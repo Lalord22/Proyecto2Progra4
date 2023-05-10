@@ -1,0 +1,49 @@
+.rBody{
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+.registrationBox > form{
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    margin-top: 50px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    
+}
+
+.registrationForm > label{
+    display: block;
+    margin-bottom: 5px;
+}
+
+.registrationForm > input{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.submit{
+    background-color: #007bff;
+    color: #fff;
+    padding: 6px;
+    border: none;
+    cursor: pointer;
+    width: 8%;
+    border-radius: 20px;
+}
+
+.submit :hover{
+    background-color: #0056b3;
+}
+
+.registrationForm > div{
+  font-family:    Arial, sans-serif;
+               
+  padding: 30px 0;
+  text-align: center;
+}
