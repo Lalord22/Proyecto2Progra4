@@ -1,0 +1,56 @@
+body{
+    background-image: url("../images/background.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;     
+}
+.csdiv{
+    padding-left: 50px;
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 500px;
+    overflow: auto; 
+    border: 1px solid lightgray;
+}
+
+.cdiv{
+    margin-top: 20px; 
+    margin-bottom: 0px;
+}
+
+
+.cldiv{
+    display: inline-block; 
+    vertical-align: top;    
+}
+
+.crdiv{
+    display: none; 
+    vertical-align: top;
+    margin-left: 30px;        
+}
+
+.cldiv:hover + .crdiv{
+   display: inline-block; 
+}
+
+.clp{
+    margin-top: 0px; 
+    margin-bottom: 10px;  
+ }
+ 
+ .climg {
+  margin-top: 5px; 
+  margin-bottom: 0px;  
+  padding: 5px;
+  background-color: lightgray;
+  transition: transform .2s; /* Animation */
+  width: 200px;
+  height: 150px;
+
+}
+
+.climg:hover {
+  transform: scale(1.2); 
+}
