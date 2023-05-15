@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 public class UserResource {
 
    private Connection getConnection() throws SQLException {
-       String url = "jdbc:mysql://localhost:3306/Guia";
+       String url = "jdbc:mysql://localhost:3306/guia";
        String username = "root";
        String password = "root";
        
