@@ -17,7 +17,7 @@ import jakarta.ws.rs.QueryParam;
 
 @Path("/categorias")
 @PermitAll
-public class Categorias {
+public class Clientes {
 
   @GET
     @Path("/cliente/{cedula}/{clave}")

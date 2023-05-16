@@ -76,12 +76,12 @@ public class Service {
                 collect(Collectors.toList());
     }
     
-    public Usuario usuarioFind(String cedula, String clave) throws Exception {
+    public Usuario usuarioFind(String cedula, String clave) throws Exception {  //implementado
         Usuario usuario = usuarioDao.read(cedula, clave);
         return usuario;
     }
 
-    public Cliente clienteFind(Usuario usuario) throws Exception {
+    public Cliente clienteFind(Usuario usuario) throws Exception {  //implementado, la ruta contiene /categorias
         return clienteDao.read(usuario.getCedula());
     }
 

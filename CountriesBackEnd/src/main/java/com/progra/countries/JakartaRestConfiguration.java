@@ -1,7 +1,8 @@
 package com.progra.countries;
 
-import com.progra.countries.resources.Categorias;
+import com.progra.countries.resources.Clientes;
 import com.progra.countries.resources.Countries;
+import com.progra.countries.resources.Polizas;
 import com.progra.countries.resources.Usuarios;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
@@ -19,7 +20,8 @@ public class JakartaRestConfiguration extends Application {
         HashSet<Class<?>> classes = new HashSet<>();
         classes.add(Countries.class); 
         classes.add(Usuarios.class);
-        classes.add(Categorias.class);
+        classes.add(Clientes.class);
+        classes.add(Polizas.class);
         return classes;
     }      
 }
