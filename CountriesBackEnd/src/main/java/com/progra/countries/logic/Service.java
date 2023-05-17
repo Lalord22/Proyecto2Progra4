@@ -125,7 +125,7 @@ public class Service {
         return coberturaDao.cargarTodo();
     }
 
-    public List<Categoria> cargarCategorias() {      
+    public List<Categoria> cargarCategorias() {      //implementado
         return categoriaDao.cargarTodo();
     }
 
