@@ -129,23 +129,23 @@ public class Service {
         return categoriaDao.cargarTodo();
     }
 
-    public void agregaCategoria(Categoria categoria) throws Exception {
+    public void agregaCategoria(Categoria categoria) throws Exception { //implementado
         this.categoriaDao.addCategoria(categoria);
     }
 
-    public List<Modelo> cargarModelos() {
-
+    public List<Modelo> cargarModelos() {          //implementado
+        
         return modeloDao.cargarTodo();
 
     }
 
-    public List<Marca> cargarMarcas() {
+    public List<Marca> cargarMarcas() {      //implementado
 
         return marcaDao.cargarTodo();
 
     }
 
-    public Marca cargarMarcaById(Integer id) throws Exception {
+    public Marca cargarMarcaById(Integer id) throws Exception {           //implementado
         return marcaDao.read(id);
     }
 
