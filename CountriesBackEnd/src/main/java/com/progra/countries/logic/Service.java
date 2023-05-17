@@ -102,11 +102,11 @@ public class Service {
         usuarioDao.update(usuario);
     }
 
-    public List<Poliza> polizaFindPlaca(String numero) throws Exception {
+    public List<Poliza> polizaFindPlaca(String numero) throws Exception {   //implementado
         return polizaDao.findByPlaca(numero);
     }
 
-    public void registerUser(Usuario u) throws Exception {
+    public void registerUser(Usuario u) throws Exception {         //implementado
         usuarioDao.addUser(u);
     }
 

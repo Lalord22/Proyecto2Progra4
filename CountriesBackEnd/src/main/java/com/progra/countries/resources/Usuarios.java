@@ -12,6 +12,7 @@ import com.progra.countries.logic.Usuario;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
@@ -53,4 +54,19 @@ public class Usuarios {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+    
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registerUser(Usuario usuario) {
+        try {
+            Service.instance().registerUser(usuario);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+    
+    
+    
 }
