@@ -94,7 +94,7 @@ public class Service {
         return polizas;
     }
 
-    public void clienteUpdate(Cliente cliente) throws Exception {    //necesita testeo
+    public void clienteUpdate(Cliente cliente) throws Exception {    //implementado
         clienteDao.update(cliente);
     }
 
@@ -110,9 +110,11 @@ public class Service {
         usuarioDao.addUser(u);
     }
 
-    public void registerClient(Cliente u) throws Exception {
-        clienteDao.addClient(u);
-    }
+   public void registerCliente(Cliente cliente) throws Exception {
+    usuarioDao.addUser(cliente.getUsuario());
+    clienteDao.addClient(cliente);
+}
+
 
     public Poliza polizaShowById(Integer parameter) throws Exception {
 

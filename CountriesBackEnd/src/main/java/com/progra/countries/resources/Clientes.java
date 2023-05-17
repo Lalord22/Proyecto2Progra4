@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Usuario;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
@@ -25,11 +26,11 @@ public class Clientes {
         Cliente cliente = Service.instance().clienteFind(usuario);
         return cliente;
     }
-    
-    @PUT
+
+    @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateCliente(Cliente cliente) {             //necesita testing
+    public Response updateCliente(Cliente cliente) {
         try {
             Service.instance().clienteUpdate(cliente);
             return Response.ok().build();
@@ -37,5 +38,18 @@ public class Clientes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-    
+
+    @POST
+@Path("/register")
+@Consumes(MediaType.APPLICATION_JSON)
+public Response registerCliente(Cliente cliente) {
+    try {
+        Service.instance().registerCliente(cliente);
+        return Response.ok().build();
+    } catch (Exception e) {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    }
+}
+
+
 }
