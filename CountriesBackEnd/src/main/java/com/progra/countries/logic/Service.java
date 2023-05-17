@@ -121,11 +121,11 @@ public class Service {
 
     }
 
-    public List<Cobertura> cargarCoberturas() {
+    public List<Cobertura> cargarCoberturas() {       // implementado
         return coberturaDao.cargarTodo();
     }
 
-    public List<Categoria> cargarCategorias() {
+    public List<Categoria> cargarCategorias() {      
         return categoriaDao.cargarTodo();
     }
 

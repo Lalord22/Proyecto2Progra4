@@ -1,6 +1,8 @@
 package com.progra.countries;
 
+import com.progra.countries.resources.Categorias;
 import com.progra.countries.resources.Clientes;
+import com.progra.countries.resources.Coberturas;
 import com.progra.countries.resources.Countries;
 import com.progra.countries.resources.Polizas;
 import com.progra.countries.resources.Usuarios;
@@ -22,6 +24,8 @@ public class JakartaRestConfiguration extends Application {
         classes.add(Usuarios.class);
         classes.add(Clientes.class);
         classes.add(Polizas.class);
+        classes.add(Coberturas.class);
+        classes.add(Categorias.class);
         return classes;
     }      
 }
