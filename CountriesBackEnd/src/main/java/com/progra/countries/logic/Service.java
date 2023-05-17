@@ -149,7 +149,7 @@ public class Service {
         return marcaDao.read(id);
     }
 
-    public Categoria cargarCategoriaById(Integer id) throws Exception {
+    public Categoria cargarCategoriaById(Integer id) throws Exception {       //implementado
         return categoriaDao.read(id);
     }
 

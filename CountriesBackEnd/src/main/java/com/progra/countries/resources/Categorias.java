@@ -37,6 +37,23 @@ public class Categorias {
         }
     }
     
+    
+            @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Categoria categoriaShowById(@PathParam("id") Integer id) {
+        try {
+            return Service.instance().cargarCategoriaById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception and return an error response
+            // or throw a custom exception based on your application's requirements
+            return null; // or throw a custom exception here
+        }
+    }
+    
+    
+    
 
     
 }
