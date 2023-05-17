@@ -6,21 +6,19 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import java.util.List;
-import com.progra.countries.logic.Country;
 import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Usuario;
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 
-@Path("/categorias")
+@Path("/clientes")
 @PermitAll
 public class Clientes {
 
-  @GET
-    @Path("/cliente/{cedula}/{clave}")
+    @GET
+    @Path("/{cedula}/{clave}")
     @Produces(MediaType.APPLICATION_JSON)
     public Cliente clienteFind(@PathParam("cedula") String cedula, @PathParam("clave") String clave) throws Exception {
         Usuario usuario = new Usuario(cedula, clave);
@@ -28,5 +26,16 @@ public class Clientes {
         return cliente;
     }
     
-     
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateCliente(Cliente cliente) {             //necesita testing
+        try {
+            Service.instance().clienteUpdate(cliente);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+    
 }

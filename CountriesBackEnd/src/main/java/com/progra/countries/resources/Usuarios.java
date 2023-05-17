@@ -9,10 +9,13 @@ import java.util.List;
 import com.progra.countries.logic.Country;
 import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Usuario;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 
 @Path("/usuarios")
 @PermitAll
@@ -36,5 +39,18 @@ public class Usuarios {
             throw new NotFoundException(); 
         }
        
+    }
+    
+    
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUsuario(Usuario usuario) {             //Testeado, hk
+        try {
+            Service.instance().usuarioUpdate(usuario);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 }

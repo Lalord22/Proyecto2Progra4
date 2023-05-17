@@ -85,7 +85,7 @@ public class Service {
         return clienteDao.read(usuario.getCedula());
     }
 
-    public List<Poliza> polizaFind(Cliente cliente) throws Exception {
+    public List<Poliza> polizaFind(Cliente cliente) throws Exception {  //se implemento el de cargarPolizasCliente en vez de este
         List<Poliza> polizas = polizaDao.findByCliente(cliente);
         for (Poliza e : polizas) {
             e.setCliente(cliente);
@@ -94,11 +94,11 @@ public class Service {
         return polizas;
     }
 
-    public void clienteUpdate(Cliente cliente) throws Exception {
+    public void clienteUpdate(Cliente cliente) throws Exception {    //necesita testeo
         clienteDao.update(cliente);
     }
 
-    public void usuarioUpdate(Usuario usuario) throws Exception {
+    public void usuarioUpdate(Usuario usuario) throws Exception {    // implementado
         usuarioDao.update(usuario);
     }
 
@@ -164,7 +164,7 @@ public class Service {
         return clienteDao.cargarTodo();
     }
 
-    public List<Poliza> cargarPolizasCliente(String id) throws Exception {
+    public List<Poliza> cargarPolizasCliente(String id) throws Exception {   // implementado
         Cliente cliente = clienteDao.readCliente(id);
         List<Poliza> polizas = polizaDao.findByCliente(cliente);
         for (Poliza e : polizas) {

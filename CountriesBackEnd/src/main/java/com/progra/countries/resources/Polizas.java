@@ -26,4 +26,11 @@ public class Polizas {
         List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);
         return polizas;
     }
+    
+     @GET
+    @Path("/findByPlaca/{placa}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Poliza> polizaFindPlaca(@PathParam("placa") String numero) throws Exception {
+        return Service.instance().polizaFindPlaca(numero);
+    }
 }

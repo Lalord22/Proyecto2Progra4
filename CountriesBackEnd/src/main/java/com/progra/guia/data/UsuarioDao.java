@@ -72,6 +72,7 @@ public class UsuarioDao {
         stm.setString(1, e.getCedula());
         stm.setString(2, e.getClave());
         stm.setInt(3, e.getTipo());
+         stm.setString(4, e.getCedula());
         int count = db.executeUpdate(stm);
         if (count == 0) {
             throw new Exception("Cliente no existe");
