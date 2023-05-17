@@ -110,13 +110,12 @@ public class Service {
         usuarioDao.addUser(u);
     }
 
-   public void registerCliente(Cliente cliente) throws Exception {
-    usuarioDao.addUser(cliente.getUsuario());
+   public void registerCliente(Cliente cliente) throws Exception {   // retorna OK pero no graba el cliente
     clienteDao.addClient(cliente);
 }
 
 
-    public Poliza polizaShowById(Integer parameter) throws Exception {
+    public Poliza polizaShowById(Integer parameter) throws Exception {  // implementado
 
         return polizaDao.read(parameter);
 

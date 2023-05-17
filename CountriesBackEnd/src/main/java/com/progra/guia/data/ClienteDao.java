@@ -90,6 +90,8 @@ public class ClienteDao {
         db.executeUpdate(statement); 
 
       }
+
+
     
     public List<Cliente> cargarTodo() {
     List<Cliente> resultado = new ArrayList<>();
