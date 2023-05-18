@@ -114,7 +114,7 @@ public class Service {
         usuarioDao.addUser(u);
     }
 
-    public void registerCliente(Cliente cliente) throws Exception {   // retorna OK pero no graba el cliente
+    public void registerCliente(Cliente cliente) throws Exception {   // implementado
         clienteDao.addClient(cliente);
     }
 
@@ -156,7 +156,7 @@ public class Service {
         return categoriaDao.read(id);
     }
 
-    public void agregaCobertura(Cobertura cobertura) throws Exception {   //retorna error 500
+    public void agregaCobertura(Cobertura cobertura) throws Exception {   //implementado
         coberturaDao.addCobertura(cobertura);
     }
 

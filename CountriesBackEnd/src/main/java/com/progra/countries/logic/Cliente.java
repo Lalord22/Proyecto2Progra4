@@ -26,7 +26,7 @@ public class Cliente {
     String correo;
     String datosTarjeta;
     Usuario usuario;
-    transient List<Poliza> polizas;
+    List<Poliza> polizas;
 
     public Cliente() {
         this("","","","","",new Usuario());

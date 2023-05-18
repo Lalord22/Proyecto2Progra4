@@ -21,7 +21,7 @@ public class Cobertura {
     String descripcion;
     double costoMinimo;
     double costoPorcentual;
-    transient Categoria categoria;
+    Categoria categoria;
 
     public Cobertura() {}
     
