@@ -5,7 +5,7 @@
     <artifactId>CountriesBackEnd</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>CountriesBackEnd-1.0-SNAPSHOT</name>
+    <name>CarINsuranceBackEnd-1.0-SNAPSHOT</name>
     
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
