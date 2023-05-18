@@ -18,12 +18,18 @@ package com.progra.countries.logic;
 public class Modelo {
     Integer id;
     String descripcion;
-    transient Marca marca;
+    Marca marca;
 
     public Modelo(Integer id, String descripcion, Marca marca) {
         this.id = id;
         this.descripcion = descripcion;
         this.marca = marca;
+    }
+    
+    public Modelo() {
+        this.id= 0;
+        this.descripcion ="";
+        this.marca = null;
     }
 
     

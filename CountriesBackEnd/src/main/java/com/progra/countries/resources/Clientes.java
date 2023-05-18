@@ -42,16 +42,21 @@ public class Clientes {
     }
 
     @POST
-@Path("/register")
-@Consumes(MediaType.APPLICATION_JSON)                        
-public Response registerCliente(Cliente cliente) {             //no esta registrando, pero retorna OK
-    try {
-        Service.instance().registerCliente(cliente);
-        return Response.ok().build();
-    } catch (Exception e) {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registerCliente(Cliente cliente) {             //no esta registrando, pero retorna OK
+        try {
+            Service.instance().registerCliente(cliente);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
-}
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Cliente> getCoberturas() {
+        return Service.instance().cargarClientes();
+    }
 
 }

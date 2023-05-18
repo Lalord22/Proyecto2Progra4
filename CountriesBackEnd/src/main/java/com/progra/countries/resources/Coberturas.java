@@ -1,5 +1,6 @@
 package com.progra.countries.resources;
 
+import com.progra.countries.logic.Categoria;
 import com.progra.countries.logic.Cobertura;
 import com.progra.countries.logic.Service;
 
@@ -19,25 +20,23 @@ import java.util.List;
 @PermitAll
 public class Coberturas {
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Cobertura> getCoberturas() {
         return Service.instance().cargarCoberturas();
     }
-    
-    
+
     @POST
-    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response registerCobertura(Cobertura cobertura) {
+    public Response agregarCobertura(Cobertura cobertura) {
         try {
+            // Call the agregaCobertura method with the received Cobertura object
             Service.instance().agregaCobertura(cobertura);
-            return Response.ok().build();
+            return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+            e.printStackTrace(); // Print the exception stack trace for debugging purposes
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    
 }

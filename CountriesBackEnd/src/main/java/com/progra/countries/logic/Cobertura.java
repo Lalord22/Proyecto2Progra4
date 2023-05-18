@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.progra.countries.logic;
+import jakarta.json.bind.annotation.JsonbProperty;
 
 
 /*
@@ -24,8 +25,8 @@ public class Cobertura {
 
     public Cobertura() {}
     
-    public Cobertura(Integer id, String descripcion, double costoMinimo, double costoPorcentual, Categoria categoria) {
-        this.id = id;
+    public Cobertura(String descripcion, double costoMinimo, double costoPorcentual, Categoria categoria) {
+        this.id = 999;
         this.descripcion = descripcion;
         this.costoMinimo = costoMinimo;
         this.costoPorcentual = costoPorcentual;
@@ -68,7 +69,8 @@ public class Cobertura {
         return categoria;
     }
 
+    @JsonbProperty("categoria")
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-    }    
+    }  
 }

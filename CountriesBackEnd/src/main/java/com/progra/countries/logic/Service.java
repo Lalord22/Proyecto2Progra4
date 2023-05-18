@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.progra.countries.logic;
+
 import com.progra.guia.data.CategoriaDao;
 import com.progra.guia.data.ClienteDao;
 import com.progra.guia.data.CoberturaDao;
@@ -24,16 +25,17 @@ import java.sql.SQLException;
  * @author Escinf
  */
 public class Service {
+
     private static Service uniqueInstance;
-    
-    public static Service instance(){
-        if (uniqueInstance == null){
+
+    public static Service instance() {
+        if (uniqueInstance == null) {
             uniqueInstance = new Service();
         }
-        return uniqueInstance; 
+        return uniqueInstance;
     }
 
-    HashMap<String,Country> countries;
+    HashMap<String, Country> countries;
     RelDatabase relDatabase;
     UsuarioDao usuarioDao;
     ClienteDao clienteDao;
@@ -42,10 +44,9 @@ public class Service {
     CategoriaDao categoriaDao;
     ModeloDao modeloDao;
     MarcaDao marcaDao;
-    
-    private Service(){
-       
-        
+
+    private Service() {
+
         relDatabase = new RelDatabase();
         usuarioDao = new UsuarioDao(relDatabase);
         clienteDao = new ClienteDao(relDatabase);
@@ -54,28 +55,31 @@ public class Service {
         categoriaDao = new CategoriaDao(relDatabase);
         modeloDao = new ModeloDao(relDatabase);
         marcaDao = new MarcaDao(relDatabase);
-        
-         countries = new HashMap();
+
+        countries = new HashMap();
         Country c;
-        c=new Country("Argentina", "Buenos Aires", 43590400, 2780400, new ArrayList<>(Arrays.asList((new Integer[]{-34,-64}))), "https://flagcdn.com/ar.svg");
+        c = new Country("Argentina", "Buenos Aires", 43590400, 2780400, new ArrayList<>(Arrays.asList((new Integer[]{-34, -64}))), "https://flagcdn.com/ar.svg");
         countries.put(c.name, c);
 
-        c=new Country("Belize", "Belmopan", 370300, 22966, new ArrayList<>(Arrays.asList(new Integer[]{17,-88})), "https://flagcdn.com/bo.svg");
+        c = new Country("Belize", "Belmopan", 370300, 22966, new ArrayList<>(Arrays.asList(new Integer[]{17, -88})), "https://flagcdn.com/bo.svg");
         countries.put(c.name, c);
     }
 
-    public Country read(String name)throws Exception{
+    public Country read(String name) throws Exception {
         Country c = countries.get(name);
-        if (c!=null) return c;
-        else throw new Exception("Country does not exist");
+        if (c != null) {
+            return c;
+        } else {
+            throw new Exception("Country does not exist");
+        }
     }
 
-    public List<Country> find(String patron){
+    public List<Country> find(String patron) {
         return countries.values().stream().
-                filter( c-> c.name.contains(patron)).
+                filter(c -> c.name.contains(patron)).
                 collect(Collectors.toList());
     }
-    
+
     public Usuario usuarioFind(String cedula, String clave) throws Exception {  //implementado
         Usuario usuario = usuarioDao.read(cedula, clave);
         return usuario;
@@ -110,10 +114,9 @@ public class Service {
         usuarioDao.addUser(u);
     }
 
-   public void registerCliente(Cliente cliente) throws Exception {   // retorna OK pero no graba el cliente
-    clienteDao.addClient(cliente);
-}
-
+    public void registerCliente(Cliente cliente) throws Exception {   // retorna OK pero no graba el cliente
+        clienteDao.addClient(cliente);
+    }
 
     public Poliza polizaShowById(Integer parameter) throws Exception {  // implementado
 
@@ -134,7 +137,7 @@ public class Service {
     }
 
     public List<Modelo> cargarModelos() {          //implementado
-        
+
         return modeloDao.cargarTodo();
 
     }
@@ -153,15 +156,15 @@ public class Service {
         return categoriaDao.read(id);
     }
 
-    public void agregaCobertura(Cobertura cobertura) throws Exception {
-        this.coberturaDao.addCobertura(cobertura);
+    public void agregaCobertura(Cobertura cobertura) throws Exception {   //retorna error 500
+        coberturaDao.addCobertura(cobertura);
     }
 
-    public void deleteCobertura(String id) throws Exception {
+    public void deleteCobertura(String id) throws Exception {    //no se utiliza
         this.coberturaDao.deleteById(id);
     }
 
-    public List<Cliente> cargarClientes() {
+    public List<Cliente> cargarClientes() {   //implementado
         return clienteDao.cargarTodo();
     }
 
@@ -175,7 +178,7 @@ public class Service {
         return polizas;
     }
 
-    public void agregarModelo(Modelo u) throws Exception {
+    public void agregarModelo(Modelo u) throws Exception {    //implementado**
         modeloDao.addModelo(u);
     }
 

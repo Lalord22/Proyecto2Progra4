@@ -64,7 +64,7 @@ public class CoberturaDao {
     public Cobertura from(ResultSet rs) {
         try {
             Categoria cate = new Categoria(0,"");
-            Cobertura e = new Cobertura(0,"",0,0,cate);
+            Cobertura e = new Cobertura("",0,0,cate);
             e.setCategoria(cate);
             e.setId(rs.getInt("id"));
             e.setDescripcion(rs.getString( "descripcion"));
