@@ -33,7 +33,7 @@ public class Poliza {
     String fechaInicio;
     Modelo modelo;  
     Cliente cliente;
-    transient List<Cobertura> coberturas;
+    List<Cobertura> coberturas;
     
     
       public Poliza(int id, String numeroPlaca, String anno, double valorAsegurado, String plazoPago, String fechaInicio, Modelo modelo, Cliente cliente) {

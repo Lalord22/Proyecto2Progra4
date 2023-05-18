@@ -182,26 +182,26 @@ public class Service {
         modeloDao.addModelo(u);
     }
 
-    public void agregarMarca(Marca u) throws Exception {
+    public void agregarMarca(Marca u) throws Exception {    //implementado
         marcaDao.addMarca(u);
     }
 
-    public Cobertura cargarCoberturaById(String coverageId) throws Exception {
+    public Cobertura cargarCoberturaById(String coverageId) throws Exception {   //implementado
         Integer value = Integer.parseInt(coverageId);
         return this.coberturaDao.read(value);
     }
 
-    public Modelo cargarModeloById(int modeloId) throws Exception {
+    public Modelo cargarModeloById(int modeloId) throws Exception {   //implementado
 
         return this.modeloDao.read(modeloId);
 
     }
 
-    public void agregarPoliza(Poliza poliza) throws SQLException {
+    public void agregarPoliza(Poliza poliza) throws SQLException {    //implementado
         this.polizaDao.addPoliza(poliza);
     }
 
-    public double calcularCostoTotalPoliza(Poliza poliza) {
+    public double calcularCostoTotalPoliza(Poliza poliza) {  //implementado
         double totalCosto = 0.0; //costo total a ser retornado
 
         int multiplicadorPeriodoPago = 1; // multiplica el costo total de acuerdo a la cantidad de meses en el plazo de la poliza

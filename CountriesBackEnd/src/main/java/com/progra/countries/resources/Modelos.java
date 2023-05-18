@@ -38,6 +38,19 @@ public class Modelos {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Modelo getModeloById(@PathParam("id") int modeloId) {
+        try {
+            return Service.instance().cargarModeloById(modeloId);
+        } catch (Exception e) {
+            // Handle the exception appropriately (e.g., log the error, return an error response)
+            // You can customize the error handling based on your application's requirements
+            return null;
+        }
+    }
 
     
 }
