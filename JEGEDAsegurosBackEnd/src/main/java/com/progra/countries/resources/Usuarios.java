@@ -29,20 +29,19 @@ public class Usuarios {
         // Assuming the Service class has a method to retrieve all usuarios
         return service.getAllUsuarios();
     }
-    
-     @GET
+
+    @GET
     @Path("/{cedula}/{clave}")
     @Produces({MediaType.APPLICATION_JSON})
     public Usuario getUsuario(@PathParam("cedula") String cedula, @PathParam("clave") String clave) throws Exception {
-       try {
-            return Service.instance().usuarioFind(cedula,clave);
+        try {
+            return Service.instance().usuarioFind(cedula, clave);
         } catch (Exception ex) {
-            throw new NotFoundException(); 
+            throw new NotFoundException();
         }
-       
+
     }
-    
-    
+
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -54,7 +53,7 @@ public class Usuarios {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-    
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -66,7 +65,8 @@ public class Usuarios {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-    
-    
-    
+
 }
+
+
+
