@@ -84,6 +84,11 @@ public class Service {
         Usuario usuario = usuarioDao.read(cedula, clave);
         return usuario;
     }
+    
+    public Usuario usuarioFindById(String cedula) throws Exception {  //implementado
+        Usuario usuario = usuarioDao.readById(cedula);
+        return usuario;
+    }
 
     public Cliente clienteFind(Usuario usuario) throws Exception {  //implementado, la ruta contiene /categorias
         return clienteDao.read(usuario.getCedula());

@@ -54,6 +54,21 @@ public class UsuarioDao {
         }
     }
     
+    public Usuario readById(String cedula) throws Exception {
+       String sql = "select " +
+        "* " +
+        "from  Usuario e " +
+        "where e.cedula=?";
+        PreparedStatement stm = db.prepareStatement(sql);
+        stm.setString(1, cedula);
+        ResultSet rs = db.executeQuery(stm);
+        if (rs.next()) {
+            return from(rs, "e");
+        } else {
+            throw new Exception("Usuario no Existe");
+        }
+    }
+    
     public Usuario from(ResultSet rs, String alias) {
         try {
             Usuario e = new Usuario();

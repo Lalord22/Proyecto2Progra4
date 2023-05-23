@@ -4,6 +4,7 @@ import com.progra.countries.resources.Categorias;
 import com.progra.countries.resources.Clientes;
 import com.progra.countries.resources.Coberturas;
 import com.progra.countries.resources.Countries;
+import com.progra.countries.resources.Login;
 import com.progra.countries.resources.Marcas;
 import com.progra.countries.resources.Modelos;
 import com.progra.countries.resources.Polizas;
@@ -30,6 +31,7 @@ public class JakartaRestConfiguration extends Application {
         classes.add(Categorias.class);
         classes.add(Modelos.class);
         classes.add(Marcas.class);
+        classes.add(Login.class);
         return classes;
     }      
 }

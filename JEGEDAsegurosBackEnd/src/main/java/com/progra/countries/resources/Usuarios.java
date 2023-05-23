@@ -29,20 +29,19 @@ public class Usuarios {
         // Assuming the Service class has a method to retrieve all usuarios
         return service.getAllUsuarios();
     }
-    
-     @GET
+
+    @GET
     @Path("/{cedula}/{clave}")
     @Produces({MediaType.APPLICATION_JSON})
     public Usuario getUsuario(@PathParam("cedula") String cedula, @PathParam("clave") String clave) throws Exception {
-       try {
-            return Service.instance().usuarioFind(cedula,clave);
+        try {
+            return Service.instance().usuarioFind(cedula, clave);
         } catch (Exception ex) {
-            throw new NotFoundException(); 
+            throw new NotFoundException();
         }
-       
+
     }
-    
-    
+
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -54,7 +53,7 @@ public class Usuarios {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-    
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -66,7 +65,28 @@ public class Usuarios {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-    
-    
-    
+
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(Usuario usuario) {
+        try {
+            // Check if the provided id and clave match a user in the database
+            Usuario loggedInUser = Service.instance().usuarioFind(usuario.getCedula(), usuario.getClave());
+
+            if (loggedInUser != null) {
+                // User authentication successful, return the user object
+                return Response.status(Response.Status.OK).entity(loggedInUser).build();
+            } else {
+                // User authentication failed
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            // Handle the exception appropriately (e.g., log the error, return an error response)
+            // You can customize the error handling based on your application's requirements
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
