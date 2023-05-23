@@ -6,16 +6,14 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
-import com.progra.countries.logic.Country;
 import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Usuario;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 @Path("/usuarios")
@@ -45,6 +43,7 @@ public class Usuarios {
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM"})
     public Response updateUsuario(Usuario usuario) {             //Testeado, hk
         try {
             Service.instance().usuarioUpdate(usuario);

@@ -86,6 +86,12 @@ public class Usuario  implements java.io.Serializable {
         return this.cedula;
     }
 
+    public String getRol(){
+        if(this.tipo==2)
+            return "ADM";
+        else
+            return "CLI";
+    }
     
     
     
