@@ -9,6 +9,7 @@ import com.progra.countries.resources.Marcas;
 import com.progra.countries.resources.Modelos;
 import com.progra.countries.resources.Polizas;
 import com.progra.countries.resources.Usuarios;
+import jakarta.annotation.security.DeclareRoles;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import java.util.HashSet;
@@ -16,9 +17,10 @@ import java.util.Set;
 
 /**
  * Configures Jakarta RESTful Web Services for the application.
- * @author Juneau
+ * @author Lalo, no olvides darle like y suscribir a lalsalvargas en instagram 
  */
 @ApplicationPath("api")
+@DeclareRoles({"ADM","CLI"})
 public class JakartaRestConfiguration extends Application {
     @Override
     public Set<Class<?>> getClasses() {

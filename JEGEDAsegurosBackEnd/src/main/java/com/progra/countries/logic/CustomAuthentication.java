@@ -20,7 +20,7 @@ public class CustomAuthentication implements HttpAuthenticationMechanism {
         Usuario user = (Usuario) request.getSession().getAttribute("user");
         if (user != null) {
             return httpMsgContext.notifyContainerAboutLogin(new Principal() {@Override public String getName(){return user.getCedula();}},
-                    new HashSet<>(Arrays.asList(new String[]{user.getTipo().toString()})));
+                    new HashSet<>(Arrays.asList(new String[]{user.getRol()})));
                 }
         else{
             return httpMsgContext.notifyContainerAboutLogin(new Principal() {@Override public String getName(){return "none";}},
