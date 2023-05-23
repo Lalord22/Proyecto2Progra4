@@ -24,7 +24,7 @@ public class Polizas {
     private Cliente cliente;
 
     @GET
-    @Path("/cliente/{cedula}")
+    @Path("/cliente/{cedula}")  // TODO: cambiar este metodo para que jale la cedula de la sesion
     @Produces(MediaType.APPLICATION_JSON)
     public List<Poliza> muestraPolizasCliente(@PathParam("cedula") String cedula) throws Exception {
         List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);

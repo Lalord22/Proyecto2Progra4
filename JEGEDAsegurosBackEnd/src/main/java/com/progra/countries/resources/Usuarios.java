@@ -66,27 +66,8 @@ public class Usuarios {
         }
     }
 
-    @POST
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response login(Usuario usuario) {
-        try {
-            // Check if the provided id and clave match a user in the database
-            Usuario loggedInUser = Service.instance().usuarioFind(usuario.getCedula(), usuario.getClave());
-
-            if (loggedInUser != null) {
-                // User authentication successful, return the user object
-                return Response.status(Response.Status.OK).entity(loggedInUser).build();
-            } else {
-                // User authentication failed
-                return Response.status(Response.Status.UNAUTHORIZED).build();
-            }
-        } catch (Exception e) {
-            // Handle the exception appropriately (e.g., log the error, return an error response)
-            // You can customize the error handling based on your application's requirements
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
 }
+
+
+
