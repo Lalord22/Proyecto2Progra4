@@ -29,13 +29,14 @@ class App{
        return rootContent;
   }
   
+  <!-- Encabesado -->
    renderMenu=()=>{
     return `
         <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
           <div class="container-fluid">
             <a class="navbar-brand  font-italic font-weight-light  text-info" href="#">
                 <img src="images/logo.png" class="logo rounded-circle" alt="logo">
-                Countries
+                JEGEDA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuCollapse">
               <span class="navbar-toggler-icon"></span>
@@ -55,7 +56,7 @@ class App{
         </div>          
     `;
   }
-
+  <!-- Pie de pagina -->
    renderFooter=()=>{
     return `
         <footer id="footer" class="bg-dark text-white mt-4 w-100 fixed-bottom">
@@ -73,18 +74,40 @@ class App{
             </div>
         </footer> 
     `;
-  }    
-
+  }  
+  
+  <!-- Cuerpo de pagina -->
+  renderBodyFiller=()=>{
+    var html= `
+        <div id='bodyFiller' style='margin-left: 10%; margin-top:40px; width: 80%; text-align: center; font-size: 1.5em'>
+            <div class="left-half">
+              <div class="mission">
+                <h2>Misión</h2>
+                <p>Ofrecer a nuestros clientes una amplia gama de seguros para sus vehículos en Costa Rica, brindando un servicio de calidad y personalizado, para garantizar su tranquilidad y protección ante cualquier eventualidad.</p>
+                <h2>Visión</h2>
+                <p>Ser reconocidos como la mejor empresa de venta de seguros para vehículos en Costa Rica, a través de la mejora continua en nuestros servicios, la innovación en nuestra oferta y el compromiso con nuestros clientes, para ser su mejor opción en protección y tranquilidad en la carretera.</p>
+              </div>
+            </div>            
+            <img src="images/local.jpeg" class="filler rounded-circle" alt="filler">
+        </div>
+     
+    `;
+    this.dom.querySelector('#app>#body').replaceChildren();
+    this.dom.querySelector('#app>#body').innerHTML=html;        
+  } 
+  
    renderModal=()=>{
     return `
         <div id="modal" class="modal fade" tabindex="-1">
            <div class="modal-dialog">
                <div class="modal-content">
+
                    <div class="modal-header" >
                        <img class="img-circle" id="img_logo" src="images/user.png" style="max-width: 50px; max-height: 50px" alt="logo">
                        <span style='margin-left:4em;font-weight: bold;'>Login</span> 
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                    </div>
+        
                    <form id="form" >
                    <div class="modal-body">
                        <div class="input-group mb-3">
@@ -92,7 +115,7 @@ class App{
                            <input type="text" class="form-control" id="identificacion" name="identificacion">
                        </div>  
                        <div class="input-group mb-3">
-                           <span class="input-group-text">clave</span>
+                           <span class="input-group-text">Clave</span>
                            <input type="password" class="form-control" id="clave" name="clave">
                        </div>      
                    </div>
@@ -103,23 +126,14 @@ class App{
                        <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
                        <a id="register" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
                    </div>                
-                   </form>                 
+                   </form> 
+        
                </div>         
            </div>          
        </div>   
     `;
   }
 
-   renderBodyFiller=()=>{
-    var html= `
-        <div id='bodyFiller' style='margin-left: 10%; margin-top:100px; width: 80%; text-align: center; font-size: 1.5em'>
-            <p>Informacón de los paises del mundo.</p>
-            <img src="images/filler.jpg" class="filler rounded-circle" alt="filler">
-        </div>
-    `;
-    this.dom.querySelector('#app>#body').replaceChildren();
-    this.dom.querySelector('#app>#body').innerHTML=html;        
-  } 
 
     renderMenuItems=()=>{
         var html='';
