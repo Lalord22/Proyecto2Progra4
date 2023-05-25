@@ -29,14 +29,13 @@ class App{
        return rootContent;
   }
   
-  <!-- Encabesado -->
+
    renderMenu=()=>{
     return `
-        <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
+        <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-black">
           <div class="container-fluid">
             <a class="navbar-brand  font-italic font-weight-light  text-info" href="#">
-                <img src="images/logo.png" class="logo rounded-circle" alt="logo">
-                JEGEDA
+                <img src="images/logo3.png" class="logo rounded-circle" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuCollapse">
               <span class="navbar-toggler-icon"></span>
@@ -56,10 +55,10 @@ class App{
         </div>          
     `;
   }
-  <!-- Pie de pagina -->
+ 
    renderFooter=()=>{
     return `
-        <footer id="footer" class="bg-dark text-white mt-4 w-100 fixed-bottom">
+        <footer id="footer" class="bg-black text-white mt-4 w-100 fixed-bottom">
             <div class="container-fluid py-2">
 
                 <div class="row">
@@ -76,7 +75,7 @@ class App{
     `;
   }  
   
-  <!-- Cuerpo de pagina -->
+ 
   renderBodyFiller=()=>{
     var html= `
         <div id='bodyFiller' style='margin-left: 10%; margin-top:40px; width: 80%; text-align: center; font-size: 1.5em'>
@@ -89,6 +88,7 @@ class App{
               </div>
             </div>            
             <img src="images/local.jpeg" class="filler rounded-circle" alt="filler">
+        <div style="height: 150px;"></div>
         </div>
      
     `;
