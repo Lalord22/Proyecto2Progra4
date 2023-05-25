@@ -4,25 +4,25 @@ class App {
 
     state;  // state variables: if any
 
-    countries; // Countries view
+    polizas; //
 
     constructor() {
         this.state = {};
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click', e => this.login());
-        this.renderBodyFiller();
-        this.renderMenuItems();
-        this.countries = new Countries();
+        this.renderBodyFiller();   //Cuando la pagina se abre por primera vez, esto imprime el body del website
+        this.renderMenuItems();  // Esto carga las opciones en el banner
+        this.polizas = new Polizas();
     }
 
     render = () => {
         const html = `
-            ${this.renderMenu()}
+            ${this.renderMenu()}  
             ${this.renderBody()} 
             ${this.renderFooter()}
             ${this.renderModal()}
-        `;
+        `;//renderMenu esta relacionado al banner
 
         var rootContent = document.createElement('div');
         rootContent.id = 'app';
@@ -169,7 +169,7 @@ class App {
             if (globalstate.user.tipo === 1) {
                 html += `
                     <li class="nav-item">
-                        <a class="nav-link" id="countries" href="#"> <span><i class="fas fa-file-alt"></i></span> Countries </a>
+                        <a class="nav-link" id="polizas" href="#"> <span><i class="fas fa-file-alt"></i></span> Polizas </a>
                     </li>
                 `;
             }
@@ -180,28 +180,28 @@ class App {
             }
             html += `
               <li class="nav-item">
-                  <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.identificacion}) </a>
+                  <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.cedula}) </a>
               </li>
             `;
         }
         ;
         this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
         this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
-        this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click', e => this.countriesShow());
+        this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click', e => this.modal.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click', e => this.logout());
         if (globalstate.user !== null) {
             switch (globalstate.user.rol) {
                 case 'CLI':
-                    this.countriesShow();
+                    this.polizasShow();
                     break;
             }
         }
     }
 
-    countriesShow = () => {
-        this.dom.querySelector('#app>#body').replaceChildren(this.countries.dom);
-        this.countries.list();
+    polizasShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.polizas.dom);
+        this.polizas.list();
     }
 
     login = async () => {
