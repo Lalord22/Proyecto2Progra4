@@ -3,12 +3,15 @@ package com.progra.countries.resources;
 import com.progra.countries.logic.Cliente;
 import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Poliza;
+import com.progra.countries.logic.PolizaDTO;
+import com.progra.countries.logic.Usuario;
 import jakarta.annotation.security.PermitAll;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -17,6 +20,7 @@ import java.util.List;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import java.sql.SQLException;
 
 @Path("/polizas")
@@ -26,14 +30,23 @@ public class Polizas {
     @JsonbTransient
     private Cliente cliente;
     
-    @GET
-    @Path("/cliente/{cedula}")  // TODO: cambiar este metodo para que jale la cedula de la sesion
+     @GET
+    @Path("/cliente")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Poliza> muestraPolizasCliente(@PathParam("cedula") String cedula) throws Exception {
+    public List<PolizaDTO> muestraPolizasCliente(@Context HttpServletRequest request) throws Exception {
+        Usuario loggedUser = (Usuario) request.getSession().getAttribute("user");
+        if (loggedUser == null) {
+        throw new NotAuthorizedException("User not logged in");
+    }
+        
+        String cedula = loggedUser.getCedula();
         List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);
-        return polizas;
+        return PolizaDTO.fromPolizas(polizas);
     }
     
+    
+    
+
     // TODO: cambiar este metodo para que jale la cedula de la sesion
     //No se si funciona porque aun no hay nadie registrado aun
     /*@GET

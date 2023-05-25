@@ -5,6 +5,7 @@
  */
 package com.progra.countries.logic;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -112,6 +113,7 @@ public class Poliza {
         return cliente;
     }
 
+    @JsonbTransient
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
