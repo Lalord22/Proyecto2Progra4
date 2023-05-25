@@ -5,6 +5,8 @@ import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Poliza;
 import jakarta.annotation.security.PermitAll;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -13,6 +15,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.sql.SQLException;
 
@@ -22,7 +25,7 @@ public class Polizas {
 
     @JsonbTransient
     private Cliente cliente;
-
+    
     @GET
     @Path("/cliente/{cedula}")  // TODO: cambiar este metodo para que jale la cedula de la sesion
     @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +33,19 @@ public class Polizas {
         List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);
         return polizas;
     }
+    
+    // TODO: cambiar este metodo para que jale la cedula de la sesion
+    //No se si funciona porque aun no hay nadie registrado aun
+    /*@GET
+    @Path("/cliente")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Poliza> muestraPolizasCliente(@Context HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        String cedula = (String) session.getAttribute("cedula"); // Obtener la cédula de la sesión
+
+        List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);
+        return polizas;
+    }*/
 
     @GET
     @Path("/findByPlaca/{placa}")
