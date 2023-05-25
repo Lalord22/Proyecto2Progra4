@@ -205,35 +205,39 @@ class App {
     }
 
     login = async () => {
-        const candidate = Object.fromEntries(new FormData(this.dom.querySelector("#form")).entries());
-        candidate.rol = 'CLI';
+  const candidate = {
+    cedula: this.dom.querySelector("#identificacion").value,
+    clave: this.dom.querySelector("#clave").value,
+  };
 
-        try {
-            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(candidate),
-            });
+  try {
+    const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(candidate),
+    });
 
-            if (response.ok) {
-                const user = await response.json();
-                globalstate.user = user;
-                this.modal.hide();
-                this.renderMenuItems();
-            } else if (response.status === 401) {
-                // Unauthorized: Invalid credentials
-                alert('Invalid credentials. Please try again.');
-            } else {
-                // Other error
-                alert('An error occurred during login. Please try again later.');
-            }
-        } catch (error) {
-            console.log('Error during login:', error);
-            alert('An error occurred during login. Please try again later.');
-        }
+    if (response.ok) {
+      const user = await response.json();
+      globalstate.user = user;
+      this.modal.hide();
+      this.renderMenuItems();
+    } else if (response.status === 401) {
+      // Unauthorized: Invalid credentials
+      alert('Invalid credentials. Please try again.');
+    } else {
+      // Other error
+      alert('An error occurred during login. Please try again later.');
     }
+  } catch (error) {
+    console.log('Error during login:', error);
+    alert('An error occurred during login. Please try again later.');
+  }
+}
+
+
 
     logout = async () => {
         // invoque backend for login
