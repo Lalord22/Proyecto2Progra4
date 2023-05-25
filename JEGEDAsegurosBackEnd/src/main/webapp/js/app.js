@@ -1,26 +1,26 @@
 class App {
-  dom;
-  modal; // login modal
-  registrationModal; // registration modal
+    dom;
+    modal; // login modal
+    registrationModal; // registration modal
 
-  state; // state variables: if any
+    state; // state variables: if any
 
-  polizas; //
+    polizas; //
 
-  constructor() {
-    this.state = {};
-    this.dom = this.render();
-    this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
-    this.registrationModal = new bootstrap.Modal(this.dom.querySelector('#registerModal'));
-    this.dom.querySelector('#apply').addEventListener('click', e => this.login());
-    this.dom.querySelector('#registerLink').addEventListener('click', e => this.openRegistrationModal());
-    this.renderBodyFiller(); //Cuando la pagina se abre por primera vez, esto imprime el body del website
-    this.renderMenuItems(); // Esto carga las opciones en el banner
-    this.polizas = new Polizas();
-  }
+    constructor() {
+        this.state = {};
+        this.dom = this.render();
+        this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.registrationModal = new bootstrap.Modal(this.dom.querySelector('#registerModal'));
+        this.dom.querySelector('#apply').addEventListener('click', e => this.login());
+        this.dom.querySelector('#registerLink').addEventListener('click', e => this.openRegistrationModal());
+        this.renderBodyFiller(); //Cuando la pagina se abre por primera vez, esto imprime el body del website
+        this.renderMenuItems(); // Esto carga las opciones en el banner
+        this.polizas = new Polizas();
+    }
 
-  render = () => {
-    const html = `
+    render = () => {
+        const html = `
       ${this.renderMenu()}
       ${this.renderBody()}
       ${this.renderFooter()}
@@ -28,14 +28,14 @@ class App {
       ${this.renderRegistrationModal()}
     `; //renderMenu esta relacionado al banner
 
-    var rootContent = document.createElement('div');
-    rootContent.id = 'app';
-    rootContent.innerHTML = html;
-    return rootContent;
-  }
+        var rootContent = document.createElement('div');
+        rootContent.id = 'app';
+        rootContent.innerHTML = html;
+        return rootContent;
+    }
 
-  renderMenu = () => {
-    return `
+    renderMenu = () => {
+        return `
       <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-black">
         <div class="container-fluid">
           <a class="navbar-brand  font-italic font-weight-light  text-info" href="#">
@@ -51,17 +51,17 @@ class App {
         </div>
       </nav>
     `;
-  }
+    }
 
-  renderBody = () => {
-    return `
+    renderBody = () => {
+        return `
       <div id="body">   
       </div>
     `;
-  }
+    }
 
-  renderFooter = () => {
-    return `
+    renderFooter = () => {
+        return `
       <footer id="footer" class="bg-black text-white mt-4 w-100 fixed-bottom">
         <div class="container-fluid py-2">
           <div class="row">
@@ -76,10 +76,10 @@ class App {
         </div>
       </footer>
     `;
-  }
+    }
 
-  renderModal = () => {
-    return `
+    renderModal = () => {
+        return `
       <div id="modal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -111,10 +111,10 @@ class App {
         </div>
       </div>
     `;
-  }
+    }
 
-  renderRegistrationModal = () => {
-    return `
+    renderRegistrationModal = () => {
+        return `
       <div id="registerModal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -150,10 +150,10 @@ class App {
         </div>
       </div>
     `;
-  }
+    }
 
-  renderBodyFiller = () => {
-    var html = `
+    renderBodyFiller = () => {
+        var html = `
       <div id='bodyFiller' style='margin-left: 10%; margin-top:40px; width: 80%; text-align: center; font-size: 1.5em'>
         <div class="left-half">
           <div class="mission">
@@ -167,132 +167,139 @@ class App {
         <div style="height: 150px;"></div>
       </div>
     `;
-    this.dom.querySelector('#app>#body').replaceChildren();
-    this.dom.querySelector('#app>#body').innerHTML = html;
-  }
+        this.dom.querySelector('#app>#body').replaceChildren();
+        this.dom.querySelector('#app>#body').innerHTML = html;
+    }
 
-  renderMenuItems = () => {
-    var html = '';
-    if (globalstate.user === null) {
-      html += `
+    renderMenuItems = () => {
+        var html = '';
+        if (globalstate.user === null) {
+            html += `
         <li class="nav-item">
           <a class="nav-link" id="loginLink" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> Login </a>
         </li>
       `;
-    } else {
-      if (globalstate.user.tipo === 1) {
-        html += `
+        } else {
+            if (globalstate.user.tipo === 1) {
+                html += `
           <li class="nav-item">
             <a class="nav-link" id="polizas" href="#"> <span><i class="fas fa-file-alt"></i></span> Polizas </a>
           </li>
         `;
-      }
-      if (globalstate.user.tipo === 2) {
-        html += `
+            }
+            if (globalstate.user.tipo === 2) {
+                html += `
           
         `;
-      }
-      html += `
+            }
+            html += `
         <li class="nav-item">
           <a class="nav-link" id="logoutLink" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.cedula}) </a>
         </li>
       `;
+        }
+        this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
+        this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
+        this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
+        this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
+        this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
+        this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
+        if (globalstate.user !== null) {
+            switch (globalstate.user.rol) {
+                case 'CLI':
+                    this.polizasShow();
+                    break;
+            }
+        }
     }
-    this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
-    this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
-    this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
-    this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
-    this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
-    this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
-    if (globalstate.user !== null) {
-      switch (globalstate.user.rol) {
-        case 'CLI':
-          this.polizasShow();
-          break;
-      }
+
+    polizasShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.polizas.dom);
+        this.polizas.list();
     }
-  }
 
-  polizasShow = () => {
-    this.dom.querySelector('#app>#body').replaceChildren(this.polizas.dom);
-    this.polizas.list();
-  }
+    login = async () => {
+        const candidate = {
+            cedula: this.dom.querySelector("#identificacion").value,
+            clave: this.dom.querySelector("#clave").value,
+        };
 
-  login = async () => {
-    const candidate = {
-      cedula: this.dom.querySelector("#identificacion").value,
-      clave: this.dom.querySelector("#clave").value,
-    };
+        try {
+            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(candidate),
+            });
 
-    try {
-      const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(candidate),
-      });
+            if (response.ok) {
+                const user = await response.json();
+                globalstate.user = user;
+                this.modal.hide();
+                this.renderMenuItems();
+            } else if (response.status === 401) {
+                alert("Credenciales inválidas. Por favor, verifique su Id y Clave.");
+            } else {
+                alert("Ocurrió un error al iniciar sesión. Por favor, intente nuevamente más tarde.");
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Ocurrió un error al iniciar sesión. Por favor, intente nuevamente más tarde.");
+        }
+    }
 
-      if (response.ok) {
-        const user = await response.json();
-        globalstate.user = user;
-        this.modal.hide();
+    reset = () => {
+        const bodyElement = this.dom.querySelector('#app>#body');
+        bodyElement.innerHTML = '';
+    }
+
+    logout = () => {
+        globalstate.user = null;
+        this.reset();
         this.renderMenuItems();
-      } else if (response.status === 401) {
-        alert("Credenciales inválidas. Por favor, verifique su Id y Clave.");
-      } else {
-        alert("Ocurrió un error al iniciar sesión. Por favor, intente nuevamente más tarde.");
-      }
-    } catch (error) {
-      console.log(error);
-      alert("Ocurrió un error al iniciar sesión. Por favor, intente nuevamente más tarde.");
+        this.renderBodyFiller();
     }
-  }
 
-  logout = () => {
-    globalstate.user = null;
-    this.renderMenuItems();
-  }
-
-  openRegistrationModal = () => {
-    this.modal.hide();
-    this.registrationModal.show();
-  }
-
-  register = async () => {
-    const candidate = {
-      cedula: this.dom.querySelector("#registrationId").value,
-      nombre: this.dom.querySelector("#registrationName").value,
-      correo: this.dom.querySelector("#registrationEmail").value,
-      clave: this.dom.querySelector("#registrationPassword").value,
-    };
-
-    try {
-      const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(candidate),
-      });
-
-      if (response.ok) {
-        alert("¡Registro exitoso! Por favor, inicie sesión con sus credenciales.");
-        this.registrationModal.hide();
-        this.modal.show();
-      } else if (response.status === 409) {
-        alert("Ya existe un usuario registrado con la misma cédula o correo electrónico. Por favor, verifique sus datos.");
-      } else {
-        alert("Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.");
-      }
-    } catch (error) {
-      console.log(error);
-      alert("Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.");
+    openRegistrationModal = () => {
+        this.modal.hide();
+        this.registrationModal.show();
     }
-  }
 
-  registrationModalShow = () => {
-    this.registrationModal.show();
-  }
+    register = async () => {
+        const candidate = {
+            cedula: this.dom.querySelector("#registrationId").value,
+            nombre: this.dom.querySelector("#registrationName").value,
+            correo: this.dom.querySelector("#registrationEmail").value,
+            clave: this.dom.querySelector("#registrationPassword").value,
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(candidate),
+            });
+
+            if (response.ok) {
+                alert("¡Registro exitoso! Por favor, inicie sesión con sus credenciales.");
+                this.registrationModal.hide();
+                this.modal.show();
+            } else if (response.status === 409) {
+                alert("Ya existe un usuario registrado con la misma cédula o correo electrónico. Por favor, verifique sus datos.");
+            } else {
+                alert("Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.");
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.");
+        }
+    }
+
+    registrationModalShow = () => {
+        this.registrationModal.show();
+    }
 }
 
