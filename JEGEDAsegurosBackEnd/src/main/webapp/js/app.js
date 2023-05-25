@@ -209,7 +209,7 @@ class App {
         candidate.rol = 'CLI';
 
         try {
-            const response = await fetch('http://localhost:8080/CountriesBackEnd/api/usuarios/login', {
+            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
