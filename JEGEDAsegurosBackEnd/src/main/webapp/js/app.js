@@ -1,36 +1,36 @@
-class App{
-  dom;
-  modal; // login modal
-  
-  state;  // state variables: if any
-  
-  countries; // Countries view
+class App {
+    dom;
+    modal; // login modal
 
-  constructor(){
-    this.state={};
-    this.dom=this.render(); 
-    this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
-    this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
-    this.renderBodyFiller();
-    this.renderMenuItems();
-    this.countries = new Countries();
-  }
-  
-  render=()=>{
-    const html= `
+    state;  // state variables: if any
+
+    countries; // Countries view
+
+    constructor() {
+        this.state = {};
+        this.dom = this.render();
+        this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
+        this.dom.querySelector('#app>#modal #apply').addEventListener('click', e => this.login());
+        this.renderBodyFiller();
+        this.renderMenuItems();
+        this.countries = new Countries();
+    }
+
+    render = () => {
+        const html = `
             ${this.renderMenu()}
             ${this.renderBody()} 
             ${this.renderFooter()}
             ${this.renderModal()}
         `;
-       var rootContent= document.createElement('div');
-       rootContent.id='app';
-       rootContent.innerHTML=html;
-       return rootContent;
-  }
-  
-   renderMenu=()=>{
-    return `
+        var rootContent = document.createElement('div');
+        rootContent.id = 'app';
+        rootContent.innerHTML = html;
+        return rootContent;
+    }
+
+    renderMenu = () => {
+        return `
         <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
           <div class="container-fluid">
             <a class="navbar-brand  font-italic font-weight-light  text-info" href="#">
@@ -47,17 +47,17 @@ class App{
           </div>
         </nav>
         `;
-  }
-  
-   renderBody=()=>{
-    return `
+    }
+
+    renderBody = () => {
+        return `
         <div id="body">   
         </div>          
     `;
-  }
+    }
 
-   renderFooter=()=>{
-    return `
+    renderFooter = () => {
+        return `
         <footer id="footer" class="bg-dark text-white mt-4 w-100 fixed-bottom">
             <div class="container-fluid py-2">
 
@@ -73,10 +73,10 @@ class App{
             </div>
         </footer> 
     `;
-  }    
+    }
 
-   renderModal=()=>{
-    return `
+    renderModal = () => {
+        return `
         <div id="modal" class="modal fade" tabindex="-1">
            <div class="modal-dialog">
                <div class="modal-content">
@@ -108,52 +108,54 @@ class App{
            </div>          
        </div>   
     `;
-  }
+    }
 
-   renderBodyFiller=()=>{
-    var html= `
+    renderBodyFiller = () => {
+        var html = `
         <div id='bodyFiller' style='margin-left: 10%; margin-top:100px; width: 80%; text-align: center; font-size: 1.5em'>
             <p>Informacón de los paises del mundo.</p>
             <img src="images/filler.jpg" class="filler rounded-circle" alt="filler">
         </div>
     `;
-    this.dom.querySelector('#app>#body').replaceChildren();
-    this.dom.querySelector('#app>#body').innerHTML=html;        
-  } 
+        this.dom.querySelector('#app>#body').replaceChildren();
+        this.dom.querySelector('#app>#body').innerHTML = html;
+    }
 
-    renderMenuItems=()=>{
-        var html='';
-        if(globalstate.user===null){
-            html+=`
+    renderMenuItems = () => {
+        var html = '';
+        if (globalstate.user === null) {
+            html += `
               <li class="nav-item">
                   <a class="nav-link" id="login" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> Login </a>
               </li>
             `;
-        }else{
-            if(globalstate.user.rol==='CLI'){
-                html+=`
+        } else {
+            if (globalstate.user.tipo === 1) {
+                html += `
                     <li class="nav-item">
                         <a class="nav-link" id="countries" href="#"> <span><i class="fas fa-file-alt"></i></span> Countries </a>
                     </li>
                 `;
             }
-            if(globalstate.user.rol==='ADM'){
-                html+=`
+            if (globalstate.user.tipo === 2) {
+                html += `
+                  
                 `;
             }
-            html+=`
+            html += `
               <li class="nav-item">
                   <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.identificacion}) </a>
               </li>
             `;
-        };
+        }
+        ;
         this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
-        this.dom.querySelector('#app>#menu #menuItems').innerHTML=html;
-        this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click',e=>this.countriesShow());   
-        this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());  
-        this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
-        if(globalstate.user!==null){
-            switch(globalstate.user.rol){
+        this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
+        this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click', e => this.countriesShow());
+        this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click', e => this.modal.show());
+        this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click', e => this.logout());
+        if (globalstate.user !== null) {
+            switch (globalstate.user.rol) {
                 case 'CLI':
                     this.countriesShow();
                     break;
@@ -161,27 +163,49 @@ class App{
         }
     }
 
-    countriesShow=()=>{
+    countriesShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.countries.dom);
         this.countries.list();
     }
-    
-    login= async ()=>{
-        const candidate = Object.fromEntries( (new FormData(this.dom.querySelector("#form"))).entries());
-        candidate.rol='CLI';
-        // invoque backend for login
-        globalstate.user = candidate;
-        this.modal.hide();
-        this.renderMenuItems();
+
+    login = async () => {
+        const candidate = Object.fromEntries(new FormData(this.dom.querySelector("#form")).entries());
+        candidate.rol = 'CLI';
+
+        try {
+            const response = await fetch('http://localhost:8080/CountriesBackEnd/api/usuarios/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(candidate),
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+                globalstate.user = user;
+                this.modal.hide();
+                this.renderMenuItems();
+            } else if (response.status === 401) {
+                // Unauthorized: Invalid credentials
+                alert('Invalid credentials. Please try again.');
+            } else {
+                // Other error
+                alert('An error occurred during login. Please try again later.');
+            }
+        } catch (error) {
+            console.log('Error during login:', error);
+            alert('An error occurred during login. Please try again later.');
+        }
     }
-    
-    logout= async ()=>{
+
+    logout = async () => {
         // invoque backend for login
-        globalstate.user=null;
+        globalstate.user = null;
         this.dom.querySelector('#app>#body').replaceChildren();
         this.renderBodyFiller();
-        this.renderMenuItems();         
-        let request = new Request(`${backend}/login`, {method: 'DELETE', headers: { }});
+        this.renderMenuItems();
+        let request = new Request(`${backend}/login`, {method: 'DELETE', headers: {}});
     }
-    
-} 
+
+}
