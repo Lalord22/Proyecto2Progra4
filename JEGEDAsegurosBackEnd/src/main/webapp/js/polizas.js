@@ -118,7 +118,29 @@ class Polizas {
     }
 
     search() {
-        // TODO: Implement search functionality
+        const searchInput = this.dom.querySelector('#name').value;
+        const request = new Request(`${backend}/polizas/findByPlaca/${searchInput}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        (async () => {
+            try {
+                const response = await fetch(request);
+                if (!response.ok) {
+                    errorMessage(response.status);
+                    return;
+                }
+                const polizas = await response.json();
+                const listing = this.dom.querySelector('#listbody');
+                listing.innerHTML = '';
+                polizas.forEach(p => this.row(listing, p));
+            } catch (error) {
+                console.error('Error searching polizas:', error);
+            }
+        })();
     }
 
     add() {
