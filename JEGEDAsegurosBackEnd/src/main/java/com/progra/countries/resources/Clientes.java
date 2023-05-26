@@ -44,7 +44,7 @@ public class Clientes {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response registerCliente(Cliente cliente) {             //no esta registrando, pero retorna OK
+    public Response registerCliente(Cliente cliente) {             
         try {
             Service.instance().registerCliente(cliente);
             return Response.ok().build();

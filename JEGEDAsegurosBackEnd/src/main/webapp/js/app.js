@@ -17,6 +17,10 @@ class App {
         this.renderBodyFiller(); //Cuando la pagina se abre por primera vez, esto imprime el body del website
         this.renderMenuItems(); // Esto carga las opciones en el banner
         this.polizas = new Polizas();
+        this.dom.querySelector('#registrationForm').addEventListener('submit', e => {
+            e.preventDefault(); // Prevent the default form submission behavior
+            this.register(); // Call the register method when the form is submitted
+        });
     }
 
     render = () => {
@@ -126,19 +130,27 @@ class App {
               <div class="modal-body">
                 <div class="input-group mb-3">
                   <span class="input-group-text">Id</span>
-                  <input type="text" class="form-control" id="registrationId" name="id">
+                  <input type="text" class="form-control" id="registrationId" name="cedula">
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text">Name</span>
-                  <input type="text" class="form-control" id="registrationName" name="name">
+                  <input type="text" class="form-control" id="registrationName" name="nombre">
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text">Email</span>
-                  <input type="email" class="form-control" id="registrationEmail" name="email">
+                  <input type="email" class="form-control" id="registrationEmail" name="correo">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Phone Number</span>
+                  <input type="tel" class="form-control" id="registrationTelefono" name="telefono">
+                </div>
+                 <div class="input-group mb-3">
+                  <span class="input-group-text">Credit Card</span>
+                  <input type="text" class="form-control" id="registrationDatosTarjeta" name="datosTarjeta">
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text">Password</span>
-                  <input type="password" class="form-control" id="registrationPassword" name="password">
+                  <input type="password" class="form-control" id="registrationPassword" name="clave">
                 </div>
               </div>
               <div class="modal-footer">
@@ -267,73 +279,62 @@ class App {
     }
 
     register = async () => {
-        const candidate = {
-            cedula: this.dom.querySelector("#registrationId").value,
-            nombre: this.dom.querySelector("#registrationName").value,
-            correo: this.dom.querySelector("#registrationEmail").value,
-            clave: this.dom.querySelector("#registrationPassword").value,
+        const registrationForm = this.dom.querySelector('#app>#registerModal #registrationForm');
+        const formData = new FormData(registrationForm);
+
+        const userData = {
+            cedula: document.getElementById("registrationId").value,
+            clave: document.getElementById("registrationPassword").value,
+            nombre: document.getElementById("registrationName").value,
+            correo: document.getElementById("registrationEmail").value,
+            telefono: document.getElementById("registrationTelefono").value,
+            datosTarjeta: document.getElementById("registrationDatosTarjeta").value
         };
 
         try {
-            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes', {
+            const usuarioResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/usuarios/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(candidate),
+                body: JSON.stringify(userData)
             });
 
-            if (response.ok) {
-                alert("¡Registro exitoso! Por favor, inicie sesión con sus credenciales.");
+            const clienteResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (usuarioResponse.ok && clienteResponse.ok) {
+                // Registration successful for both Usuario and Cliente
+                alert('Registration successful. You can now log in with your credentials.');
                 this.registrationModal.hide();
-                this.modal.show();
-            } else if (response.status === 409) {
-                alert("Ya existe un usuario registrado con la misma cédula o correo electrónico. Por favor, verifique sus datos.");
+                this.modal.show(); // Show the login modal after successful registration
+            } else if (usuarioResponse.status === 409 || clienteResponse.status === 409) {
+                // User already exists
+                alert('A user with the same ID or email already exists. Please check your information.');
             } else {
-                alert("Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.");
+                // Registration failed
+                alert('An error occurred during registration. Please try again later.');
             }
         } catch (error) {
-            console.log(error);
-            alert("Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.");
+            console.error('Error during registration:', error);
+            alert('An error occurred during registration. Please try again later.');
         }
     }
 
     registrationModalShow = () => {
         this.registrationModal.show();
     }
+
+    // Existing code...
+
+
+
 }
-register = async () => {
-    const registrationForm = this.dom.querySelector('#app>#modal #registrationForm');
-    const formData = new FormData(registrationForm);
 
-    const userData = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        password: formData.get('password')
-    };
-
-    try {
-        const response = await fetch('http://localhost:8080/api/usuarios/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        });
-
-        if (response.ok) {
-            // Registration successful
-            alert('Registration successful. You can now log in with your credentials.');
-            this.modal.hide();
-        } else {
-            // Registration failed
-            const errorData = await response.json();
-            alert(`Registration failed. ${errorData.message}`);
-        }
-    } catch (error) {
-        console.error('Error during registration:', error);
-        alert('An error occurred during registration. Please try again later.');
-    }
-}
 
 
