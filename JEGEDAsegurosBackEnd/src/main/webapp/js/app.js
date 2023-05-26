@@ -302,4 +302,38 @@ class App {
         this.registrationModal.show();
     }
 }
+register = async () => {
+    const registrationForm = this.dom.querySelector('#app>#modal #registrationForm');
+    const formData = new FormData(registrationForm);
+
+    const userData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        password: formData.get('password')
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/api/usuarios/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            // Registration successful
+            alert('Registration successful. You can now log in with your credentials.');
+            this.modal.hide();
+        } else {
+            // Registration failed
+            const errorData = await response.json();
+            alert(`Registration failed. ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Error during registration:', error);
+        alert('An error occurred during registration. Please try again later.');
+    }
+}
+
 
