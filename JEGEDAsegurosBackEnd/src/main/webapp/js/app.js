@@ -1,12 +1,13 @@
 class App {
 
-    //TODO: Cambiar el texto de la caja de busqueda de poliza por placa de Nombre a Placa
+    
 
 
 
     dom;
     modal; // login modal
     registrationModal; // registration modal
+    updateModal
 
     state; // state variables: if any
 
@@ -17,6 +18,7 @@ class App {
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.registrationModal = new bootstrap.Modal(this.dom.querySelector('#registerModal'));
+        this.updateModal = new bootstrap.Modal(this.dom.querySelector('#updateModal'));
         this.dom.querySelector('#apply').addEventListener('click', e => this.login());
         this.dom.querySelector('#registerLink').addEventListener('click', e => this.openRegistrationModal());
         this.renderBodyFiller(); //Cuando la pagina se abre por primera vez, esto imprime el body del website
@@ -35,6 +37,7 @@ class App {
       ${this.renderFooter()}
       ${this.renderModal()}
       ${this.renderRegistrationModal()}
+      ${this.renderUpdateModal()}
     `; //renderMenu esta relacionado al banner
 
         var rootContent = document.createElement('div');
@@ -42,6 +45,49 @@ class App {
         rootContent.innerHTML = html;
         return rootContent;
     }
+    
+    renderUpdateModal = () => {
+    return `
+      <div id="updateModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Update Info</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="updateForm">
+              <div class="modal-body">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Nombre</span>
+                  <input type="text" class="form-control" id="updateNombre" name="nombre">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Apellido</span>
+                  <input type="text" class="form-control" id="updateApellido" name="apellido">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Teléfono</span>
+                  <input type="text" class="form-control" id="updateTelefono" name="telefono">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Dirección</span>
+                  <input type="text" class="form-control" id="updateDireccion" name="direccion">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Email</span>
+                  <input type="email" class="form-control" id="updateEmail" name="email">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
     renderMenu = () => {
         return `
@@ -224,6 +270,9 @@ class App {
       `;
     }
     html += `
+    <li class="nav-item">
+        <a class="nav-link" id="updateLink" href="#"> <span><i class="fas fa-user-edit"></i></span> Update Info </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" id="logoutLink" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.cedula}) </a>
       </li>
@@ -239,6 +288,7 @@ class App {
   this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.displayClientes());
   this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
   this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
+  this.dom.querySelector("#app>#menu #menuItems #updateLink")?.addEventListener('click', e => this.updateInfo());
   this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
   if (globalstate.user !== null) {
     switch (globalstate.user.rol) {
@@ -248,6 +298,74 @@ class App {
     }
   }
 }
+
+updateInfo() {
+  const user = globalstate.user;
+
+  // Create the HTML content for the update form
+  const html = `
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateModalLabel">Update Info</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Add your form elements here to allow the user to update their information -->
+            <form>
+              <div class="mb-3">
+                <label for="nameInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="nameInput" value="${user.name}" required>
+              </div>
+              <div class="mb-3">
+                <label for="emailInput" class="form-label">Email</label>
+                <input type="email" class="form-control" id="emailInput" value="${user.email}" required>
+              </div>
+              <!-- Add more fields as needed -->
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Append the HTML content to the DOM
+  const updateModalContainer = document.createElement('div');
+  updateModalContainer.innerHTML = html;
+  document.body.appendChild(updateModalContainer);
+
+  // Show the update modal
+  const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+  updateModal.show();
+
+  // Handle the update button click event
+  const updateBtn = document.getElementById('updateBtn');
+  updateBtn.addEventListener('click', () => {
+    // Retrieve the updated values from the form
+    const updatedName = document.getElementById('nameInput').value;
+    const updatedEmail = document.getElementById('emailInput').value;
+
+    // Update the user object or send the updated values to the server
+    user.name = updatedName;
+    user.email = updatedEmail;
+
+    // Close the update modal
+    updateModal.hide();
+
+    // Perform any additional actions or update the UI as needed
+    // ...
+  });
+}
+
+
+
+
+
 
 
     polizasShow = () => {
