@@ -1,4 +1,9 @@
 class App {
+
+    //TODO: Cambiar el texto de la caja de busqueda de poliza por placa de Nombre a Placa
+
+
+
     dom;
     modal; // login modal
     registrationModal; // registration modal
@@ -142,7 +147,7 @@ class App {
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text">Phone Number</span>
-                  <input type="tel" class="form-control" id="registrationTelefono" name="telefono">
+                  <input type="text" class="form-control" id="registrationTelefono" name="telefono">
                 </div>
                  <div class="input-group mb-3">
                   <span class="input-group-text">Credit Card</span>
@@ -282,13 +287,25 @@ class App {
         const registrationForm = this.dom.querySelector('#app>#registerModal #registrationForm');
         const formData = new FormData(registrationForm);
 
-        const userData = {
+        const usuarioData = {
             cedula: document.getElementById("registrationId").value,
             clave: document.getElementById("registrationPassword").value,
+            tipo: 1
+        };
+
+        const clienteData = {
+            cedula: document.getElementById("registrationId").value,
             nombre: document.getElementById("registrationName").value,
-            correo: document.getElementById("registrationEmail").value,
             telefono: document.getElementById("registrationTelefono").value,
-            datosTarjeta: document.getElementById("registrationDatosTarjeta").value
+            correo: document.getElementById("registrationEmail").value,
+            datosTarjeta: document.getElementById("registrationDatosTarjeta").value,
+            usuario: {
+                cedula: document.getElementById("registrationId").value,
+                clave: document.getElementById("registrationPassword").value,
+                rol: "CLI",
+                tipo: 1,
+                username: document.getElementById("registrationId").value
+            }
         };
 
         try {
@@ -297,28 +314,36 @@ class App {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify(usuarioData)
             });
 
-            const clienteResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            });
+            if (usuarioResponse.ok) {
+                const clienteResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(clienteData)
+                });
 
-            if (usuarioResponse.ok && clienteResponse.ok) {
-                // Registration successful for both Usuario and Cliente
-                alert('Registration successful. You can now log in with your credentials.');
-                this.registrationModal.hide();
-                this.modal.show(); // Show the login modal after successful registration
-            } else if (usuarioResponse.status === 409 || clienteResponse.status === 409) {
-                // User already exists
-                alert('A user with the same ID or email already exists. Please check your information.');
+                if (clienteResponse.ok) {
+                    // Registration successful for both Usuario and Cliente
+                    alert('Registration successful. You can now log in with your credentials.');
+                    this.registrationModal.hide();
+                    this.modal.show(); // Show the login modal after successful registration
+                } else if (clienteResponse.status === 409) {
+                    // Cliente already exists
+                    alert('A cliente with the same ID already exists. Please check your information.');
+                } else {
+                    // Registration failed for Cliente
+                    alert('An error occurred during cliente registration. Please try again later.');
+                }
+            } else if (usuarioResponse.status === 409) {
+                // Usuario already exists
+                alert('A usuario with the same ID already exists. Please check your information.');
             } else {
-                // Registration failed
-                alert('An error occurred during registration. Please try again later.');
+                // Registration failed for Usuario
+                alert('An error occurred during usuario registration. Please try again later.');
             }
         } catch (error) {
             console.error('Error during registration:', error);

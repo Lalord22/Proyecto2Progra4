@@ -72,7 +72,6 @@ public class Cliente {
         return polizas;
     }
     
-    @JsonbTransient
     public void setPolizas(List<Poliza> polizas) {
         this.polizas = polizas;
     }

@@ -122,6 +122,10 @@ public class Service {
     public void registerCliente(Cliente cliente) throws Exception {   // implementado
         clienteDao.addClient(cliente);
     }
+    
+    public void registerClienteandUser(Cliente cliente) throws Exception {   
+        clienteDao.addClient(cliente);
+    }
 
     public Poliza polizaShowById(Integer parameter) throws Exception {  // implementado
 

@@ -9,6 +9,7 @@ import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -44,7 +45,7 @@ public class Clientes {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response registerCliente(Cliente cliente) {             
+    public Response registerCliente(Cliente cliente) {
         try {
             Service.instance().registerCliente(cliente);
             return Response.ok().build();
