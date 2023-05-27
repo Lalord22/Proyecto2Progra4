@@ -12,6 +12,7 @@ class App {
     state; // state variables: if any
 
     polizas; //
+    clientes;
 
     constructor() {
         this.state = {};
@@ -214,6 +215,31 @@ class App {
       </div>
     `;
     }
+    
+    updateInfo = () => {
+  const updateForm = this.dom.querySelector('#updateForm');
+
+  // Make an HTTP GET request to fetch the user data
+  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente')
+    .then(response => response.json())
+    .then(data => {
+      // Populate the update form with the retrieved user data
+      updateForm.querySelector('#updateNombre').value = data.nombre;
+      updateForm.querySelector('#updateApellido').value = data.usuario.clave;
+      updateForm.querySelector('#updateTelefono').value = data.telefono;
+      updateForm.querySelector('#updateDireccion').value = data.datosTarjeta;
+      updateForm.querySelector('#updateEmail').value = data.correo;
+
+      // Show the update modal
+      this.updateModal.show();
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+}
+
+
+    
 
     renderBodyFiller = () => {
         var html = `
@@ -299,68 +325,10 @@ class App {
   }
 }
 
-updateInfo() {
-  const user = globalstate.user;
 
-  // Create the HTML content for the update form
-  const html = `
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updateModalLabel">Update Info</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Add your form elements here to allow the user to update their information -->
-            <form>
-              <div class="mb-3">
-                <label for="nameInput" class="form-label">Name</label>
-                <input type="text" class="form-control" id="nameInput" value="${user.name}" required>
-              </div>
-              <div class="mb-3">
-                <label for="emailInput" class="form-label">Email</label>
-                <input type="email" class="form-control" id="emailInput" value="${user.email}" required>
-              </div>
-              <!-- Add more fields as needed -->
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
 
-  // Append the HTML content to the DOM
-  const updateModalContainer = document.createElement('div');
-  updateModalContainer.innerHTML = html;
-  document.body.appendChild(updateModalContainer);
 
-  // Show the update modal
-  const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
-  updateModal.show();
 
-  // Handle the update button click event
-  const updateBtn = document.getElementById('updateBtn');
-  updateBtn.addEventListener('click', () => {
-    // Retrieve the updated values from the form
-    const updatedName = document.getElementById('nameInput').value;
-    const updatedEmail = document.getElementById('emailInput').value;
-
-    // Update the user object or send the updated values to the server
-    user.name = updatedName;
-    user.email = updatedEmail;
-
-    // Close the update modal
-    updateModal.hide();
-
-    // Perform any additional actions or update the UI as needed
-    // ...
-  });
-}
 
 
 
