@@ -189,46 +189,66 @@ class App {
     }
 
     renderMenuItems = () => {
-        var html = '';
-        if (globalstate.user === null) {
-            html += `
+  var html = '';
+  if (globalstate.user === null) {
+    html += `
+      <li class="nav-item">
+        <a class="nav-link" id="loginLink" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> Login </a>
+      </li>
+    `;
+  } else {
+    if (globalstate.user.tipo === 1) {
+      html += `
         <li class="nav-item">
-          <a class="nav-link" id="loginLink" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> Login </a>
+          <a class="nav-link" id="polizas" href="#"> <span><i class="fas fa-file-alt"></i></span> Polizas </a>
         </li>
       `;
-        } else {
-            if (globalstate.user.tipo === 1) {
-                html += `
-          <li class="nav-item">
-            <a class="nav-link" id="polizas" href="#"> <span><i class="fas fa-file-alt"></i></span> Polizas </a>
-          </li>
-        `;
-            }
-            if (globalstate.user.tipo === 2) {
-                html += `
-          
-        `;
-            }
-            html += `
-        <li class="nav-item">
-          <a class="nav-link" id="logoutLink" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.cedula}) </a>
-        </li>
-      `;
-        }
-        this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
-        this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
-        this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
-        this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
-        this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
-        this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
-        if (globalstate.user !== null) {
-            switch (globalstate.user.rol) {
-                case 'CLI':
-                    this.polizasShow();
-                    break;
-            }
-        }
     }
+    if (globalstate.user.tipo === 2) {
+      html += `
+        <li class="nav-item">
+          <a class="nav-link" id="addCobertura" href="#"> <span><i class="fas fa-plus"></i></span> Add Cobertura </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="addCategoria" href="#"> <span><i class="fas fa-plus"></i></span> Add Categoria </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="addModelo" href="#"> <span><i class="fas fa-plus"></i></span> Add Modelo </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="addMarca" href="#"> <span><i class="fas fa-plus"></i></span> Add Marca </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="displayClientes" href="#"> <span><i class="fas fa-users"></i></span> Display Clientes </a>
+        </li>
+      `;
+    }
+    html += `
+      <li class="nav-item">
+        <a class="nav-link" id="logoutLink" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.cedula}) </a>
+      </li>
+    `;
+  }
+  this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
+  this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
+  this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
+  this.dom.querySelector("#app>#menu #menuItems #addCobertura")?.addEventListener('click', e => this.addCobertura());
+  this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.addCategoria());
+  this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.addModelo());
+  this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.addMarca());
+  this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.displayClientes());
+  this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
+  this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
+  this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
+  if (globalstate.user !== null) {
+    switch (globalstate.user.rol) {
+      case 'CLI':
+        this.polizasShow();
+        break;
+    }
+  }
+}
+
 
     polizasShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.polizas.dom);
