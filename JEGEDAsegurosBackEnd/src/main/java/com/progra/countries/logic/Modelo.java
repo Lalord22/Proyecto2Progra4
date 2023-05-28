@@ -4,6 +4,8 @@
  */
 package com.progra.countries.logic;
 
+import java.io.Serializable;
+
 
 /*
  *Proyecto I Programacion 4
@@ -15,7 +17,7 @@ package com.progra.countries.logic;
  */
 
 
-public class Modelo {
+public class Modelo  implements Serializable{
     Integer id;
     String descripcion;
     Marca marca;

@@ -4,6 +4,7 @@
  */
 package com.progra.countries.logic;
 import jakarta.json.bind.annotation.JsonbProperty;
+import java.io.Serializable;
 
 
 /*
@@ -16,7 +17,7 @@ import jakarta.json.bind.annotation.JsonbProperty;
  */
 
 
-public class Cobertura {
+public class Cobertura  implements Serializable{
     Integer id;
     String descripcion;
     double costoMinimo;

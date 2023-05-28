@@ -1,9 +1,5 @@
 class App {
 
-    
-
-
-
     dom;
     modal; // login modal
     registrationModal; // registration modal
@@ -13,7 +9,11 @@ class App {
 
     polizas; //
     clientes;
-
+    marcas;
+    modelos;
+    categorias;
+    coberturas;
+    
     constructor() {
         this.state = {};
         this.dom = this.render();
@@ -25,6 +25,11 @@ class App {
         this.renderBodyFiller(); //Cuando la pagina se abre por primera vez, esto imprime el body del website
         this.renderMenuItems(); // Esto carga las opciones en el banner
         this.polizas = new Polizas();
+        this.marcas = new Marcas();
+        this.modelos = new Modelos(); 
+        this.categorias = new Categorias();
+        this.coberturas = new Coberturas();
+
         this.dom.querySelector('#registrationForm').addEventListener('submit', e => {
             e.preventDefault(); // Prevent the default form submission behavior
             this.register(); // Call the register method when the form is submitted
@@ -279,16 +284,16 @@ class App {
     if (globalstate.user.tipo === 2) {
       html += `
         <li class="nav-item">
-          <a class="nav-link" id="addCobertura" href="#"> <span><i class="fas fa-plus"></i></span> Add Cobertura </a>
+          <a class="nav-link" id="addCobertura" href="#"> <span><i class="fas fa-plus"></i></span> Coberturas </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="addCategoria" href="#"> <span><i class="fas fa-plus"></i></span> Add Categoria </a>
+          <a class="nav-link" id="addCategoria" href="#"> <span><i class="fas fa-plus"></i></span> Categorias </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="addModelo" href="#"> <span><i class="fas fa-plus"></i></span> Add Modelo </a>
+          <a class="nav-link" id="addModelo" href="#"> <span><i class="fas fa-plus"></i></span> Modelos </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="addMarca" href="#"> <span><i class="fas fa-plus"></i></span> Add Marca </a>
+          <a class="nav-link" id="addMarca" href="#"> <span><i class="fas fa-plus"></i></span> Marcas </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="displayClientes" href="#"> <span><i class="fas fa-users"></i></span> Display Clientes </a>
@@ -307,10 +312,10 @@ class App {
   this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
   this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
   this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
-  this.dom.querySelector("#app>#menu #menuItems #addCobertura")?.addEventListener('click', e => this.addCobertura());
-  this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.addCategoria());
-  this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.addModelo());
-  this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.addMarca());
+  this.dom.querySelector("#app>#menu #menuItems #addCobertura")?.addEventListener('click', e => this.coberturasShow());
+  this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.categoriasShow());
+  this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.modelosShow());
+  this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.marcasShow());
   this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.displayClientes());
   this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
   this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
@@ -327,18 +332,29 @@ class App {
 
 
 
-
-
-
-
-
-
-
-
-
     polizasShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.polizas.dom);
         this.polizas.list();
+    }
+    
+     marcasShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.marcas.dom);
+        this.marcas.list();
+    }
+    
+     modelosShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.modelos.dom);
+        this.modelos.list();
+    }
+    
+    categoriasShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.categorias.dom);
+        this.categorias.list();
+    }
+    
+    coberturasShow = () => {
+      this.dom.querySelector('#app>#body').replaceChildren(this.coberturas.dom);
+      this.coberturas.list();
     }
 
     login = async () => {
