@@ -13,6 +13,7 @@ class App {
 
     polizas; //
     clientes;
+    marcas;
 
     constructor() {
         this.state = {};
@@ -25,6 +26,7 @@ class App {
         this.renderBodyFiller(); //Cuando la pagina se abre por primera vez, esto imprime el body del website
         this.renderMenuItems(); // Esto carga las opciones en el banner
         this.polizas = new Polizas();
+        this.marcas = new Marcas();
         this.dom.querySelector('#registrationForm').addEventListener('submit', e => {
             e.preventDefault(); // Prevent the default form submission behavior
             this.register(); // Call the register method when the form is submitted
@@ -310,7 +312,7 @@ class App {
   this.dom.querySelector("#app>#menu #menuItems #addCobertura")?.addEventListener('click', e => this.addCobertura());
   this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.addCategoria());
   this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.addModelo());
-  this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.addMarca());
+  this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.marcasShow());
   this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.displayClientes());
   this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
   this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
@@ -321,18 +323,12 @@ class App {
       case 'CLI':
         this.polizasShow();
         break;
+    case 'ADMIN':
+        this.marcasShow();
+        break;
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -463,7 +459,10 @@ class App {
 
     // Existing code...
 
-
+      marcasShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.marcas.dom);
+        this.marcas.list();
+    }
 
 }
 
