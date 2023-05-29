@@ -19,7 +19,7 @@ class Clientes {
             <div class="card-body mx-auto w-75">
                <form id="form">
                     <div class="btn-group me-2">
-                      <button type="button" class="btn btn-primary" id="create">Create</button>
+                      <button type="button" class="btn btn-primary" id="create">-</button>
                     </div>
               </form>
 

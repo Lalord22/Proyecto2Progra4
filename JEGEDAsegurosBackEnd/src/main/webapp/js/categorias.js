@@ -61,35 +61,34 @@ class Categorias {
     </div>
         
     `;
-    const categoriasContainer = document.createElement('div');
-    categoriasContainer.innerHTML = html;
-    
-    return categoriasContainer;
-  }
+        const categoriasContainer = document.createElement('div');
+        categoriasContainer.innerHTML = html;
+        return categoriasContainer;
+    }
 
-  list() {
-    const request = new Request(`${backend}/categorias`, { method: 'GET', headers: {} });
-    (async () => {
-      try {
-        const response = await fetch(request);
-        if (!response.ok) {
-          errorMessage(response.status);
-          return;
-        }
-        const categorias = await response.json();
-        this.state.entities = categorias; // Update entities in the state
-        const listing = this.dom.querySelector("#listbody");
-        listing.innerHTML = "";
-        this.state.entities.forEach(e => this.row(listing, e));
-      } catch (error) {
-        console.error('Error fetching categorias:', error);
-      }
-    })();
-  }
+    list() {
+        const request = new Request(`${backend}/categorias`, {method: 'GET', headers: {}});
+        (async () => {
+            try {
+                const response = await fetch(request);
+                if (!response.ok) {
+                    errorMessage(response.status);
+                    return;
+                }
+                const categorias = await response.json();
+                this.state.entities = categorias; // Update entities in the state
+                const listing = this.dom.querySelector("#listbody");
+                listing.innerHTML = "";
+                this.state.entities.forEach(e => this.row(listing, e));
+            } catch (error) {
+                console.error('Error fetching categorias:', error);
+            }
+        })();
+    }
 
-  row(list, ca) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+    row(list, ca) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
       <td>${ca.id}</td>
       <td>${ca.descripcion}</td>`;
     list.append(tr);

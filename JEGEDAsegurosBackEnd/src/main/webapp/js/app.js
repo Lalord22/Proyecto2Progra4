@@ -13,7 +13,7 @@ class App {
     modelos;
     categorias;
     coberturas;
-    
+
     constructor() {
         this.state = {};
         this.dom = this.render();
@@ -26,7 +26,7 @@ class App {
         this.renderMenuItems(); // Esto carga las opciones en el banner
         this.polizas = new Polizas();
         this.marcas = new Marcas();
-        this.modelos = new Modelos(); 
+        this.modelos = new Modelos();
         this.categorias = new Categorias();
         this.coberturas = new Coberturas();
         this.clientes = new Clientes();
@@ -35,7 +35,7 @@ class App {
             e.preventDefault(); // Prevent the default form submission behavior
             this.register(); // Call the register method when the form is submitted
         });
-        
+
 
     }
 
@@ -54,14 +54,14 @@ class App {
         rootContent.innerHTML = html;
         return rootContent;
     }
-    
+
     renderUpdateModal = () => {
-    return `
+        return `
       <div id="updateModal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Update Info</h5>
+              <h5 class="modal-title">Actualizar Informacion</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="updateForm">
@@ -88,15 +88,15 @@ class App {
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
               </div>
             </form>
           </div>
         </div>
       </div>
     `;
-  }
+    }
 
     renderMenu = () => {
         return `
@@ -183,7 +183,7 @@ class App {
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Registration</h5>
+              <h5 class="modal-title">Cliente</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="registrationForm">
@@ -214,8 +214,8 @@ class App {
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Registar</button>
               </div>
             </form>
           </div>
@@ -223,17 +223,6 @@ class App {
       </div>
     `;
     }
-    
-   
-
-
-
-
-
-
-
-
-    
 
     renderBodyFiller = () => {
         var html = `
@@ -255,23 +244,23 @@ class App {
     }
 
     renderMenuItems = () => {
-  var html = '';
-  if (globalstate.user === null) {
-    html += `
+        var html = '';
+        if (globalstate.user === null) {
+            html += `
       <li class="nav-item">
         <a class="nav-link" id="loginLink" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> Login </a>
       </li>
     `;
-  } else {
-    if (globalstate.user.tipo === 1) {
-      html += `
+        } else {
+            if (globalstate.user.tipo === 1) {
+                html += `
         <li class="nav-item">
           <a class="nav-link" id="polizas" href="#"> <span><i class="fas fa-file-alt"></i></span> Polizas </a>
         </li>
       `;
-    }
-    if (globalstate.user.tipo === 2) {
-      html += `
+            }
+            if (globalstate.user.tipo === 2) {
+                html += `
         <li class="nav-item">
           <a class="nav-link" id="addCobertura" href="#"> <span><i class="fas fa-plus"></i></span> Coberturas </a>
         </li>
@@ -285,70 +274,68 @@ class App {
           <a class="nav-link" id="addMarca" href="#"> <span><i class="fas fa-plus"></i></span> Marcas </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="displayClientes" href="#"> <span><i class="fas fa-users"></i></span> Display Clientes </a>
+          <a class="nav-link" id="displayClientes" href="#"> <span><i class="fas fa-users"></i></span> Clientes </a>
         </li>
       `;
-    }
-    html += `
+            }
+            html += `
     <li class="nav-item">
-        <a class="nav-link" id="updateLink" href="#"> <span><i class="fas fa-user-edit"></i></span> Update Info </a>
+        <a class="nav-link" id="updateLink" href="#"> <span><i class="fas fa-user-edit"></i></span> Datos Personales </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" id="logoutLink" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.cedula}) </a>
       </li>
     `;
-  }
-  this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
-  this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
-  this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
-  this.dom.querySelector("#app>#menu #menuItems #addCobertura")?.addEventListener('click', e => this.coberturasShow());
-  this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.categoriasShow());
-  this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.modelosShow());
-  this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.marcasShow());
-  this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.clientesShow());
-  this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
-  this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
-  this.dom.querySelector("#app>#menu #menuItems #updateLink")?.addEventListener('click', e => this.updateInfo());
-  this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
-  if (globalstate.user !== null) {
-    switch (globalstate.user.rol) {
-      case 'CLI':
-        this.polizasShow();
-        break;
+        }
+        this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
+        this.dom.querySelector('#app>#menu #menuItems').innerHTML = html;
+        this.dom.querySelector("#app>#menu #menuItems #polizas")?.addEventListener('click', e => this.polizasShow());
+        this.dom.querySelector("#app>#menu #menuItems #addCobertura")?.addEventListener('click', e => this.coberturasShow());
+        this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.categoriasShow());
+        this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.modelosShow());
+        this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.marcasShow());
+        this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.clientesShow());
+        this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
+        this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
+        this.dom.querySelector("#app>#menu #menuItems #updateLink")?.addEventListener('click', e => this.updateInfo());
+        this.dom.querySelector("#registerLink")?.addEventListener('click', e => this.registrationModal.show());
+        if (globalstate.user !== null) {
+            switch (globalstate.user.rol) {
+                case 'CLI':
+                    this.polizasShow();
+                    break;
+            }
+        }
     }
-  }
-}
-
-
 
     polizasShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.polizas.dom);
         this.polizas.list();
     }
-    
-     marcasShow = () => {
+
+    marcasShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.marcas.dom);
         this.marcas.list();
     }
-    
-     modelosShow = () => {
+
+    modelosShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.modelos.dom);
         this.modelos.list();
     }
-    
+
     categoriasShow = () => {
         this.dom.querySelector('#app>#body').replaceChildren(this.categorias.dom);
         this.categorias.list();
     }
-    
+
     coberturasShow = () => {
-      this.dom.querySelector('#app>#body').replaceChildren(this.coberturas.dom);
-      this.coberturas.list();
+        this.dom.querySelector('#app>#body').replaceChildren(this.coberturas.dom);
+        this.coberturas.list();
     }
-    
-     clientesShow = () => {
-      this.dom.querySelector('#app>#body').replaceChildren(this.clientes.dom);
-      this.clientes.list();
+
+    clientesShow = () => {
+        this.dom.querySelector('#app>#body').replaceChildren(this.clientes.dom);
+        this.clientes.list();
     }
 
     login = async () => {
@@ -471,111 +458,106 @@ class App {
         this.registrationModal.show();
     }
 
-  updateInfo = async () => {
-  const updateForm = this.dom.querySelector('#updateForm');
+    updateInfo = async () => {
+        const updateForm = this.dom.querySelector('#updateForm');
 
-  try {
-    // Make an HTTP GET request to fetch the client data for the currently logged-in client
-    const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
-    if (!response.ok) {
-      throw new Error('Failed to fetch client data');
+        try {
+            // Make an HTTP GET request to fetch the client data for the currently logged-in client
+            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
+            if (!response.ok) {
+                throw new Error('Failed to fetch client data');
+            }
+
+            const data = await response.json();
+
+            // Populate the update form with the retrieved client data
+            updateForm.querySelector('#updateNombre').value = data.nombre;
+            updateForm.querySelector('#updateApellido').value = data.usuario.clave;
+            updateForm.querySelector('#updateTelefono').value = data.telefono;
+            updateForm.querySelector('#updateDireccion').value = data.datosTarjeta;
+            updateForm.querySelector('#updateEmail').value = data.correo;
+
+            // Show the update modal
+            this.updateModal.show();
+        } catch (error) {
+            console.error('Error fetching client data:', error);
+        }
+
+        // Remove any existing event listeners from the form submission
+        updateForm.removeEventListener('submit', this.updateCliente);
+
+        // Add a new event listener to the form submission
+        updateForm.addEventListener('submit', e => {
+            e.preventDefault(); // Prevent the default form submission behavior
+            this.updateCliente(); // Call the updateCliente method when the form is submitted
+        });
     }
-    
-    const data = await response.json();
-    
-    // Populate the update form with the retrieved client data
-    updateForm.querySelector('#updateNombre').value = data.nombre;
-    updateForm.querySelector('#updateApellido').value = data.usuario.clave;
-    updateForm.querySelector('#updateTelefono').value = data.telefono;
-    updateForm.querySelector('#updateDireccion').value = data.datosTarjeta;
-    updateForm.querySelector('#updateEmail').value = data.correo;
 
-    // Show the update modal
-    this.updateModal.show();
-  } catch (error) {
-    console.error('Error fetching client data:', error);
-  }
+    updateCliente = async () => {
+        const updateForm = this.dom.querySelector('#updateModal #updateForm');
+        const formData = new FormData(updateForm);
 
-  // Remove any existing event listeners from the form submission
-  updateForm.removeEventListener('submit', this.updateCliente);
+        try {
+            // Make an HTTP GET request to fetch the client data for the currently logged-in client
+            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
+            if (!response.ok) {
+                throw new Error('Failed to fetch client data');
+            }
 
-  // Add a new event listener to the form submission
-  updateForm.addEventListener('submit', e => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    this.updateCliente(); // Call the updateCliente method when the form is submitted
-  });
-}
+            const data = await response.json();
 
-updateCliente = async () => {
-  const updateForm = this.dom.querySelector('#updateModal #updateForm');
-  const formData = new FormData(updateForm);
+            const usuarioData = {
+                cedula: data.usuario.cedula,
+                clave: formData.get("apellido"),
+                tipo: data.usuario.tipo
+            };
 
-  try {
-    // Make an HTTP GET request to fetch the client data for the currently logged-in client
-    const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
-    if (!response.ok) {
-      throw new Error('Failed to fetch client data');
+            const clienteData = {
+                cedula: data.cedula,
+                nombre: formData.get("nombre"),
+                telefono: formData.get("telefono"),
+                datosTarjeta: formData.get("direccion"),
+                correo: formData.get("email"),
+                usuario: {
+                    cedula: data.usuario.cedula,
+                    username: data.usuario.username
+                }
+            };
+
+            // Send clienteData to the server for update
+            const updateResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(clienteData)
+            });
+
+            if (updateResponse.ok) {
+                // Update successful
+                const usuarioResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/usuarios/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(usuarioData)
+                });
+                if (usuarioResponse.ok) {
+                    alert('Update successful.');
+                    this.updateModal.hide();
+                } else {
+                    // Update failed for usuario
+                    alert('An error occurred during the usuario update. Please try again later.');
+                }
+            } else {
+                // Update failed for cliente
+                alert('An error occurred during the cliente update. Please try again later.');
+            }
+        } catch (error) {
+            console.error('Error during update:', error);
+            alert('An error occurred during the update. Please try again later.');
+        }
     }
-    
-    const data = await response.json();
-    
-    const usuarioData = {
-      cedula: data.usuario.cedula,
-      clave: formData.get("apellido"),
-      tipo: data.usuario.tipo
-    };
-    
-    const clienteData = {
-      cedula: data.cedula,
-      nombre: formData.get("nombre"),
-      telefono: formData.get("telefono"),
-      datosTarjeta: formData.get("direccion"),
-      correo: formData.get("email"),
-      usuario: {
-        cedula: data.usuario.cedula,
-        username: data.usuario.username
-      }
-    };
-
-    // Send clienteData to the server for update
-    const updateResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/update', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(clienteData)
-    });
-
-    if (updateResponse.ok) {
-      // Update successful
-      const usuarioResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/usuarios/update', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(usuarioData)
-      });
-      if (usuarioResponse.ok) {
-        alert('Update successful.');
-        this.updateModal.hide();
-      } else {
-        // Update failed for usuario
-        alert('An error occurred during the usuario update. Please try again later.');
-      }
-    } else {
-      // Update failed for cliente
-      alert('An error occurred during the cliente update. Please try again later.');
-    }
-  } catch (error) {
-    console.error('Error during update:', error);
-    alert('An error occurred during the update. Please try again later.');
-  }
-}
-
-
-
-
-
 
 }
 

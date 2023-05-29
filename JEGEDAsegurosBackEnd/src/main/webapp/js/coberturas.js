@@ -1,17 +1,17 @@
 class Coberturas {
-  constructor() {
-    this.state = {
-      entities: [], // Initialize entities as an empty array
-      mode: '', // Initialize mode
-    };
-    this.dom = this.render();
-    this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
-    this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
-    this.dom.querySelector('#apply').addEventListener('click', () => this.add());
-  }
+    constructor() {
+        this.state = {
+            entities: [], // Initialize entities as an empty array
+            mode: '', // Initialize mode
+        };
+        this.dom = this.render();
+        this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
+        this.dom.querySelector('#apply').addEventListener('click', () => this.add());
+    }
 
-  render() {
-    const html = `
+    render() {
+        const html = `
       <div id="coberturas">
         <div id="list" class="container">
           <div class="card bg-light">
@@ -19,7 +19,7 @@ class Coberturas {
             <div class="card-body mx-auto w-75">
             <form id="form">
                     <div class="btn-group me-2">
-                      <button type="button" class="btn btn-primary" id="create">Create</button>
+                      <button type="button" class="btn btn-primary" id="create">Agregar</button>
                     </div>
               </form>
 
@@ -60,55 +60,55 @@ class Coberturas {
         </div>
       </div>
     `;
-    const coberturasContainer = document.createElement('div');
-    coberturasContainer.innerHTML = html;
-    return coberturasContainer;
-  }
+        const coberturasContainer = document.createElement('div');
+        coberturasContainer.innerHTML = html;
+        return coberturasContainer;
+    }
 
-  list() {
-    const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
-    (async () => {
-      try {
-        const response = await fetch(request);
-        if (!response.ok) {
-          errorMessage(response.status);
-          return;
-        }
-        const coberturas = await response.json();
-        this.state.entities = coberturas; // Update entities in the state
-        const listing = this.dom.querySelector("#listbody");
-        listing.innerHTML = "";
-        this.state.entities.forEach(e => this.row(listing, e));
-      } catch (error) {
-        console.error('Error fetching modelos:', error);
-      }
-    })();
-  }
+    list() {
+        const request = new Request(`${backend}/coberturas`, {method: 'GET', headers: {}});
+        (async () => {
+            try {
+                const response = await fetch(request);
+                if (!response.ok) {
+                    errorMessage(response.status);
+                    return;
+                }
+                const coberturas = await response.json();
+                this.state.entities = coberturas; // Update entities in the state
+                const listing = this.dom.querySelector("#listbody");
+                listing.innerHTML = "";
+                this.state.entities.forEach(e => this.row(listing, e));
+            } catch (error) {
+                console.error('Error fetching modelos:', error);
+            }
+        })();
+    }
 
-  row(list, co) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+    row(list, co) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
       <td>${co.id}</td>
       <td>${co.descripcion}</td>
       <td>${co.costoMinimo}</td>
       <td>${co.costoPorcentual}</td>`;
-    list.append(tr);
-  }
+        list.append(tr);
+    }
 
-  makenew() {
-    this.reset();
-    this.state.mode = 'A'; // Adding
-    this.showModal();
-  }
+    makenew() {
+        this.reset();
+        this.state.mode = 'A'; // Adding
+        this.showModal();
+    }
 
-  add() {
-    // TODO: Validate data, load into entity, invoke backend for adding
-    this.list();
-    this.reset();
-    this.modal.hide();
-  }
+    add() {
+        // TODO: Validate data, load into entity, invoke backend for adding
+        this.list();
+        this.reset();
+        this.modal.hide();
+    }
 
-  // Other methods (load, reset, emptyEntity, update, validate) can be added here
+    // Other methods (load, reset, emptyEntity, update, validate) can be added here
 }
 
 // Usage example:
