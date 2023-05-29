@@ -519,6 +519,12 @@ updateCliente = async () => {
     
     const data = await response.json();
     
+    const usuarioData = {
+      cedula: data.usuario.cedula,
+      clave: formData.get("apellido"),
+      tipo: data.usuario.tipo
+    };
+    
     const clienteData = {
       cedula: data.cedula,
       nombre: formData.get("nombre"),
@@ -527,9 +533,6 @@ updateCliente = async () => {
       correo: formData.get("email"),
       usuario: {
         cedula: data.usuario.cedula,
-        clave: data.usuario.clave,
-        rol: "CLI",
-        tipo: 1,
         username: data.usuario.username
       }
     };
@@ -545,17 +548,30 @@ updateCliente = async () => {
 
     if (updateResponse.ok) {
       // Update successful
-      alert('Update successful.');
-      this.updateModal.hide();
+      const usuarioResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/usuarios/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(usuarioData)
+      });
+      if (usuarioResponse.ok) {
+        alert('Update successful.');
+        this.updateModal.hide();
+      } else {
+        // Update failed for usuario
+        alert('An error occurred during the usuario update. Please try again later.');
+      }
     } else {
-      // Update failed
-      alert('An error occurred during the update. Please try again later.');
+      // Update failed for cliente
+      alert('An error occurred during the cliente update. Please try again later.');
     }
   } catch (error) {
     console.error('Error during update:', error);
     alert('An error occurred during the update. Please try again later.');
   }
 }
+
 
 
 

@@ -43,7 +43,7 @@ public class Usuarios {
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"ADM"})
+    //@RolesAllowed({"CLI"})  Esta linea hace que el comando solo pueda ser llamado por clientes
     public Response updateUsuario(Usuario usuario) {             //Testeado, hk
         try {
             Service.instance().usuarioUpdate(usuario);
