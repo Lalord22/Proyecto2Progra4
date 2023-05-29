@@ -100,48 +100,52 @@ class Marcas {
     }
     
     registerMarcas() {
-      const descriptionInput = this.dom.querySelector("#description");
+  const descripcionInput = this.dom.querySelector("#description");
 
-      // Get the values from the input fields
-      const descripcion = descriptionInput.value.trim();
+  // Get the values from the input fields
+  const descripcion = descripcionInput.value.trim();
 
-      // Validate the input
-      if (!descripcion) {
-        // Show an error message or handle validation as needed
-        return;
+  // Validate the input
+  if (!descripcion) {
+    // Show an error message or handle validation as needed
+    return;
+  }
+
+  // Create a new marca object
+  const newMarca = {
+    descripcion,
+  };
+
+  // Send the new marca object to the backend using fetch
+  const url = "http://localhost:8080/JEGEDAsegurosBackEnd/api/marcas/register";
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newMarca),
+  };
+
+  fetch(url, options)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to register the marca. Status: ${response.status}`);
       }
+      // If the marca was successfully registered, refresh the list
+      this.list();
+    })
+    .catch(error => {
+      console.error("Error registering the marca:", error);
+      // Handle the error as needed (e.g., show an error message)
+    });
 
-      // Create a new marca object
-      const newMarca = {
-        descripcion,
-      };
-      descriptionInput.value = "";
+  // Reset the input field
+  descripcionInput.value = "";
 
-      // Send the new marca object to the backend using fetch
-      const request = new Request(`${backend}/marcas/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newMarca),
-      });
+  // Close the modal
+  this.modal.hide();
+}
 
-      fetch(request)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to register marca');
-          }
-          // If the marca was successfully registered, refresh the list
-          this.list();
-        })
-        .catch(error => {
-          console.error('Error registering marca:', error);
-          // Handle the error as needed (e.g., show an error message)
-        });
-
-      // Close the modal
-      this.modal.hide();
-    }
 
     add() {
         // TODO: Validate data, load into entity, invoke backend for adding
