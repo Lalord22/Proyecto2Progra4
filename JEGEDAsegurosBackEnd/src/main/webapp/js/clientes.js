@@ -102,7 +102,7 @@ class Clientes {
       <td>${cli.nombre}</td>
       <td>${cli.telefono}</td>
       <td>${cli.correo}</td>        
-      <td>${cli.datosTajeta}</td>`;
+      <td>${cli.datosTarjeta}</td>`;
         list.append(tr);
     }
 
