@@ -7,63 +7,75 @@ class Coberturas {
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
-        this.dom.querySelector('#apply').addEventListener('click', () => this.add());
     }
 
     render() {
-        const html = `
-      <div id="coberturas">
-        <div id="list" class="container">
-          <div class="card bg-light">
-            <h4 class="card-title mt-3 text-center">Coberturas</h4>
-            <div class="card-body mx-auto w-75">
+  const html = `
+    <div id="coberturas">
+      <div id="list" class="container">
+        <div class="card bg-light">
+          <h4 class="card-title mt-3 text-center">Coberturas</h4>
+          <div class="card-body mx-auto w-75">
             <form id="form">
-                    <div class="btn-group me-2">
-                      <button type="button" class="btn btn-primary" id="create">Agregar</button>
-                    </div>
-              </form>
-              <div class="table-responsive" style="max-height: 300px; overflow: auto">
-                <table class="table table-striped table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">Descripcion</th>
-                      <th scope="col">Precio Minimo</th>
-                      <th scope="col">Precio Porcentual</th>
-                      <th scope="col">Categoria</th>
-                    </tr>
-                  </thead>
-                  <tbody id="listbody"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="modal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
-              <span style='margin-left:4em;font-weight: bold;'>Marcas</span>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="modalForm">
-              <div class="modal-body">
-                <h1>To do</h1>
-              </div>
-              <div class="modal-footer">
-                <button id="apply" type="button" class="btn btn-primary">Apply</button>
+              <div class="btn-group me-2">
+                <button type="button" class="btn btn-primary" id="create">Agregar</button>
               </div>
             </form>
+            <div class="table-responsive" style="max-height: 300px; overflow: auto">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Precio Minimo</th>
+                    <th scope="col">Precio Porcentual</th>
+                    <th scope="col">Categoria</th>
+                  </tr>
+                </thead>
+                <tbody id="listbody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-    `;
-        const coberturasContainer = document.createElement('div');
-        coberturasContainer.innerHTML = html;
-        return coberturasContainer;
-    }
+    </div>
+    <div id="modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
+            <span style='margin-left:4em;font-weight: bold;'>Marcas</span>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="modalForm">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="categorySelect" class="form-label">Categoría</label>
+                <select id="categorySelect" class="form-select">
+                  <!-- Categories options will be populated dynamically -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="descriptionInput" class="form-label">Descripción</label>
+                <input type="text" id="descriptionInput" class="form-control">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="apply" type="button" class="btn btn-primary">Apply</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const coberturasContainer = document.createElement('div');
+  coberturasContainer.innerHTML = html;
+  const applyButton = coberturasContainer.querySelector('#apply');
+  applyButton.addEventListener('click', () => this.add());
+  return coberturasContainer;
+}
+
     
     getCategoriaById(coverageId) {
   const request = new Request(`${backend}/categorias/${coverageId}`, { method: 'GET', headers: {} });
@@ -119,23 +131,59 @@ class Coberturas {
         list.append(tr);
     }
 
-    makenew() {
-        this.reset();
-        this.state.mode = 'A'; // Adding
-        this.showModal();
-    }
+makenew() {
+  const categorySelect = this.dom.querySelector('#categorySelect');
+  categorySelect.innerHTML = ''; // Clear existing options
+
+  // Fetch categorias from the endpoint
+  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/categorias')
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch categorias');
+      }
+      return response.json();
+    })
+    .then((categorias) => {
+      // Populate category options
+      categorias.forEach((categoria) => {
+        const option = document.createElement('option');
+        option.value = categoria.id;
+        option.textContent = categoria.descripcion;
+        categorySelect.appendChild(option);
+      });
+
+      // Display the modal
+      this.modal.show();
+    })
+    .catch((error) => {
+      console.error('Error fetching categorias:', error);
+    });
+}
+
+
+
 
     add() {
-        // TODO: Validate data, load into entity, invoke backend for adding
-        this.list();
-        this.reset();
-        this.modal.hide();
-    }
+  const categorySelect = this.dom.querySelector('#categorySelect');
+  const descriptionInput = this.dom.querySelector('#descriptionInput');
+  const category = categorySelect.value;
+  const description = descriptionInput.value;
 
-    // Other methods (load, reset, emptyEntity, update, validate) can be added here
+  const newCobertura = {
+    categoria: category,
+    descripcion: description,
+  };
+
+  // TODO: Send the newCobertura object to the backend or perform desired actions
+
+  this.reset();
+  this.modal.hide();
+}
+
+
 }
 
 // Usage example:
 const coberturasTable = new Coberturas();
 document.body.appendChild(coberturasTable.dom);
-coberturasTable.list(); // Call list() to fetch and display the polizas
+coberturasTable.list();

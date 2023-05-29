@@ -108,9 +108,9 @@ class Modelos {
     // Other methods (load, reset, emptyEntity, update, validate) can be added here
 }
 
-// Usage example:
 const modelosTable = new Modelos();
 document.body.appendChild(modelosTable.dom);
-Table.list(); // Call list() to fetch and display the polizas
+modelosTable.list(); // Call list() to fetch and display the modelos
+
 
 
