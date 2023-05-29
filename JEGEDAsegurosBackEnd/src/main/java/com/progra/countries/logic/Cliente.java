@@ -6,6 +6,7 @@
 package com.progra.countries.logic;
 
 import jakarta.json.bind.annotation.JsonbTransient;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +21,7 @@ import java.util.Objects;
  */
 
 
-public class Cliente {
+public class Cliente implements Serializable{
     String cedula;
     String nombre;
     String telefono;

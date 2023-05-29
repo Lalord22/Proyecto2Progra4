@@ -29,6 +29,7 @@ class App {
         this.modelos = new Modelos(); 
         this.categorias = new Categorias();
         this.coberturas = new Coberturas();
+        this.clientes = new Clientes();
 
         this.dom.querySelector('#registrationForm').addEventListener('submit', e => {
             e.preventDefault(); // Prevent the default form submission behavior
@@ -316,7 +317,7 @@ class App {
   this.dom.querySelector("#app>#menu #menuItems #addCategoria")?.addEventListener('click', e => this.categoriasShow());
   this.dom.querySelector("#app>#menu #menuItems #addModelo")?.addEventListener('click', e => this.modelosShow());
   this.dom.querySelector("#app>#menu #menuItems #addMarca")?.addEventListener('click', e => this.marcasShow());
-  this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.displayClientes());
+  this.dom.querySelector("#app>#menu #menuItems #displayClientes")?.addEventListener('click', e => this.clientesShow());
   this.dom.querySelector("#app>#menu #menuItems #loginLink")?.addEventListener('click', e => this.modal.show());
   this.dom.querySelector("#app>#menu #menuItems #logoutLink")?.addEventListener('click', e => this.logout());
   this.dom.querySelector("#app>#menu #menuItems #updateLink")?.addEventListener('click', e => this.updateInfo());
@@ -355,6 +356,11 @@ class App {
     coberturasShow = () => {
       this.dom.querySelector('#app>#body').replaceChildren(this.coberturas.dom);
       this.coberturas.list();
+    }
+    
+     clientesShow = () => {
+      this.dom.querySelector('#app>#body').replaceChildren(this.clientes.dom);
+      this.clientes.list();
     }
 
     login = async () => {

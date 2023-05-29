@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response;
 @Path("/clientes")
 @PermitAll
 public class Clientes {
-
+    
     @GET
 @Path("/cliente")
 @Produces(MediaType.APPLICATION_JSON)
@@ -67,9 +67,16 @@ public Cliente clienteFind(@Context HttpServletRequest request) throws Exception
     }
 
     @GET
+    @Path("/coberturas")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Cliente> getCoberturas() {
         return Service.instance().cargarClientes();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Cliente> getClientes() {
+        return Service.instance().cargarClientes();
+    }
+    
 }
