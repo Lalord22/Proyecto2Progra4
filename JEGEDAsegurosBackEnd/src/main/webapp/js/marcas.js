@@ -7,7 +7,8 @@ class Marcas {
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.dom.querySelector("#create").addEventListener('click', () => this.makenew()); // Use arrow function to maintain the context
-        this.dom.querySelector('#apply').addEventListener('click', () => this.add()); // Use arrow function to maintain the context
+        this.dom.querySelector("#registerMarcas").addEventListener('click', () => this.registerMarcas());
+
     }
 
     render() {
@@ -38,25 +39,28 @@ class Marcas {
           </div>
         </div>
       </div>
-      <div id="modal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
-              <span style='margin-left:4em;font-weight: bold;'>Marcas</span>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="form">
-              <div class="modal-body">
-                <h1>To do</h1>
-              </div>
-              <div class="modal-footer">
-                <button id="apply" type="button" class="btn btn-primary">Apply</button>
+    <div id="modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Register New Marcas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="marcaForm">
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" rows="3" required></textarea>
               </div>
             </form>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="registerMarcas">Register</button>
+          </div>
         </div>
       </div>
+    </div>
     `;
         const marcasContainer = document.createElement('div');
         marcasContainer.innerHTML = html;
@@ -92,9 +96,51 @@ class Marcas {
     }
 
     makenew() {
-        this.reset();
-        this.state.mode = 'A'; // Adding
-        this.showModal();
+     this.modal.show();
+    }
+    
+    registerMarcas() {
+      const descriptionInput = this.dom.querySelector("#description");
+
+      // Get the values from the input fields
+      const descripcion = descriptionInput.value.trim();
+
+      // Validate the input
+      if (!descripcion) {
+        // Show an error message or handle validation as needed
+        return;
+      }
+
+      // Create a new marca object
+      const newMarca = {
+        descripcion,
+      };
+      descriptionInput.value = "";
+
+      // Send the new marca object to the backend using fetch
+      const request = new Request(`${backend}/marcas/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMarca),
+      });
+
+      fetch(request)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to register marca');
+          }
+          // If the marca was successfully registered, refresh the list
+          this.list();
+        })
+        .catch(error => {
+          console.error('Error registering marca:', error);
+          // Handle the error as needed (e.g., show an error message)
+        });
+
+      // Close the modal
+      this.modal.hide();
     }
 
     add() {
@@ -110,5 +156,5 @@ class Marcas {
 // Usage example:
 const marcasTable = new Marcas();
 document.body.appendChild(marcasTable.dom);
-Table.list(); // Call list() to fetch and display the polizas
+marcasTable.list(); // Call list() to fetch and display the polizas
 
