@@ -18,15 +18,9 @@ class Marcas {
             <h4 class="card-title mt-3 text-center">Marcas</h4>
             <div class="card-body mx-auto w-75">
               <form id="form">
-                <div class="input-group mb-3">
-                  <span class="input-group-text">Name</span>
-                  <input id="name" type="text" class="form-control">
-                  <div class="btn-toolbar">
                     <div class="btn-group me-2">
                       <button type="button" class="btn btn-primary" id="create">Create</button>
                     </div>
-                  </div>
-                </div>
               </form>
 
               <div class="table-responsive" style="max-height: 300px; overflow: auto">
