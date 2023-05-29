@@ -22,7 +22,6 @@ class Coberturas {
                       <button type="button" class="btn btn-primary" id="create">Agregar</button>
                     </div>
               </form>
-
               <div class="table-responsive" style="max-height: 300px; overflow: auto">
                 <table class="table table-striped table-hover">
                   <thead>
@@ -31,6 +30,7 @@ class Coberturas {
                       <th scope="col">Descripcion</th>
                       <th scope="col">Precio Minimo</th>
                       <th scope="col">Precio Porcentual</th>
+                      <th scope="col">Categoria</th>
                     </tr>
                   </thead>
                   <tbody id="listbody"></tbody>
@@ -64,26 +64,49 @@ class Coberturas {
         coberturasContainer.innerHTML = html;
         return coberturasContainer;
     }
+    
+    getCategoriaById(coverageId) {
+  const request = new Request(`${backend}/categorias/${coverageId}`, { method: 'GET', headers: {} });
+  return fetch(request)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch categoria by ID');
+      }
+      return response.json();
+    })
+    .catch(error => {
+      console.error('Error fetching categoria by ID:', error);
+      throw error;
+    });
+}
 
-    list() {
-        const request = new Request(`${backend}/coberturas`, {method: 'GET', headers: {}});
-        (async () => {
-            try {
-                const response = await fetch(request);
-                if (!response.ok) {
-                    errorMessage(response.status);
-                    return;
-                }
-                const coberturas = await response.json();
-                this.state.entities = coberturas; // Update entities in the state
-                const listing = this.dom.querySelector("#listbody");
-                listing.innerHTML = "";
-                this.state.entities.forEach(e => this.row(listing, e));
-            } catch (error) {
-                console.error('Error fetching modelos:', error);
-            }
-        })();
+
+
+   list() {
+  const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
+  (async () => {
+    try {
+      const response = await fetch(request);
+      if (!response.ok) {
+        errorMessage(response.status);
+        return;
+      }
+      const coberturas = await response.json();
+      this.state.entities = coberturas; // Update entities in the state
+      const listing = this.dom.querySelector("#listbody");
+      listing.innerHTML = "";
+      this.state.entities.forEach(async e => {
+        const cobertura = e;
+        const categoria = await this.getCategoriaById(cobertura.id);
+        cobertura.categoria = categoria;
+        this.row(listing, cobertura);
+      });
+    } catch (error) {
+      console.error('Error fetching coberturas:', error);
     }
+  })();
+}
+
 
     row(list, co) {
         const tr = document.createElement("tr");
@@ -91,7 +114,8 @@ class Coberturas {
       <td>${co.id}</td>
       <td>${co.descripcion}</td>
       <td>${co.costoMinimo}</td>
-      <td>${co.costoPorcentual}</td>`;
+      <td>${co.costoPorcentual}</td>
+      <td>${co.categoria.descripcion}</td>`;
         list.append(tr);
     }
 
