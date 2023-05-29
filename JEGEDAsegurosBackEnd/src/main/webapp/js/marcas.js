@@ -20,7 +20,7 @@ class Marcas {
             <div class="card-body mx-auto w-75">
               <form id="form">
                     <div class="btn-group me-2">
-                      <button type="button" class="btn btn-primary" id="create">Create</button>
+                      <button type="button" class="btn btn-primary" id="create">Agregar</button>
                     </div>
               </form>
 
@@ -100,51 +100,48 @@ class Marcas {
     }
     
     registerMarcas() {
-  const descripcionInput = this.dom.querySelector("#description");
+        const descriptionInput = this.dom.querySelector("#description");
 
-  // Get the values from the input fields
-  const descripcion = descripcionInput.value.trim();
+        // Get the values from the input fields
+        const descripcion = descriptionInput.value.trim();
 
-  // Validate the input
-  if (!descripcion) {
-    // Show an error message or handle validation as needed
-    return;
-  }
+        // Validate the input
+        if (!descripcion) {
+          // Show an error message or handle validation as needed
+          return;
+        }
 
-  // Create a new marca object
-  const newMarca = {
-    descripcion,
-  };
+        // Create a new marca object
+        const newMarca = {
+          descripcion,
+        };
+        descriptionInput.value = "";
 
-  // Send the new marca object to the backend using fetch
-  const url = "http://localhost:8080/JEGEDAsegurosBackEnd/api/marcas/register";
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newMarca),
-  };
+        // Send the new marca object to the backend using fetch
+        const request = new Request(`${backend}/marcas/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newMarca),
+        });
 
-  fetch(url, options)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Failed to register the marca. Status: ${response.status}`);
+        fetch(request)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to register marca');
+            }
+            // If the marca was successfully registered, refresh the list
+            this.list();
+          })
+          .catch(error => {
+            console.error('Error registering marca:', error);
+            // Handle the error as needed (e.g., show an error message)
+          });
+
+        // Close the modal
+        this.modal.hide();
       }
-      // If the marca was successfully registered, refresh the list
-      this.list();
-    })
-    .catch(error => {
-      console.error("Error registering the marca:", error);
-      // Handle the error as needed (e.g., show an error message)
-    });
-
-  // Reset the input field
-  descripcionInput.value = "";
-
-  // Close the modal
-  this.modal.hide();
-}
 
 
     add() {

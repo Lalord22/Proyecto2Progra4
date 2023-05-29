@@ -26,17 +26,17 @@ public class Categorias {
     }
     
     @POST
-    @Path("/add")
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCategoria(Categoria categoria) {
+    public Response addCategoria(Categoria cate) {
         try {
-            Service.instance().agregaCategoria(categoria);
+            Service.instance().agregaCategoria(cate);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-    
+
     
             @GET
     @Path("/{id}")
