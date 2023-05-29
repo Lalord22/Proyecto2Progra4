@@ -59,6 +59,14 @@ class Coberturas {
                 <label for="descriptionInput" class="form-label">Descripción</label>
                 <input type="text" id="descriptionInput" class="form-control">
               </div>
+              <div class="mb-3">
+                <label for="costoMinimoInput" class="form-label">Costo Minimo</label>
+                <input type="text" id="costoMinimoInput" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="costoPorcentualInput" class="form-label">Costo Porcentual</label>
+                <input type="text" id="costoPorcentualInput" class="form-control">
+              </div>
             </div>
             <div class="modal-footer">
               <button id="apply" type="button" class="btn btn-primary">Apply</button>
@@ -75,6 +83,7 @@ class Coberturas {
   applyButton.addEventListener('click', () => this.add());
   return coberturasContainer;
 }
+
 
     
     getCategoriaById(coverageId) {
@@ -154,6 +163,13 @@ makenew() {
 
       // Display the modal
       this.modal.show();
+
+      // Add event listener to the apply button
+      const applyButton = this.dom.querySelector('#apply');
+      applyButton.addEventListener('click', () => {
+        const categoryId = categorySelect.value;
+        this.add(categoryId);
+      });
     })
     .catch((error) => {
       console.error('Error fetching categorias:', error);
@@ -163,22 +179,49 @@ makenew() {
 
 
 
-    add() {
-  const categorySelect = this.dom.querySelector('#categorySelect');
+
+   add(categoryId) {
   const descriptionInput = this.dom.querySelector('#descriptionInput');
-  const category = categorySelect.value;
+  const costoMinimoInput = this.dom.querySelector('#costoMinimoInput');
+  const costoPorcentualInput = this.dom.querySelector('#costoPorcentualInput');
   const description = descriptionInput.value;
+  const costoMinimo = costoMinimoInput.value;
+  const costoPorcentual = costoPorcentualInput.value;
 
   const newCobertura = {
-    categoria: category,
+    categoria: {
+                id: categoryId
+            },  
     descripcion: description,
+    costoMinimo: costoMinimo,
+    costoPorcentual: costoPorcentual,
   };
 
-  // TODO: Send the newCobertura object to the backend or perform desired actions
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newCobertura),
+  };
 
-  this.reset();
-  this.modal.hide();
+  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/coberturas', requestOptions)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to add cobertura');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Handle successful response from the backend
+      console.log('Cobertura added successfully:', data);
+      this.reset();
+      this.modal.hide();
+      this.list(); // Refresh the coberturas list after adding a new one
+    })
+    .catch((error) => {
+      console.error('Error adding cobertura:', error);
+    });
 }
+
 
 
 }
