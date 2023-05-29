@@ -35,6 +35,8 @@ class App {
             e.preventDefault(); // Prevent the default form submission behavior
             this.register(); // Call the register method when the form is submitted
         });
+        
+
     }
 
     render = () => {
@@ -222,27 +224,13 @@ class App {
     `;
     }
     
-    updateInfo = () => {
-  const updateForm = this.dom.querySelector('#updateForm');
+   
 
-  // Make an HTTP GET request to fetch the user data
-  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente')
-    .then(response => response.json())
-    .then(data => {
-      // Populate the update form with the retrieved user data
-      updateForm.querySelector('#updateNombre').value = data.nombre;
-      updateForm.querySelector('#updateApellido').value = data.usuario.clave;
-      updateForm.querySelector('#updateTelefono').value = data.telefono;
-      updateForm.querySelector('#updateDireccion').value = data.datosTarjeta;
-      updateForm.querySelector('#updateEmail').value = data.correo;
 
-      // Show the update modal
-      this.updateModal.show();
-    })
-    .catch(error => {
-      console.error('Error fetching user data:', error);
-    });
-}
+
+
+
+
 
 
     
@@ -483,7 +471,93 @@ class App {
         this.registrationModal.show();
     }
 
-    // Existing code...
+  updateInfo = async () => {
+  const updateForm = this.dom.querySelector('#updateForm');
+
+  try {
+    // Make an HTTP GET request to fetch the client data for the currently logged-in client
+    const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
+    if (!response.ok) {
+      throw new Error('Failed to fetch client data');
+    }
+    
+    const data = await response.json();
+    
+    // Populate the update form with the retrieved client data
+    updateForm.querySelector('#updateNombre').value = data.nombre;
+    updateForm.querySelector('#updateApellido').value = data.usuario.clave;
+    updateForm.querySelector('#updateTelefono').value = data.telefono;
+    updateForm.querySelector('#updateDireccion').value = data.datosTarjeta;
+    updateForm.querySelector('#updateEmail').value = data.correo;
+
+    // Show the update modal
+    this.updateModal.show();
+  } catch (error) {
+    console.error('Error fetching client data:', error);
+  }
+
+  // Remove any existing event listeners from the form submission
+  updateForm.removeEventListener('submit', this.updateCliente);
+
+  // Add a new event listener to the form submission
+  updateForm.addEventListener('submit', e => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    this.updateCliente(); // Call the updateCliente method when the form is submitted
+  });
+}
+
+updateCliente = async () => {
+  const updateForm = this.dom.querySelector('#updateModal #updateForm');
+  const formData = new FormData(updateForm);
+
+  try {
+    // Make an HTTP GET request to fetch the client data for the currently logged-in client
+    const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
+    if (!response.ok) {
+      throw new Error('Failed to fetch client data');
+    }
+    
+    const data = await response.json();
+    
+    const clienteData = {
+      cedula: data.cedula,
+      nombre: formData.get("nombre"),
+      telefono: formData.get("telefono"),
+      datosTarjeta: formData.get("direccion"),
+      correo: formData.get("email"),
+      usuario: {
+        cedula: data.usuario.cedula,
+        clave: data.usuario.clave,
+        rol: "CLI",
+        tipo: 1,
+        username: data.usuario.username
+      }
+    };
+
+    // Send clienteData to the server for update
+    const updateResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/update', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(clienteData)
+    });
+
+    if (updateResponse.ok) {
+      // Update successful
+      alert('Update successful.');
+      this.updateModal.hide();
+    } else {
+      // Update failed
+      alert('An error occurred during the update. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Error during update:', error);
+    alert('An error occurred during the update. Please try again later.');
+  }
+}
+
+
 
 
 

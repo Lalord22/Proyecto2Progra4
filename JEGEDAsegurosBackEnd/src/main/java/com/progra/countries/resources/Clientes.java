@@ -42,7 +42,7 @@ public Cliente clienteFind(@Context HttpServletRequest request) throws Exception
 }
 
 
-    @POST
+    @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateCliente(Cliente cliente) {
