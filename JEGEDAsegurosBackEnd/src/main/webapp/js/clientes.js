@@ -83,7 +83,9 @@ class Clientes {
                     return;
                 }
                 const clientes = await response.json();
-                this.state.entities = clientes; // Update entities in the state
+                const filteredClientes = clientes.filter(cli => cli.usuario.tipo !== 2);
+                this.state.entities = filteredClientes; // Update entities in the state
+
                 const listing = this.dom.querySelector("#listbody");
                 listing.innerHTML = "";
                 this.state.entities.forEach(e => this.row(listing, e));
