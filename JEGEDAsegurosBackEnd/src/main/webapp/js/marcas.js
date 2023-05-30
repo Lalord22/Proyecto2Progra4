@@ -44,6 +44,7 @@ class Marcas {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
+            <img class="img-circle" id="img_logo" src="images/logo3.png" style="max-width: 100px; max-height: 100px" alt="logo">
             <h5 class="modal-title">Registar Marca</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>

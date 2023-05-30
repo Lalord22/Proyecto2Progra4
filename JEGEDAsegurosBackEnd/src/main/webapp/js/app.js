@@ -148,8 +148,10 @@ class App {
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <img class="img-circle" id="img_logo" src="images/user.png" style="max-width: 50px; max-height: 50px" alt="logo">
-              <span style='margin-left:4em;font-weight: bold;'>Login</span>
+              <div class="d-flex align-items-center">
+                <img class="img-circle me-2" id="img_logo" src="images/user1.png" style="max-width: 40px; max-height: 40px" alt="logo">
+                <h5 class="modal-title mb-0">Login</h5>
+              </div>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="form">
