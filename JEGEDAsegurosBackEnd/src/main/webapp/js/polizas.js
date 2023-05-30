@@ -204,30 +204,6 @@ showAddModal() {
 
 
 
-
-
-
-
-
-
-
-
-populateModelos(marcaId, modelos) {
-  const selectModelo = this.dom.querySelector('#selectModelo');
-  selectModelo.innerHTML = '';
-
-  const modelosByMarca = modelos.filter((modelo) => modelo.marca_id === marcaId);
-
-  modelosByMarca.forEach((modelo) => {
-    const optionModelo = document.createElement('option');
-    optionModelo.value = modelo.id;
-    optionModelo.textContent = modelo.descripcion;
-    selectModelo.appendChild(optionModelo);
-  });
-}
-
-
-
   createPoliza(data) {
     const request = new Request(`${backend}/polizas`, {
       method: 'POST',
