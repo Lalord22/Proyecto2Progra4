@@ -62,12 +62,6 @@ class Polizas {
             <form id="modal-form">
               <div class="modal-body">
                 <div class="mb-3">
-                  <label for="selectMarca" class="form-label">Marca</label>
-                  <select id="selectMarca" class="form-select">
-                    <!-- Options will be populated dynamically -->
-                  </select>
-                </div>
-                <div class="mb-3">
                   <label for="selectModelo" class="form-label">Modelo</label>
                   <select id="selectModelo" class="form-select">
                     <!-- Options will be populated dynamically based on selected marca -->
@@ -155,69 +149,32 @@ showAddModal() {
   const modalForm = this.dom.querySelector('#modal-form');
   modalForm.reset();
 
-  // Fetch marcas from the database and populate the select dropdown
-  const selectMarca = modalForm.querySelector('#selectMarca');
-  const requestMarcas = new Request(`${backend}/marcas`, { method: 'GET', headers: {} });
-  (async () => {
-    try {
-      const responseMarcas = await fetch(requestMarcas);
-      if (!responseMarcas.ok) {
-        errorMessage(responseMarcas.status);
+  // Fetch modelos from the database
+  const requestModelos = new Request(`${backend}/modelos`, { method: 'GET', headers: {} });
+
+  fetch(requestModelos)
+    .then(async (responseModelos) => {
+      if (!responseModelos.ok) {
+        errorMessage(responseModelos.status);
         return;
       }
-      const marcas = await responseMarcas.json();
-      selectMarca.innerHTML = '';
-      marcas.forEach((marca) => {
-        const optionMarca = document.createElement('option');
-        optionMarca.value = marca.id;
-        optionMarca.textContent = marca.descripcion;
-        selectMarca.appendChild(optionMarca);
-      });
 
-      // Add event listener to populate modelos based on the selected marca
-      selectMarca.addEventListener('change', () => {
-        const selectedMarcaId = selectMarca.value;
-        this.populateModelos(selectedMarcaId);
+      const modelos = await responseModelos.json();
+
+      // Populate selectModelo dropdown with modelos and their marca
+      const selectModelo = modalForm.querySelector('#selectModelo');
+      selectModelo.innerHTML = '';
+      modelos.forEach((modelo) => {
+        const optionModelo = document.createElement('option');
+        optionModelo.value = modelo.id;
+        optionModelo.textContent = `${modelo.descripcion} - ${modelo.marca.descripcion}`;
+        selectModelo.appendChild(optionModelo);
       });
 
       // Show the modal
       this.modal.show();
-    } catch (error) {
-      console.error('Error fetching marcas:', error);
-    }
-  })();
-}
-
-
-populateModelos(marcaId) {
-  console.log('populateModelos called with marcaId:', marcaId);
-
-  const selectModelo = document.querySelector('#selectModelo');
-  const requestModelos = new Request(`${backend}/modelos?marca_id=${marcaId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  fetch(requestModelos)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-      return response.json();
     })
-    .then(modelos => {
-      console.log('Fetched modelos:', modelos);
-      selectModelo.innerHTML = '';
-      modelos.forEach(modelo => {
-        const optionModelo = document.createElement('option');
-        optionModelo.value = modelo.id;
-        optionModelo.textContent = modelo.descripcion;
-        selectModelo.appendChild(optionModelo);
-      });
-    })
-    .catch(error => {
+    .catch((error) => {
       console.error('Error fetching modelos:', error);
     });
 }
@@ -231,11 +188,19 @@ populateModelos(marcaId) {
 
 
 
+populateModelos(marcaId, modelos) {
+  const selectModelo = this.dom.querySelector('#selectModelo');
+  selectModelo.innerHTML = '';
 
+  const modelosByMarca = modelos.filter((modelo) => modelo.marca_id === marcaId);
 
-
-
-
+  modelosByMarca.forEach((modelo) => {
+    const optionModelo = document.createElement('option');
+    optionModelo.value = modelo.id;
+    optionModelo.textContent = modelo.descripcion;
+    selectModelo.appendChild(optionModelo);
+  });
+}
 
 
 
