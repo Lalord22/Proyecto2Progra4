@@ -148,8 +148,10 @@ class App {
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <img class="img-circle" id="img_logo" src="images/user.png" style="max-width: 50px; max-height: 50px" alt="logo">
-              <span style='margin-left:4em;font-weight: bold;'>Login</span>
+              <div class="d-flex align-items-center">
+                <img class="img-circle me-2" id="img_logo" src="images/user1.png" style="max-width: 40px; max-height: 40px" alt="logo">
+                <h5 class="modal-title mb-0">Login</h5>
+              </div>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="form">
@@ -166,9 +168,8 @@ class App {
               <div class="modal-footer">
                 <button id="apply" type="button" class="btn btn-primary" id="apply">Login</button>
               </div>
-              <div class="input-group">
-                <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
-                <a id="registerLink" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
+                <span style="font-style: italic; margin-left: 2em; color: #555;">No tiene cuenta? ...</span>
+                <a id="registerLink" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: #005b99; color: white; border: none;" href="#">Regístrese aquí</a>
               </div>
             </form>
           </div>

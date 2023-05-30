@@ -17,11 +17,11 @@ class Clientes {
           <div class="card bg-light">
             <h4 class="card-title mt-3 text-center">Clientes</h4>
             <div class="card-body mx-auto w-75">
-               <form id="form">
-                    <div class="btn-group me-2">
-                      <button type="button" class="btn btn-primary" id="create">-</button>
-                    </div>
-              </form>
+                <form id="form">
+                 <div class="btn-group me-2">
+                   <button type="button" style="background-color: transparent; border-color: transparent;" id="create"></button>
+                 </div>
+               </form>
 
               <div class="table-responsive" style="max-height: 300px; overflow: auto">
                 <table class="table table-striped table-hover">

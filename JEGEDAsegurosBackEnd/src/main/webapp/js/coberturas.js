@@ -43,8 +43,8 @@ class Coberturas {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
-            <span style='margin-left:4em;font-weight: bold;'>Marcas</span>
+            <img class="img-circle" id="img_logo" src="images/logo3.png" style="max-width: 100px; max-height: 100px" alt="logo">
+            <h5 class="modal-title">Registrar Cobertura</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form id="modalForm">
@@ -69,7 +69,7 @@ class Coberturas {
               </div>
             </div>
             <div class="modal-footer">
-              <button id="apply" type="button" class="btn btn-primary">Apply</button>
+              <button id="apply" type="button" class="btn btn-primary">Registrar</button>
             </div>
           </form>
         </div>
@@ -104,28 +104,28 @@ class Coberturas {
 
 
    list() {
-  const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
-  (async () => {
-    try {
-      const response = await fetch(request);
-      if (!response.ok) {
-        errorMessage(response.status);
-        return;
+    const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
+    (async () => {
+      try {
+        const response = await fetch(request);
+        if (!response.ok) {
+          errorMessage(response.status);
+          return;
+        }
+        const coberturas = await response.json();
+        this.state.entities = coberturas; // Update entities in the state
+        const listing = this.dom.querySelector("#listbody");
+        listing.innerHTML = "";
+        this.state.entities.forEach(async e => {
+          const cobertura = e;
+          const categoria = await this.getCategoriaById(cobertura.id);
+          cobertura.categoria = categoria;
+          this.row(listing, cobertura);
+        });
+      } catch (error) {
+        console.error('Error fetching coberturas:', error);
       }
-      const coberturas = await response.json();
-      this.state.entities = coberturas; // Update entities in the state
-      const listing = this.dom.querySelector("#listbody");
-      listing.innerHTML = "";
-      this.state.entities.forEach(async e => {
-        const cobertura = e;
-        const categoria = await this.getCategoriaById(cobertura.id);
-        cobertura.categoria = categoria;
-        this.row(listing, cobertura);
-      });
-    } catch (error) {
-      console.error('Error fetching coberturas:', error);
-    }
-  })();
+    })();
 }
 
 
