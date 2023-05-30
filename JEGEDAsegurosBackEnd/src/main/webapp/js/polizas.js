@@ -161,14 +161,37 @@ showAddModal() {
 
       const modelos = await responseModelos.json();
 
+      // Create a map to store the unique combination of marca and modelos
+      const marcaModeloMap = new Map();
+
+      // Group modelos by marca
+      modelos.forEach((modelo) => {
+        const marcaId = modelo.marca.id;
+        if (!marcaModeloMap.has(marcaId)) {
+          marcaModeloMap.set(marcaId, {
+            marcaDescripcion: modelo.marca.descripcion,
+            modelos: [],
+          });
+        }
+        marcaModeloMap.get(marcaId).modelos.push(modelo);
+      });
+
       // Populate selectModelo dropdown with modelos and their marca
       const selectModelo = modalForm.querySelector('#selectModelo');
       selectModelo.innerHTML = '';
-      modelos.forEach((modelo) => {
-        const optionModelo = document.createElement('option');
-        optionModelo.value = modelo.id;
-        optionModelo.textContent = `${modelo.descripcion} - ${modelo.marca.descripcion}`;
-        selectModelo.appendChild(optionModelo);
+
+      marcaModeloMap.forEach((marcaModelo) => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = marcaModelo.marcaDescripcion;
+
+        marcaModelo.modelos.forEach((modelo) => {
+          const optionModelo = document.createElement('option');
+          optionModelo.value = modelo.id;
+          optionModelo.textContent = modelo.descripcion;
+          optgroup.appendChild(optionModelo);
+        });
+
+        selectModelo.appendChild(optgroup);
       });
 
       // Show the modal
@@ -178,6 +201,7 @@ showAddModal() {
       console.error('Error fetching modelos:', error);
     });
 }
+
 
 
 
