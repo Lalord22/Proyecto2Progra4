@@ -104,28 +104,28 @@ class Coberturas {
 
 
    list() {
-  const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
-  (async () => {
-    try {
-      const response = await fetch(request);
-      if (!response.ok) {
-        errorMessage(response.status);
-        return;
+    const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
+    (async () => {
+      try {
+        const response = await fetch(request);
+        if (!response.ok) {
+          errorMessage(response.status);
+          return;
+        }
+        const coberturas = await response.json();
+        this.state.entities = coberturas; // Update entities in the state
+        const listing = this.dom.querySelector("#listbody");
+        listing.innerHTML = "";
+        this.state.entities.forEach(async e => {
+          const cobertura = e;
+          const categoria = await this.getCategoriaById(cobertura.id);
+          cobertura.categoria = categoria;
+          this.row(listing, cobertura);
+        });
+      } catch (error) {
+        console.error('Error fetching coberturas:', error);
       }
-      const coberturas = await response.json();
-      this.state.entities = coberturas; // Update entities in the state
-      const listing = this.dom.querySelector("#listbody");
-      listing.innerHTML = "";
-      this.state.entities.forEach(async e => {
-        const cobertura = e;
-        const categoria = await this.getCategoriaById(cobertura.id);
-        cobertura.categoria = categoria;
-        this.row(listing, cobertura);
-      });
-    } catch (error) {
-      console.error('Error fetching coberturas:', error);
-    }
-  })();
+    })();
 }
 
 
