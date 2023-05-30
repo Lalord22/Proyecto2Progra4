@@ -91,6 +91,12 @@ class Polizas {
                   <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
                   <input type="date" class="form-control" id="fechaInicio" required>
                 </div>
+                <div class="mb-3">
+    <label class="form-label">Coberturas</label>
+    <div id="checkboxGroup">
+      <!-- Checkboxes will be populated dynamically -->
+    </div>
+  </div>
               </div>
               <div class="modal-footer">
                 <button id="apply" type="button" class="btn btn-primary">Registrar</button>
@@ -144,6 +150,7 @@ class Polizas {
     list.append(tr);
   }
 
+
 showAddModal() {
   // Reset modal form inputs
   const modalForm = this.dom.querySelector('#modal-form');
@@ -161,44 +168,46 @@ showAddModal() {
 
       const modelos = await responseModelos.json();
 
-      // Create a map to store the unique combination of marca and modelos
-      const marcaModeloMap = new Map();
-
-      // Group modelos by marca
-      modelos.forEach((modelo) => {
-        const marcaId = modelo.marca.id;
-        if (!marcaModeloMap.has(marcaId)) {
-          marcaModeloMap.set(marcaId, {
-            marcaDescripcion: modelo.marca.descripcion,
-            modelos: [],
-          });
-        }
-        marcaModeloMap.get(marcaId).modelos.push(modelo);
-      });
-
       // Populate selectModelo dropdown with modelos and their marca
       const selectModelo = modalForm.querySelector('#selectModelo');
       selectModelo.innerHTML = '';
+      modelos.forEach((modelo) => {
+        const optionModelo = document.createElement('option');
+        optionModelo.value = modelo.id;
+        optionModelo.textContent = `${modelo.descripcion} - ${modelo.marca.descripcion}`;
+        selectModelo.appendChild(optionModelo);
+      });
 
-      marcaModeloMap.forEach((marcaModelo) => {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = marcaModelo.marcaDescripcion;
+      // Fetch coberturas from the database
+      const requestCoberturas = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
 
-        marcaModelo.modelos.forEach((modelo) => {
-          const optionModelo = document.createElement('option');
-          optionModelo.value = modelo.id;
-          optionModelo.textContent = modelo.descripcion;
-          optgroup.appendChild(optionModelo);
-        });
+      return fetch(requestCoberturas);
+    })
+    .then(async (responseCoberturas) => {
+      if (!responseCoberturas.ok) {
+        errorMessage(responseCoberturas.status);
+        return;
+      }
 
-        selectModelo.appendChild(optgroup);
+      const coberturas = await responseCoberturas.json();
+
+      // Populate checkbox group with coberturas
+      const checkboxGroup = modalForm.querySelector('#checkboxGroup');
+      checkboxGroup.innerHTML = '';
+      coberturas.forEach((cobertura) => {
+        const checkbox = document.createElement('div');
+        checkbox.innerHTML = `
+          <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
+          <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
+        `;
+        checkboxGroup.appendChild(checkbox);
       });
 
       // Show the modal
       this.modal.show();
     })
     .catch((error) => {
-      console.error('Error fetching modelos:', error);
+      console.error('Error fetching data:', error);
     });
 }
 
