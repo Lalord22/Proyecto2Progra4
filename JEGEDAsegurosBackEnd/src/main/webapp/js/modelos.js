@@ -121,11 +121,11 @@ class Modelos {
         list.append(tr);
     }
 
-    makenew() {
+   makenew() {
         const marcaSelect = this.dom.querySelector('#marcaSelect');
         marcaSelect.innerHTML = ''; // Clear existing options
 
-        // Fetch categorias from the endpoint
+        // Fetch marcas from the endpoint
         fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/marcas')
           .then((response) => {
             if (!response.ok) {
@@ -134,7 +134,7 @@ class Modelos {
             return response.json();
           })
           .then((marcas) => {
-            // Populate category options
+            // Populate marca options
             marcas.forEach((marca) => {
               const option = document.createElement('option');
               option.value = marca.id;
@@ -153,9 +153,10 @@ class Modelos {
             });
           })
           .catch((error) => {
-            console.error('Error fetching marca:', error);
+            console.error('Error fetching marcas:', error);
           });
-    }
+      }
+
 
     add(marcaId) {
         const descriptionInput = this.dom.querySelector('#descriptionInput');
