@@ -168,9 +168,8 @@ class App {
               <div class="modal-footer">
                 <button id="apply" type="button" class="btn btn-primary" id="apply">Login</button>
               </div>
-              <div class="input-group">
-                <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
-                <a id="registerLink" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
+                <span style="font-style: italic; margin-left: 2em; color: #555;">No tiene cuenta? ...</span>
+                <a id="registerLink" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: #005b99; color: white; border: none;" href="#">Regístrese aquí</a>
               </div>
             </form>
           </div>
