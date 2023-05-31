@@ -98,28 +98,30 @@ class Modelos {
     }
     
     list() {
-        const request = new Request(`${backend}/modelos`, {method: 'GET', headers: {}});
-        (async () => {
-            try {
-                const response = await fetch(request);
-                if (!response.ok) {
-                    errorMessage(response.status);
-                    return;
-                }
-                const modelos = await response.json();
-                this.state.entities = modelos; // Update entities in the state
-                const listing = this.dom.querySelector("#listbody");
-                listing.innerHTML = "";
-                this.state.entities.forEach(e => this.row(listing, e));
-                const modelo = e;
-                const marca = await this.getMarcaById(modelos.id);
-                modelo.marca = marca;
-                this.row(listing, modelo);
-            } catch (error) {
-                console.error('Error fetching modelos:', error);
-            }
-        })();
+  const request = new Request(`${backend}/modelos`, {method: 'GET', headers: {}});
+  (async () => {
+    try {
+      const response = await fetch(request);
+      if (!response.ok) {
+        errorMessage(response.status);
+        return;
+      }
+      const modelos = await response.json();
+
+      const listing = this.dom.querySelector("#listbody");
+      listing.innerHTML = "";
+
+      for (const modelo of modelos) {
+        const marca = await this.getMarcaById(modelo.marca.id);
+        modelo.marca = marca;
+        this.row(listing, modelo);
+      }
+    } catch (error) {
+      console.error('Error fetching modelos:', error);
     }
+  })();
+}
+
 
     row(list, mo) {
         const tr = document.createElement("tr");
@@ -162,40 +164,52 @@ class Modelos {
 }
 
 
-   registerModelos(marcaId) {
-    const descriptionInput = this.dom.querySelector('#descriptionInput');
-    const imageInput = this.dom.querySelector('#imageInput');
-    const description = descriptionInput.value.trim();
+  registerModelos(marcaId) {
+  const descriptionInput = this.dom.querySelector('#descriptionInput');
+  const imageInput = this.dom.querySelector('#imageInput');
+  const description = descriptionInput.value.trim();
 
-    const newModelo = {
-      marca: {
-        id: marcaId
-      },
-      descripcion: description,
-    };
+  const newModelo = {
+    marca: {
+      id: marcaId
+    },
+    descripcion: description,
+  };
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newModelo),
-    };
+  const registerRequestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newModelo),
+  };
 
-    fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/register', requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to add modelo');
-         }    
-        return response.json(); // Parse the response as JSON
-     
+  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/register', registerRequestOptions)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to add modelo');
+      }
+      return response.json();
     })
-        .then((data) => {
-          this.addAuto(data.id);
+    .then((data) => {
+      fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/last')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch last modelo');
+          }
+          return response.json();
+        })
+        .then((lastModelo) => {
+          this.addAuto(parseInt(lastModelo.id));
           this.list();
-        })  
-      .catch((error) => {
-            console.error('Error adding modelos:', error);
-      });
-  }
+        })
+        .catch((error) => {
+          console.error('Error fetching last modelo:', error);
+        });
+    })
+    .catch((error) => {
+      console.error('Error adding modelo:', error);
+    });
+}
+
 
     addAuto = async (modeloId) => {
         var data = new FormData();

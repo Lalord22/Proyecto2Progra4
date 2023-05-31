@@ -67,7 +67,7 @@ public class Modelos {
     @Path("{id}/carro")
     public void createImage(@PathParam("id") int id, @FormParam("carro") InputStream in) {
         try (
-            OutputStream out = new FileOutputStream(new File(location + id))) {
+            OutputStream out = new FileOutputStream(new File(location + id+".png"))) {
             in.transferTo(out);
             out.close();
         } catch (Exception ex) {
@@ -82,6 +82,14 @@ public class Modelos {
         return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition", "attachment; filename=\"carro.png\"")
                 .build();
+    }
+    
+    
+    @GET
+    @Path("/last")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Modelo getLastModelo() throws Exception {
+        return Service.instance().cargarUltimoModelo();
     }
 
     

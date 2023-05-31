@@ -242,4 +242,8 @@ public class Service {
     public List<Usuario> getAllUsuarios() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    public Modelo cargarUltimoModelo() throws Exception {
+        return this.modeloDao.getLastModelo();
+    }
 }
