@@ -27,6 +27,7 @@ public class Coberturas {
     }
 
     @POST
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response agregarCobertura(Cobertura cobertura) {
         try {

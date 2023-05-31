@@ -27,6 +27,7 @@ public class Modelos {
     
     
     @POST
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response agregarModelo(Modelo modelo) {
         try {

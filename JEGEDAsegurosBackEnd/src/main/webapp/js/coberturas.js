@@ -203,7 +203,7 @@ makenew() {
     body: JSON.stringify(newCobertura),
   };
 
-  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/coberturas', requestOptions)
+  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/coberturas/register', requestOptions)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Failed to add cobertura');
