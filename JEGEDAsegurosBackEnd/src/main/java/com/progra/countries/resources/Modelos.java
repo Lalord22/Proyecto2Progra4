@@ -61,7 +61,7 @@ public class Modelos {
         }
     }
     
-    public static final String location = "D:/AAA/seguros/";
+    public static final String location = "C:/AAA/seguros/";
     
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
