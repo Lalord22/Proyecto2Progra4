@@ -1,5 +1,5 @@
 class Coberturas {
-    constructor() {
+     constructor() {
         this.state = {
             entities: [], // Initialize entities as an empty array
             mode: '', // Initialize mode
@@ -7,6 +7,11 @@ class Coberturas {
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
+        this.dom.querySelector("#registerCoberturas").addEventListener('click', () => {
+          const categoriaSelect = this.dom.querySelector('#categoriaSelect');
+          const categoriaId = categoriaSelect.value;
+          this.registerCoberturas(categoriaId);
+        });
     }
 
     render() {
@@ -50,8 +55,8 @@ class Coberturas {
           <form id="modalForm">
             <div class="modal-body">
               <div class="mb-3">
-                <label for="categorySelect" class="form-label">Categoría</label>
-                <select id="categorySelect" class="form-select">
+                <label for="categoriaSelect" class="form-label">Categoría</label>
+                <select id="categoriaSelect" class="form-select">
                   <!-- Categories options will be populated dynamically -->
                 </select>
               </div>
@@ -69,7 +74,8 @@ class Coberturas {
               </div>
             </div>
             <div class="modal-footer">
-              <button id="apply" type="button" class="btn btn-primary">Registrar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button id="registerCoberturas" type="button" class="btn btn-primary" data-bs-dismiss="modal" >Registrar</button>
             </div>
           </form>
         </div>
@@ -79,8 +85,6 @@ class Coberturas {
 
   const coberturasContainer = document.createElement('div');
   coberturasContainer.innerHTML = html;
-  const applyButton = coberturasContainer.querySelector('#apply');
-  applyButton.addEventListener('click', () => this.add());
   return coberturasContainer;
 }
 
@@ -140,8 +144,8 @@ class Coberturas {
     }
 
 makenew() {
-  const categorySelect = this.dom.querySelector('#categorySelect');
-  categorySelect.innerHTML = ''; // Clear existing options
+  const categoriaSelect = this.dom.querySelector('#categoriaSelect');
+  categoriaSelect.innerHTML = ''; // Clear existing options
 
   // Fetch categorias from the endpoint
   fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/categorias')
@@ -157,18 +161,12 @@ makenew() {
         const option = document.createElement('option');
         option.value = categoria.id;
         option.textContent = categoria.descripcion;
-        categorySelect.appendChild(option);
+        categoriaSelect.appendChild(option);
       });
 
       // Display the modal
       this.modal.show();
 
-      // Add event listener to the apply button
-      const applyButton = this.dom.querySelector('#apply');
-      applyButton.addEventListener('click', () => {
-        const categoryId = categorySelect.value;
-        this.add(categoryId);
-      });
     })
     .catch((error) => {
       console.error('Error fetching categorias:', error);
@@ -179,7 +177,7 @@ makenew() {
 
 
 
-   add(categoryId) {
+   registerCoberturas(categoryId) {
   const descriptionInput = this.dom.querySelector('#descriptionInput');
   const costoMinimoInput = this.dom.querySelector('#costoMinimoInput');
   const costoPorcentualInput = this.dom.querySelector('#costoPorcentualInput');
@@ -207,34 +205,13 @@ makenew() {
       if (!response.ok) {
         throw new Error('Failed to add cobertura');
       }
+       this.list(); // Refresh the coberturas list after adding a new one
       return response.json();
-    })
-    .then((data) => {
-      // Handle successful response from the backend
-      console.log('Cobertura added successfully:', data);
-      this.reset();
-      this.modal.hide();
-      this.list(); // Refresh the coberturas list after adding a new one
     })
     .catch((error) => {
       console.error('Error adding cobertura:', error);
     });
 }
-
-getMarcaById(marcaId) {
-      const request = new Request(`${backend}/coberturas/${marcaId}`, { method: 'GET', headers: {} });
-      return fetch(request)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch cobertura by ID');
-          }
-          return response.json();
-        })
-        .catch(error => {
-          console.error('Error fetching cobertura by ID:', error);
-          throw error;
-        });
-    }
 
 
 }
