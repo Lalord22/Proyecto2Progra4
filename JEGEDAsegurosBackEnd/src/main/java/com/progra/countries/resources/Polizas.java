@@ -6,6 +6,8 @@ import com.progra.countries.logic.Poliza;
 import com.progra.countries.logic.PolizaDTO;
 import com.progra.countries.logic.Usuario;
 import jakarta.annotation.security.PermitAll;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -67,16 +69,15 @@ public class Polizas {
         }
     }
 
-    @POST
+ @POST
     @Path("/agregar")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response agregarPoliza(Poliza poliza) {
         try {
             Service.instance().agregarPoliza(poliza);
             return Response.status(Response.Status.OK).build();
-        } catch (SQLException e) {
-            // Handle the exception appropriately (e.g., log the error, return an error response)
-            // You can customize the error handling based on your application's requirements
+        } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

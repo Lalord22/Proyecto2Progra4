@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 
 
-public class Cliente implements Serializable{
+public class Cliente implements Serializable {
     String cedula;
     String nombre;
     String telefono;
@@ -31,7 +31,7 @@ public class Cliente implements Serializable{
     List<Poliza> polizas;
 
     public Cliente() {
-        this("","","","","",new Usuario());
+        this("", "", "", "", "", new Usuario());
     }
 
     public Cliente(String cedula, String nombre, String telefono, String correo, String datosTarjeta, Usuario usuario) {
@@ -41,10 +41,9 @@ public class Cliente implements Serializable{
         this.telefono = telefono;
         this.correo = correo;
         this.datosTarjeta = datosTarjeta;
-        this.polizas = new ArrayList();
+        this.polizas = new ArrayList<>();
     }
 
-    
     public String getCedula() {
         return cedula;
     }
@@ -69,10 +68,12 @@ public class Cliente implements Serializable{
         this.usuario = usuario;
     }
 
+    @JsonbTransient
     public List<Poliza> getPolizas() {
         return polizas;
     }
     
+    @JsonbTransient
     public void setPolizas(List<Poliza> polizas) {
         this.polizas = polizas;
     }
@@ -106,18 +107,10 @@ public class Cliente implements Serializable{
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Cliente other = (Cliente) obj;
-        if (!Objects.equals(this.cedula, other.cedula)) {
-            return false;
-        }
-        return true;
+        Cliente cliente = (Cliente) obj;
+        return Objects.equals(cedula, cliente.cedula);
     }
-
-    
 }

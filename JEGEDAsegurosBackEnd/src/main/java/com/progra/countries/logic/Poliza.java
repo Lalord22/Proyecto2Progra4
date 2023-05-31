@@ -1,54 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.progra.countries.logic;
 
 import jakarta.json.bind.annotation.JsonbTransient;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
-/*
- *Proyecto I Programacion 4
- * 
- *Jennifer Lobo Vasquez
- *Daniela Madrigal Morales
- *Gerardo Salzar Vargas
- * 
- */
-
-
 public class Poliza {
 
-    
-    int id;
-    String numeroPlaca;
-    String anno;
-    double valorAsegurado;
-    String plazoPago;
-    String fechaInicio;
-    Modelo modelo;  
-    Cliente cliente;
-    List<Cobertura> coberturas;
-    
-    
-      public Poliza(int id, String numeroPlaca, String anno, double valorAsegurado, String plazoPago, String fechaInicio, Modelo modelo, Cliente cliente) {
+    private int id;
+    private String numeroPlaca;
+    private String anno;
+    private double valorAsegurado;
+    private String plazoPago;
+    private String fechaInicio;
+    private Modelo modelo;
+    private Cliente cliente;
+    private List<Cobertura> coberturas;
+
+    public Poliza() {
+        this(0, "", "", 0, "", "", new Modelo(), new Cliente());
+    }
+
+    public Poliza(int id, String numeroPlaca, String anno, double valorAsegurado, String plazoPago, String fechaInicio, Modelo modelo, Cliente cliente) {
         this.id = id;
         this.numeroPlaca = numeroPlaca;
         this.anno = anno;
         this.valorAsegurado = valorAsegurado;
         this.plazoPago = plazoPago;
         this.fechaInicio = fechaInicio;
-        this.modelo= modelo;
+        this.modelo = modelo;
         this.cliente = cliente;
-        this.coberturas = new ArrayList();
-    }
-
-     public Poliza() {
-        this(0,"","",0,"","",new Modelo(0,"",new Marca(0,"")),new Cliente());
+        this.coberturas = new ArrayList<>();
     }
 
     public int getId() {
@@ -111,7 +94,6 @@ public class Poliza {
         return cliente;
     }
 
-    @JsonbTransient
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
@@ -123,27 +105,21 @@ public class Poliza {
     public void setCoberturas(List<Cobertura> coberturas) {
         this.coberturas = coberturas;
     }
-    
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Poliza other = (Poliza) obj;
-        if (!Objects.equals(this.numeroPlaca, other.numeroPlaca)) {
-            return false;
-        }
-        return true;
+        Poliza poliza = (Poliza) obj;
+        return Objects.equals(numeroPlaca, poliza.numeroPlaca);
     }
-    
-    
-    
-    
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numeroPlaca);
+    }
 }

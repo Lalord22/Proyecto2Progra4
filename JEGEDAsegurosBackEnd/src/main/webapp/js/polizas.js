@@ -271,10 +271,10 @@ showAddModal() {
 
                 // Create a new poliza object from the form data
                 const newPoliza = {
-                  id: 0,
+               
                   modelo: modelo,
                   numeroPlaca: placaInput.value,
-                  valorAsegurado: parseDouble(valorAseguradoInput.value),
+                  valorAsegurado: parseFloat(valorAseguradoInput.value),
                   anno: annoInput.value,
                   plazoPago: plazoPagoSelect.value,
                   fechaInicio: fechaInicioInput.value,
@@ -428,6 +428,8 @@ showAddModal() {
     summaryModal._element.addEventListener('hidden.bs.modal', cleanup);
   });
 }
+
+
   
 }
 
