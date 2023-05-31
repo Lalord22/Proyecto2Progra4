@@ -23,9 +23,7 @@ import java.util.Objects;
 
 public class Poliza {
 
-    public static List<Modelo> getTodosModelos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
     int id;
     String numeroPlaca;
     String anno;

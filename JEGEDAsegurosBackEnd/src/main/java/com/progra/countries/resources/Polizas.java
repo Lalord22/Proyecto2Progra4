@@ -45,20 +45,6 @@ public class Polizas {
     }
     
     
-    
-
-    // TODO: cambiar este metodo para que jale la cedula de la sesion
-    //No se si funciona porque aun no hay nadie registrado aun
-    /*@GET
-    @Path("/cliente")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Poliza> muestraPolizasCliente(@Context HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
-        String cedula = (String) session.getAttribute("cedula"); // Obtener la cédula de la sesión
-
-        List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);
-        return polizas;
-    }*/
 
     @GET
     @Path("/findByPlaca/{placa}")

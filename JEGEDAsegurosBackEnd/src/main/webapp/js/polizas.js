@@ -168,6 +168,21 @@ showAddModal() {
 
       const modelos = await responseModelos.json();
 
+      // Create a map to store the unique combination of marca and modelos
+      const marcaModeloMap = new Map();
+
+      // Group modelos by marca
+      modelos.forEach((modelo) => {
+        const marcaId = modelo.marca.id;
+        if (!marcaModeloMap.has(marcaId)) {
+          marcaModeloMap.set(marcaId, {
+            marcaDescripcion: modelo.marca.descripcion,
+            modelos: [],
+          });
+        }
+        marcaModeloMap.get(marcaId).modelos.push(modelo);
+      });
+
       // Populate selectModelo dropdown with modelos and their marca
       const selectModelo = modalForm.querySelector('#selectModelo');
       selectModelo.innerHTML = '';
@@ -207,38 +222,88 @@ showAddModal() {
         checkboxGroup.appendChild(checkbox);
       });
 
-      // Show the modal
-      this.modal.show();
+      // Fetch cliente information from the server
+      fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente')
+        .then((responseCliente) => {
+          if (!responseCliente.ok) {
+            errorMessage(responseCliente.status);
+            return;
+          }
+
+          return responseCliente.json();
+        })
+        .then((cliente) => {
+          // Show the modal
+          this.modal.show();
+
+          // Bind the createPoliza method to the "Registrar" button click event
+          const registrarButton = modalForm.querySelector('#apply');
+          registrarButton.addEventListener('click', () => {
+            const selectModelo = modalForm.querySelector('#selectModelo');
+            const modeloSelected = selectModelo.value;
+            const placaInput = modalForm.querySelector('#placa');
+            const valorAseguradoInput = modalForm.querySelector('#valorAsegurado');
+            const annoInput = modalForm.querySelector('#anno');
+            const plazoPagoSelect = modalForm.querySelector('#plazoPago');
+            const fechaInicioInput = modalForm.querySelector('#fechaInicio');
+
+            // Create an array of selected coberturas
+            const coberturasCheckboxList = modalForm.querySelectorAll('input[type="checkbox"]:checked');
+            const coberturaIds = Array.from(coberturasCheckboxList).map((checkbox) => checkbox.value);
+
+            // Fetch the selected coberturas from the database
+            const fetchCoberturas = coberturaIds.map((coberturaId) => {
+              const requestCobertura = new Request(`${backend}/coberturas/${coberturaId}`, { method: 'GET', headers: {} });
+              return fetch(requestCobertura).then((response) => response.json());
+            });
+
+            // Fetch the selected modelo from the database
+            const requestModelo = new Request(`${backend}/modelos/${modeloSelected}`, { method: 'GET', headers: {} });
+
+            Promise.all([fetch(requestModelo), ...fetchCoberturas])
+              .then(async ([responseModelo, ...selectedCoberturas]) => {
+                if (!responseModelo.ok) {
+                  errorMessage(responseModelo.status);
+                  return;
+                }
+
+                const modelo = await responseModelo.json();
+
+                // Create a new poliza object from the form data
+                const newPoliza = {
+                  id: 0,
+                  modelo: modelo,
+                  numeroPlaca: placaInput.value,
+                  valorAsegurado: parseDouble(valorAseguradoInput.value),
+                  anno: annoInput.value,
+                  plazoPago: plazoPagoSelect.value,
+                  fechaInicio: fechaInicioInput.value,
+                  coberturas: selectedCoberturas,
+                  cliente: cliente,
+                };
+
+                // Call the createPoliza method with the new poliza object
+                this.createPoliza(newPoliza);
+              })
+              .catch((error) => {
+                errorMessage(error.message);
+              });
+          });
+        })
+        .catch((error) => {
+          errorMessage(error.message);
+        });
     })
     .catch((error) => {
-      console.error('Error fetching data:', error);
+      errorMessage(error.message);
     });
 }
 
 
 
-  createPoliza(data) {
-    const request = new Request(`${backend}/polizas`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    (async () => {
-      try {
-        const response = await fetch(request);
-        if (!response.ok) {
-          errorMessage(response.status);
-          return;
-        }
-        this.modal.hide();
-        this.list(); // Refresh the polizas list after creating a new poliza
-      } catch (error) {
-        console.error('Error creating poliza:', error);
-      }
-    })();
-  }
+
+
+
 
   search() {
     const searchInput = this.dom.querySelector('#name').value;
@@ -265,6 +330,105 @@ showAddModal() {
       }
     })();
   }
+  
+  
+  createPoliza(poliza) {
+  // Show summary popup
+  this.showSummaryPopup(poliza)
+    .then((confirmed) => {
+      if (confirmed) {
+        // User confirmed, proceed with creating the poliza
+        const request = new Request(`${backend}/polizas/agregar`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(poliza),
+        });
+
+        fetch(request)
+          .then((response) => {
+            if (!response.ok) {
+              errorMessage(response.status);
+              throw new Error('Failed to create poliza');
+            }
+            this.modal.hide();
+            this.list(); // Refresh the polizas list after creating a new poliza
+          })
+          .catch((error) => {
+            console.error('Error creating poliza:', error);
+          });
+      } else {
+        // User canceled, do nothing
+      }
+    })
+    .catch((error) => {
+      console.error('Error showing summary popup:', error);
+    });
+}
+  
+  showSummaryPopup(data) {
+  return new Promise((resolve, reject) => {
+    const html = `
+      <div class="modal fade" id="summary-modal" tabindex="-1" role="dialog" aria-labelledby="summary-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="summary-modal-label">Summary</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p><strong>Modelo:</strong> ${data.modelo.descripcion}</p>
+              <p><strong>Placa:</strong> ${data.numeroPlaca}</p>
+              <p><strong>Valor Asegurado:</strong> ${data.valorAsegurado}</p>
+              <p><strong>Año de Fabricación:</strong> ${data.anno}</p>
+              <p><strong>Plazo de Pago:</strong> ${data.plazoPago}</p>
+              <p><strong>Fecha de Inicio:</strong> ${data.fechaInicio}</p>
+            </div>
+            <div class="modal-footer">
+              <button id="cancel-button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button id="confirm-button" type="button" class="btn btn-primary">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    const summaryPopup = document.createElement('div');
+    summaryPopup.innerHTML = html;
+    document.body.appendChild(summaryPopup);
+
+    // Show the summary popup
+    const summaryModal = new bootstrap.Modal(summaryPopup.querySelector('#summary-modal'));
+    summaryModal.show();
+
+    // Add event listener to the confirm button
+    const confirmButton = summaryPopup.querySelector('#confirm-button');
+    confirmButton.addEventListener('click', () => {
+      summaryModal.hide();
+      resolve(true); // User confirmed
+    });
+
+    // Add event listener to the cancel button
+    const cancelButton = summaryPopup.querySelector('#cancel-button');
+    cancelButton.addEventListener('click', () => {
+      summaryModal.hide();
+      resolve(false); // User canceled
+    });
+
+    // Cleanup function
+    const cleanup = () => {
+      confirmButton.removeEventListener('click', cleanup);
+      cancelButton.removeEventListener('click', cleanup);
+      summaryPopup.remove();
+    };
+
+    // Cleanup when the modal is hidden
+    summaryModal._element.addEventListener('hidden.bs.modal', cleanup);
+  });
+}
+  
 }
 
 // Usage example:
@@ -283,13 +447,16 @@ polizasTable.dom.querySelector('#apply').addEventListener('click', () => {
 
   // Create a new poliza object from the form data
   const newPoliza = {
-    modeloId: selectModelo.value,
+    modelo: selectModelo.value,
     numeroPlaca: placaInput.value,
     valorAsegurado: valorInput.value,
     anno: yearInput.value,
     plazoPago: plazoInput.value,
     fechaInicio: startDateInput.value,
   };
+  
+  
+  
 
   polizasTable.createPoliza(newPoliza);
 });
