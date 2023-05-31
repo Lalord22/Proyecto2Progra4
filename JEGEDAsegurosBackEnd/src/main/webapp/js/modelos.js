@@ -7,6 +7,11 @@ class Modelos {
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
+        this.dom.querySelector("#registerModelos").addEventListener('click', () => {
+          const marcaSelect = this.dom.querySelector('#marcaSelect');
+          const marcaId = marcaSelect.value;
+          this.registerModelos(marcaId);
+        });
     }
 
     render() {
@@ -36,7 +41,7 @@ class Modelos {
           </div>
         </div>
       </div>
-    </div>
+    </div>   
     <div id="modal" class="modal fade" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -45,7 +50,7 @@ class Modelos {
             <h5 class="modal-title">Registrar Modelo</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form id="modalForm">
+          <form id="modeloForm">
             <div class="modal-body">
               <div class="mb-3">
                 <label for="marcaSelect" class="form-label">Marca</label>
@@ -59,7 +64,8 @@ class Modelos {
               </div>
             </div>
             <div class="modal-footer">
-              <button id="apply" type="button" class="btn btn-primary">Registrar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary" id="registerModelos" data-bs-dismiss="modal">Registar</button>
             </div>
           </form>
         </div>
@@ -68,8 +74,6 @@ class Modelos {
     `;
         const modelosContainer = document.createElement('div');
         modelosContainer.innerHTML = html;
-        const applyButton = modelosContainer.querySelector('#apply');
-        applyButton.addEventListener('click', () => this.add());
         return modelosContainer;
     }
     
@@ -120,8 +124,8 @@ class Modelos {
       <td>${mo.marca.descripcion}</td>`;
         list.append(tr);
     }
-
-   makenew() {
+    
+  makenew() {
         const marcaSelect = this.dom.querySelector('#marcaSelect');
         marcaSelect.innerHTML = ''; // Clear existing options
 
@@ -145,53 +149,41 @@ class Modelos {
             // Display the modal
             this.modal.show();
 
-            // Add event listener to the apply button
-            const applyButton = this.dom.querySelector('#apply');
-            applyButton.addEventListener('click', () => {
-              const marcaId = marcaSelect.value;
-              this.add(marcaId);
-            });
           })
           .catch((error) => {
             console.error('Error fetching marcas:', error);
           });
-      }
+}
 
 
-    add(marcaId) {
-        const descriptionInput = this.dom.querySelector('#descriptionInput');
-        const description = descriptionInput.value;
-        const newModelo = {
-          marca: {
-                      id: marcaId
-                  },  
-          descripcion: description,
-        };
+   registerModelos(marcaId) {
+    const descriptionInput = this.dom.querySelector('#descriptionInput');
+    const description = descriptionInput.value.trim();
 
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newModelo),
-        };
+    const newModelo = {
+      marca: {
+        id: marcaId
+      },
+      descripcion: description,
+    };
 
-        fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos', requestOptions)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Failed to add modelo');
-            }
-            return response.json();
-          })
-          .then((data) => {
-            // Handle successful response from the backend
-            console.log('Modelo added successfully:', data);
-            this.reset();
-            this.modal.hide();
-            this.list(); // Refresh the coberturas list after adding a new one
-          })
-          .catch((error) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newModelo),
+    };
+
+    fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/register', requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to add modelo');
+        }        
+          this.list();
+      })
+      .catch((error) => {
             console.error('Error adding modelos:', error);
-          });
-    }
+      });
+  }
 
     // Other methods (load, reset, emptyEntity, update, validate) can be added here
 }
