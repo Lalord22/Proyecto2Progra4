@@ -16,7 +16,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -66,16 +65,13 @@ public class Modelos {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("{id}/carro")
-    public void createImage(@PathParam("id") int id, Part filePart) {
-        try (InputStream in = filePart.getInputStream();
-             OutputStream out = new FileOutputStream(new File(location + id + ".png"))) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException("Error saving image", ex);
+    public void createImage(@PathParam("id") int id, @FormParam("carro") InputStream in) {
+        try (
+            OutputStream out = new FileOutputStream(new File(location + id))) {
+            in.transferTo(out);
+            out.close();
+        } catch (Exception ex) {
+            throw new NotAcceptableException();
         }
     }
 

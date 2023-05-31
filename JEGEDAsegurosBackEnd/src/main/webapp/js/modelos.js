@@ -31,8 +31,8 @@ class Modelos {
                 <thead>
                   <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Imagen</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Auto</th>
                     <th scope="col">Marca</th>
                   </tr>
                 </thead>
@@ -51,7 +51,7 @@ class Modelos {
             <h5 class="modal-title">Registrar Modelo</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form id="modeloForm">
+          <form id="modeloForm" enctype="multipart/form-data">
             <div class="modal-body">
               <div class="mb-3">
                 <label for="marcaSelect" class="form-label">Marca</label>
@@ -184,48 +184,26 @@ class Modelos {
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to add modelo');
-        }    
-              return response.json(); // Parse the response as JSON
-
-      })
-      .then((modelo) => {
-      this.entity = modelo; // Assign the created modelo to the entity property
-      this.addAuto(modelo.id);
-      this.list();
+         }    
+        return response.json(); // Parse the response as JSON
+     
     })
+        .then((data) => {
+          this.addAuto(data.id);
+          this.list();
+        })  
       .catch((error) => {
             console.error('Error adding modelos:', error);
       });
   }
 
-   addAuto = async (modeloId) => {
-  if (!this.entity) {
-    console.error('No entity available');
-    return;
-  }
-
-  const imageInput = this.dom.querySelector('#imageInput');
-  const file = imageInput.files[0];
-
-  const formData = new FormData();
-  formData.append('auto', file);
-
-  const requestOptions = {
-    method: 'POST',
-    body: formData,
-  };
-
-  try {
-    const response = await fetch(`${backend}/modelos/${modeloId}/carro`, requestOptions);
-    if (!response.ok) {
-      throw new Error('Error uploading image');
+    addAuto = async (modeloId) => {
+        var data = new FormData();
+        data.append("carro",document.querySelector('#imageInput').files[0]);
+        let request = new Request(`${backend}/modelos/${modeloId}/carro`,{method: 'POST', body: 'data'});
+        const response = await fetch(request);
+        if(!response.ok) {alert("Error uploading image"); return;}
     }
-    // Image uploaded successfully
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    // Handle the error appropriately (e.g., display an error message to the user)
-  }
-}
 
 
     // Other methods (load, reset, emptyEntity, update, validate) can be added here
