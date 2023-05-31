@@ -102,25 +102,25 @@ public class CoberturaDao {
       }
 
     public List<Cobertura> cargarTodo() {
-        
     List<Cobertura> resultado = new ArrayList<>();
     try {
-        String sql = "SELECT * FROM Cobertura";
+        String sql = "SELECT * FROM Cobertura JOIN Categoria ON Cobertura.categoria = Categoria.id";
         PreparedStatement stm = db.prepareStatement(sql);
         
         ResultSet rs = db.executeQuery(stm);
         while (rs.next()) {
+            Categoria categoria = new Categoria(rs.getInt("Categoria.id"), rs.getString("Categoria.descripcion"));
             
-            
-            resultado.add(from(rs));
+            Cobertura cobertura = new Cobertura(rs.getString("Cobertura.descripcion"), rs.getInt("Cobertura.costoMinimo"), rs.getInt("Cobertura.costoPorcentual"), categoria);
+            cobertura.setId(rs.getInt("Cobertura.id"));
+            resultado.add(cobertura);
         }
     } catch (SQLException ex) {
         // Handle the exception
     }
     return resultado;
+}
 
-        
-    }
 
     public void deleteById(String id) throws SQLException, Exception {
         String sql = "DELETE FROM Cobertura WHERE id=?";

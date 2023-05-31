@@ -199,6 +199,10 @@ showAddModal() {
         checkbox.innerHTML = `
           <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
           <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
+          <div>Costo Minimo: ${cobertura.costoMinimo}</div>
+          <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
+          <div>Categoria: ${cobertura.categoria.descripcion}</div>
+          <!-- Add additional attributes as needed -->
         `;
         checkboxGroup.appendChild(checkbox);
       });

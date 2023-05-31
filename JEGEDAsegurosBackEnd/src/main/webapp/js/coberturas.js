@@ -103,30 +103,29 @@ class Coberturas {
 
 
 
-   list() {
-    const request = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
-    (async () => {
-      try {
-        const response = await fetch(request);
-        if (!response.ok) {
-          errorMessage(response.status);
-          return;
-        }
-        const coberturas = await response.json();
-        this.state.entities = coberturas; // Update entities in the state
-        const listing = this.dom.querySelector("#listbody");
-        listing.innerHTML = "";
-        this.state.entities.forEach(async e => {
-          const cobertura = e;
-          const categoria = await this.getCategoriaById(cobertura.id);
-          cobertura.categoria = categoria;
-          this.row(listing, cobertura);
-        });
-      } catch (error) {
-        console.error('Error fetching coberturas:', error);
-      }
-    })();
-}
+    list() {
+        const request = new Request(`${backend}/coberturas`, {method: 'GET', headers: {}});
+        (async () => {
+            try {
+                const response = await fetch(request);
+                if (!response.ok) {
+                    errorMessage(response.status);
+                    return;
+                }
+                const coberturas = await response.json();
+                this.state.entities = coberturas; // Update entities in the state
+                const listing = this.dom.querySelector("#listbody");
+                listing.innerHTML = "";
+                this.state.entities.forEach(e => this.row(listing, e));
+                const cobertura = e;
+                const categoria = await this.getMarcaById(coberturas.id);
+                cobertura.categoria = categoria;
+                this.row(listing, cobertura);
+            } catch (error) {
+                console.error('Error fetching modelos:', error);
+            }
+        })();
+    }
 
 
     row(list, co) {
@@ -222,6 +221,20 @@ makenew() {
     });
 }
 
+getMarcaById(marcaId) {
+      const request = new Request(`${backend}/coberturas/${marcaId}`, { method: 'GET', headers: {} });
+      return fetch(request)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch cobertura by ID');
+          }
+          return response.json();
+        })
+        .catch(error => {
+          console.error('Error fetching cobertura by ID:', error);
+          throw error;
+        });
+    }
 
 
 }
