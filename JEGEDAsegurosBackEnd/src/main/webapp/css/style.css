@@ -19,3 +19,7 @@ img.flag{
     width: 200px;
     height: auto;    
 }
+.carro {
+  width: 100px; /* Ancho deseado */
+  height: auto; /* Altura ajustada automáticamente */
+}

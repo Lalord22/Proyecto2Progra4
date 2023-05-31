@@ -32,6 +32,7 @@ class Modelos {
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Descripcion</th>
+                    <th scope="col">Imagen</th>
                     <th scope="col">Marca</th>
                   </tr>
                 </thead>
@@ -61,6 +62,10 @@ class Modelos {
               <div class="mb-3">
                 <label for="descriptionInput" class="form-label">Descripción</label>
                 <input type="text" id="descriptionInput" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="imageInput" class="form-label">Imagen</label>
+                <input type="file" id="imageInput" class="form-control" accept="image/*">
               </div>
             </div>
             <div class="modal-footer">
@@ -121,6 +126,7 @@ class Modelos {
         tr.innerHTML = `
       <td>${mo.id}</td>
       <td>${mo.descripcion}</td>
+      <td><img class="carro" src="${backend}/modelos/${mo.id}/carro"></td>
       <td>${mo.marca.descripcion}</td>`;
         list.append(tr);
     }
@@ -158,6 +164,7 @@ class Modelos {
 
    registerModelos(marcaId) {
     const descriptionInput = this.dom.querySelector('#descriptionInput');
+    const imageInput = this.dom.querySelector('#imageInput');
     const description = descriptionInput.value.trim();
 
     const newModelo = {
@@ -177,13 +184,49 @@ class Modelos {
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to add modelo');
-        }        
-          this.list();
+        }    
+              return response.json(); // Parse the response as JSON
+
       })
+      .then((modelo) => {
+      this.entity = modelo; // Assign the created modelo to the entity property
+      this.addAuto(modelo.id);
+      this.list();
+    })
       .catch((error) => {
             console.error('Error adding modelos:', error);
       });
   }
+
+   addAuto = async (modeloId) => {
+  if (!this.entity) {
+    console.error('No entity available');
+    return;
+  }
+
+  const imageInput = this.dom.querySelector('#imageInput');
+  const file = imageInput.files[0];
+
+  const formData = new FormData();
+  formData.append('auto', file);
+
+  const requestOptions = {
+    method: 'POST',
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(`${backend}/modelos/${modeloId}/carro`, requestOptions);
+    if (!response.ok) {
+      throw new Error('Error uploading image');
+    }
+    // Image uploaded successfully
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    // Handle the error appropriately (e.g., display an error message to the user)
+  }
+}
+
 
     // Other methods (load, reset, emptyEntity, update, validate) can be added here
 }
