@@ -71,8 +71,8 @@ class App {
                   <input type="text" class="form-control" id="updateNombre" name="nombre">
                 </div>
                 <div class="input-group mb-3">
-                  <span class="input-group-text">Apellido</span>
-                  <input type="text" class="form-control" id="updateApellido" name="apellido">
+                  <span class="input-group-text">Clave</span>
+                  <input type="password" class="form-control" id="updateApellido" name="apellido">
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text">Teléfono</span>
