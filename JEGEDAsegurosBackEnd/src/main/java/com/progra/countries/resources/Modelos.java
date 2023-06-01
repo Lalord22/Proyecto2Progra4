@@ -50,19 +50,7 @@ public class Modelos {
         }
     }
 
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"CLI","ADM"})
-    public Modelo getModeloById(@PathParam("id") int modeloId) {
-        try {
-            return Service.instance().cargarModeloById(modeloId);
-        } catch (Exception e) {
-            // Handle the exception appropriately (e.g., log the error, return an error response)
-            // You can customize the error handling based on your application's requirements
-            return null;
-        }
-    }
+    
 
     public static final String location = "C:/AAA/seguros/";
 
@@ -77,6 +65,20 @@ public class Modelos {
             out.close();
         } catch (Exception ex) {
             throw new NotAcceptableException();
+        }
+    }
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
+    public Modelo getModeloById(@PathParam("id") int modeloId) {
+        try {
+            return Service.instance().cargarModeloById(modeloId);
+        } catch (Exception e) {
+            // Handle the exception appropriately (e.g., log the error, return an error response)
+            // You can customize the error handling based on your application's requirements
+            return null;
         }
     }
 

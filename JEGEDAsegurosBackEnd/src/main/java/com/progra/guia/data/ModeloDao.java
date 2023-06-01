@@ -32,10 +32,13 @@ public class ModeloDao {
     }
 
     public Modelo read(Integer id) throws Exception {
-        String sql = "select "
-                + "* "
-                + "from Modelo e inner join Marca u on e.id=u.id "
-                + "where e.id=?";
+        String sql = "SELECT "
+                + "e.*, "
+                + "u.* "
+                + "FROM Modelo e "
+                + "INNER JOIN Marca u ON e.marca_id = u.id "
+                + "WHERE e.id = ?";
+
         PreparedStatement stm = db.prepareStatement(sql);
         stm.setInt(1, id);
         ResultSet rs = db.executeQuery(stm);
