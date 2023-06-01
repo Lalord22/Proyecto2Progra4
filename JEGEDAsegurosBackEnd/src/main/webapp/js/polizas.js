@@ -43,6 +43,7 @@ class Polizas {
                     <th scope="col">Plazo</th>
                     <th scope="col">Fecha de Inicio</th>
                     <th scope="col">Modelo</th>
+                    <th scope="col">Auto</th>
                   </tr>
                 </thead>
                 <tbody id="listbody"></tbody>
@@ -146,7 +147,8 @@ class Polizas {
       <td>${p.valorAsegurado}</td>
       <td>${p.plazoPago}</td>
       <td>${p.fechaInicio}</td>
-      <td>${p.modelo.descripcion}</td>`;
+      <td>${p.modelo.descripcion}</td>
+      <td><img class="carro" src="${backend}/modelos/${p.modelo.id}/carro"></td>`;
     list.append(tr);
   }
 
