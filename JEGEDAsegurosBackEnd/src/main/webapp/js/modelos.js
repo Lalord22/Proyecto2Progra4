@@ -98,29 +98,28 @@ class Modelos {
   }
 
   list() {
-    const request = new Request(`${backend}/modelos`, { method: 'GET', headers: {} });
-    (async () => {
-      try {
-        const response = await fetch(request);
-        if (!response.ok) {
-          errorMessage(response.status);
-          return;
-        }
-        const modelos = await response.json();
-
-        const listing = this.dom.querySelector("#listbody");
-        listing.innerHTML = "";
-
-        for (const modelo of modelos) {
-          const marca = await this.getMarcaById(modelo.marca.id);
-          modelo.marca = marca;
-          this.row(listing, modelo);
-        }
-      } catch (error) {
-        console.error('Error fetching modelos:', error);
-      }
-    })();
-  }
+        const request = new Request(`${backend}/modelos`, {method: 'GET', headers: {}});
+        (async () => {
+            try {
+                const response = await fetch(request);
+                if (!response.ok) {
+                    errorMessage(response.status);
+                    return;
+                }
+                const modelos = await response.json();
+                this.state.entities = modelos; // Update entities in the state
+                const listing = this.dom.querySelector("#listbody");
+                listing.innerHTML = "";
+                this.state.entities.forEach(e => this.row(listing, e));
+                const modelo = e;
+                const marca = await this.getMarcaById(modelos.id);
+               modelo.marca = marca;
+                this.row(listing, modelo);
+            } catch (error) {
+                console.error('Error fetching modelos:', error);
+            }
+        })();
+    }
 
   row(list, mo) {
     const tr = document.createElement("tr");
