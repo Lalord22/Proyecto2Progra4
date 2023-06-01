@@ -79,7 +79,7 @@ class App {
                   <input type="text" class="form-control" id="updateTelefono" name="telefono">
                 </div>
                 <div class="input-group mb-3">
-                  <span class="input-group-text">Dirección</span>
+                  <span class="input-group-text">Numero de Tarjeta</span>
                   <input type="text" class="form-control" id="updateDireccion" name="direccion">
                 </div>
                 <div class="input-group mb-3">
@@ -495,70 +495,84 @@ class App {
     }
 
     updateCliente = async () => {
-        const updateForm = this.dom.querySelector('#updateModal #updateForm');
-        const formData = new FormData(updateForm);
+  const updateForm = this.dom.querySelector('#updateModal #updateForm');
+  const formData = new FormData(updateForm);
 
-        try {
-            // Make an HTTP GET request to fetch the client data for the currently logged-in client
-            const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
-            if (!response.ok) {
-                throw new Error('Failed to fetch client data');
-            }
+  // Check if any of the required form fields are empty
+  if (
+    formData.get('nombre').trim() === '' ||
+    formData.get('apellido').trim() === '' ||
+    formData.get('telefono').trim() === '' ||
+    formData.get('direccion').trim() === '' ||
+    formData.get('email').trim() === ''
+  ) {
+    alert('Please fill in all the required fields.');
+    return;
+  }
 
-            const data = await response.json();
-
-            const usuarioData = {
-                cedula: data.usuario.cedula,
-                clave: formData.get("apellido"),
-                tipo: data.usuario.tipo
-            };
-
-            const clienteData = {
-                cedula: data.cedula,
-                nombre: formData.get("nombre"),
-                telefono: formData.get("telefono"),
-                datosTarjeta: formData.get("direccion"),
-                correo: formData.get("email"),
-                usuario: {
-                    cedula: data.usuario.cedula,
-                    username: data.usuario.username
-                }
-            };
-
-            // Send clienteData to the server for update
-            const updateResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/update', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(clienteData)
-            });
-
-            if (updateResponse.ok) {
-                // Update successful
-                const usuarioResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/usuarios/update', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(usuarioData)
-                });
-                if (usuarioResponse.ok) {
-                    alert('Update successful.');
-                    this.updateModal.hide();
-                } else {
-                    // Update failed for usuario
-                    alert('An error occurred during the usuario update. Please try again later.');
-                }
-            } else {
-                // Update failed for cliente
-                alert('An error occurred during the cliente update. Please try again later.');
-            }
-        } catch (error) {
-            console.error('Error during update:', error);
-            alert('An error occurred during the update. Please try again later.');
-        }
+  try {
+    // Make an HTTP GET request to fetch the client data for the currently logged-in client
+    const response = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente');
+    if (!response.ok) {
+      throw new Error('Failed to fetch client data');
     }
+
+    const data = await response.json();
+
+    const usuarioData = {
+      cedula: data.usuario.cedula,
+      clave: formData.get('apellido'),
+      tipo: data.usuario.tipo
+    };
+
+    const clienteData = {
+      cedula: data.cedula,
+      nombre: formData.get('nombre'),
+      telefono: formData.get('telefono'),
+      datosTarjeta: formData.get('direccion'),
+      correo: formData.get('email'),
+      usuario: {
+        cedula: data.usuario.cedula,
+        username: data.usuario.username
+      }
+    };
+
+    // Send clienteData to the server for update
+    const updateResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/update', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(clienteData)
+    });
+
+    if (updateResponse.ok) {
+      // Update successful
+      const usuarioResponse = await fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/usuarios/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(usuarioData)
+      });
+      if (usuarioResponse.ok) {
+        alert('Update successful.');
+        this.updateModal.hide();
+      } else {
+        // Update failed for usuario
+        alert('An error occurred during the usuario update. Please try again later.');
+      }
+    } else {
+      // Update failed for cliente
+      alert('An error occurred during the cliente update. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Error during update:', error);
+    alert('An error occurred during the update. Please try again later.');
+  }
+};
+
+
 
 }
 
