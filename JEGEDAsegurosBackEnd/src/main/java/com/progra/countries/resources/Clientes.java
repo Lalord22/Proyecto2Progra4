@@ -5,6 +5,7 @@ import com.progra.countries.logic.Service;
 import com.progra.countries.logic.Poliza;
 import com.progra.countries.logic.Usuario;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
@@ -27,6 +28,7 @@ public class Clientes {
     @GET
 @Path("/cliente")
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"CLI","ADM"})
 public Cliente clienteFind(@Context HttpServletRequest request) throws Exception {
     Usuario loggedUser = (Usuario) request.getSession().getAttribute("user");
     if (loggedUser == null) {
@@ -45,6 +47,7 @@ public Cliente clienteFind(@Context HttpServletRequest request) throws Exception
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public Response updateCliente(Cliente cliente) {
         try {
             Service.instance().clienteUpdate(cliente);
@@ -69,12 +72,14 @@ public Cliente clienteFind(@Context HttpServletRequest request) throws Exception
     @GET
     @Path("/coberturas")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public List<Cliente> getCoberturas() {
         return Service.instance().cargarClientes();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public List<Cliente> getClientes() {
         return Service.instance().cargarClientes();
     }

@@ -22,6 +22,7 @@ public class Usuarios {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM"})
     public List<Usuario> getAllUsuarios() {
         Service service = Service.instance();
         // Assuming the Service class has a method to retrieve all usuarios
@@ -31,6 +32,7 @@ public class Usuarios {
     @GET
     @Path("/{cedula}/{clave}")
     @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed({"CLI","ADM"})
     public Usuario getUsuario(@PathParam("cedula") String cedula, @PathParam("clave") String clave) throws Exception {
         try {
             return Service.instance().usuarioFind(cedula, clave);
@@ -43,7 +45,7 @@ public class Usuarios {
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    //@RolesAllowed({"CLI"})  Esta linea hace que el comando solo pueda ser llamado por clientes
+    @RolesAllowed({"CLI","ADM"})
     public Response updateUsuario(Usuario usuario) {             //Testeado, hk
         try {
             Service.instance().usuarioUpdate(usuario);

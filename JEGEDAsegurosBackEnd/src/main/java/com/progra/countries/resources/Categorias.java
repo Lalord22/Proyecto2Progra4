@@ -4,6 +4,7 @@ import com.progra.countries.logic.Categoria;
 import com.progra.countries.logic.Service;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -28,6 +29,7 @@ public class Categorias {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM"})
     public Response addCategoria(Categoria cate) {
         try {
             Service.instance().agregaCategoria(cate);

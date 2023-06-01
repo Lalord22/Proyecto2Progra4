@@ -5,6 +5,7 @@ import com.progra.countries.logic.Cobertura;
 import com.progra.countries.logic.Service;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -22,6 +23,7 @@ public class Coberturas {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public List<Cobertura> getCoberturas() {
         return Service.instance().cargarCoberturas();
     }
@@ -29,6 +31,7 @@ public class Coberturas {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM"})
     public Response agregarCobertura(Cobertura cobertura) {
         try {
             // Call the agregaCobertura method with the received Cobertura object
@@ -43,6 +46,7 @@ public class Coberturas {
      @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public Cobertura getCoberturaById(@PathParam("id") String coverageId) {
         try {
           

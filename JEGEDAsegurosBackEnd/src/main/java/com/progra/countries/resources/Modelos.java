@@ -3,6 +3,7 @@ package com.progra.countries.resources;
 import com.progra.countries.logic.Modelo;
 import com.progra.countries.logic.Service;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.Part;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
@@ -27,17 +28,17 @@ import java.util.List;
 @PermitAll
 public class Modelos {
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public List<Modelo> getModelos() {
         return Service.instance().cargarModelos();
     }
-    
-    
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM"})
     public Response agregarModelo(Modelo modelo) {
         try {
             Service.instance().agregarModelo(modelo);
@@ -48,10 +49,11 @@ public class Modelos {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI","ADM"})
     public Modelo getModeloById(@PathParam("id") int modeloId) {
         try {
             return Service.instance().cargarModeloById(modeloId);
@@ -61,15 +63,16 @@ public class Modelos {
             return null;
         }
     }
-    
+
     public static final String location = "C:/AAA/seguros/";
-    
+
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("{id}/carro")
+    @RolesAllowed({"ADM"})
     public void createImage(@PathParam("id") int id, @FormParam("carro") InputStream in) {
         try (
-            OutputStream out = new FileOutputStream(new File(location + id+".png"))) {
+                OutputStream out = new FileOutputStream(new File(location + id + ".png"))) {
             in.transferTo(out);
             out.close();
         } catch (Exception ex) {
@@ -79,20 +82,20 @@ public class Modelos {
 
     @GET
     @Path("{id}/carro")
+    @RolesAllowed({"CLI","ADM"})
     public Response readImage(@PathParam("id") int id) {
         File file = new File(location + id + ".png");
         return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition", "attachment; filename=\"carro.png\"")
                 .build();
     }
-    
-    
+
     @GET
     @Path("/last")
+    @RolesAllowed({"ADM"})
     @Produces(MediaType.APPLICATION_JSON)
     public Modelo getLastModelo() throws Exception {
         return Service.instance().cargarUltimoModelo();
     }
 
-    
 }

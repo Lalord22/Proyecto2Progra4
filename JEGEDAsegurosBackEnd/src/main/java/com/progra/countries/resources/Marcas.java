@@ -3,6 +3,7 @@ package com.progra.countries.resources;
 import com.progra.countries.logic.Marca;
 import com.progra.countries.logic.Service;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -18,17 +19,17 @@ import java.util.List;
 @PermitAll
 public class Marcas {
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI", "ADM"})
     public List<Marca> getMarcas() {
         return Service.instance().cargarMarcas();
     }
-    
-    
-        @GET
+
+    @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"CLI", "ADM"})
     public Marca marcaShowById(@PathParam("id") Integer id) {
         try {
             return Service.instance().cargarMarcaById(id);
@@ -39,10 +40,11 @@ public class Marcas {
             return null; // or throw a custom exception here
         }
     }
-    
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM"})
     public Response registerMarca(Marca marca) {
         try {
             Service.instance().agregarMarca(marca);
@@ -52,5 +54,4 @@ public class Marcas {
         }
     }
 
-    
 }
