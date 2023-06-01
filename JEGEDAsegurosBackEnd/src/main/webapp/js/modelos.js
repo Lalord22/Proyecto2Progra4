@@ -1,21 +1,21 @@
 class Modelos {
-    constructor() {
-        this.state = {
-            entities: [], // Initialize entities as an empty array
-            mode: '', // Initialize mode
-        };
-        this.dom = this.render();
-        this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
-        this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
-        this.dom.querySelector("#registerModelos").addEventListener('click', () => {
-          const marcaSelect = this.dom.querySelector('#marcaSelect');
-          const marcaId = marcaSelect.value;
-          this.registerModelos(marcaId);
-        });
-    }
+  constructor() {
+    this.state = {
+      entities: [], // Initialize entities as an empty array
+      mode: '', // Initialize mode
+    };
+    this.dom = this.render();
+    this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+    this.dom.querySelector("#create").addEventListener('click', () => this.makenew());
+    this.dom.querySelector("#registerModelos").addEventListener('click', () => {
+      const marcaSelect = this.dom.querySelector('#marcaSelect');
+      const marcaId = marcaSelect.value;
+      this.registerModelos(marcaId);
+    });
+  }
 
-    render() {
-        const html = `
+  render() {
+    const html = `
       <div id="modelos">
       <div id="list" class="container">
         <div class="card bg-light">
@@ -70,99 +70,97 @@ class Modelos {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" class="btn btn-primary" id="registerModelos" data-bs-dismiss="modal">Registar</button>
+              <button type="button" class="btn btn-primary" id="registerModelos" data-bs-dismiss="modal">Registrar</button>
             </div>
           </form>
         </div>
       </div>
     </div>
     `;
-        const modelosContainer = document.createElement('div');
-        modelosContainer.innerHTML = html;
-        return modelosContainer;
-    }
-    
-    getMarcaById(marcaId) {
-      const request = new Request(`${backend}/modelos/${marcaId}`, { method: 'GET', headers: {} });
-      return fetch(request)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch marca by ID');
-          }
-          return response.json();
-        })
-        .catch(error => {
-          console.error('Error fetching marca by ID:', error);
-          throw error;
-        });
-    }
-    
-    list() {
-  const request = new Request(`${backend}/modelos`, {method: 'GET', headers: {}});
-  (async () => {
-    try {
-      const response = await fetch(request);
-      if (!response.ok) {
-        errorMessage(response.status);
-        return;
+    const modelosContainer = document.createElement('div');
+    modelosContainer.innerHTML = html;
+    return modelosContainer;
+  }
+
+  getMarcaById(marcaId) {
+    const request = new Request(`${backend}/modelos/${marcaId}`, { method: 'GET', headers: {} });
+    return fetch(request)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch marca by ID');
+        }
+        return response.json();
+      })
+      .catch(error => {
+        console.error('Error fetching marca by ID:', error);
+        throw error;
+      });
+  }
+
+  list() {
+    const request = new Request(`${backend}/modelos`, { method: 'GET', headers: {} });
+    (async () => {
+      try {
+        const response = await fetch(request);
+        if (!response.ok) {
+          errorMessage(response.status);
+          return;
+        }
+        const modelos = await response.json();
+
+        const listing = this.dom.querySelector("#listbody");
+        listing.innerHTML = "";
+
+        for (const modelo of modelos) {
+          const marca = await this.getMarcaById(modelo.marca.id);
+          modelo.marca = marca;
+          this.row(listing, modelo);
+        }
+      } catch (error) {
+        console.error('Error fetching modelos:', error);
       }
-      const modelos = await response.json();
+    })();
+  }
 
-      const listing = this.dom.querySelector("#listbody");
-      listing.innerHTML = "";
-
-      for (const modelo of modelos) {
-        const marca = await this.getMarcaById(modelo.marca.id);
-        modelo.marca = marca;
-        this.row(listing, modelo);
-      }
-    } catch (error) {
-      console.error('Error fetching modelos:', error);
-    }
-  })();
-}
-
-
-    row(list, mo) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
+  row(list, mo) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td>${mo.id}</td>
       <td>${mo.descripcion}</td>
       <td><img class="carro" src="${backend}/modelos/${mo.id}/carro"></td>
       <td>${mo.marca.descripcion}</td>`;
-        list.append(tr);
-    }
-    
+    list.append(tr);
+  }
+
   makenew() {
-        const marcaSelect = this.dom.querySelector('#marcaSelect');
-        marcaSelect.innerHTML = ''; // Clear existing options
+    const marcaSelect = this.dom.querySelector('#marcaSelect');
+    marcaSelect.innerHTML = ''; // Clear existing options
 
-        // Fetch marcas from the endpoint
-        fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/marcas')
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Failed to fetch marcas');
-            }
-            return response.json();
-          })
-          .then((marcas) => {
-            // Populate marca options
-            marcas.forEach((marca) => {
-              const option = document.createElement('option');
-              option.value = marca.id;
-              option.textContent = marca.descripcion;
-              marcaSelect.appendChild(option);
-            });
+    // Fetch marcas from the endpoint
+    fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/marcas')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch marcas');
+        }
+        return response.json();
+      })
+      .then((marcas) => {
+        // Populate marca options
+        marcas.forEach((marca) => {
+          const option = document.createElement('option');
+          option.value = marca.id;
+          option.textContent = marca.descripcion;
+          marcaSelect.appendChild(option);
+        });
 
-            // Display the modal
-            this.modal.show();
+        // Display the modal
+        this.modal.show();
 
-          })
-          .catch((error) => {
-            console.error('Error fetching marcas:', error);
-          });
-}
-
+      })
+      .catch((error) => {
+        console.error('Error fetching marcas:', error);
+      });
+  }
 
   registerModelos(marcaId) {
   const descriptionInput = this.dom.querySelector('#descriptionInput');
@@ -187,23 +185,10 @@ class Modelos {
       if (!response.ok) {
         throw new Error('Failed to add modelo');
       }
-      return response.json();
+      return this.fetchLastModelo(); // Return the promise from fetchLastModelo()
     })
-    .then((data) => {
-      fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/last')
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch last modelo');
-          }
-          return response.json();
-        })
-        .then((lastModelo) => {
-          this.addAuto(parseInt(lastModelo.id));
-          this.list();
-        })
-        .catch((error) => {
-          console.error('Error fetching last modelo:', error);
-        });
+    .then(() => {
+      
     })
     .catch((error) => {
       console.error('Error adding modelo:', error);
@@ -211,21 +196,58 @@ class Modelos {
 }
 
 
-    addAuto = async (modeloId) => {
-        var data = new FormData();
-        data.append("carro",document.querySelector('#imageInput').files[0]);
-        let request = new Request(`${backend}/modelos/${modeloId}/carro`,{method: 'POST', body: 'data'});
-        const response = await fetch(request);
-        if(!response.ok) {alert("Error uploading image"); return;}
-    }
+  
+
+  fetchLastModelo() {
+  return fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/last')
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch last modelo');
+      }
+      return response.json();
+    })
+    .then((lastModelo) => {
+      return this.addAuto(parseInt(lastModelo.id), this.dom.querySelector('#imageInput').files[0]);
+    })
+    .then(() => {
+      this.list();
+    })
+    .catch((error) => {
+      console.error('Error fetching last modelo:', error);
+    });
+}
+
+addAuto(modeloId, file) {
+  const formData = new FormData();
+  formData.append('carro', file, 'carro.png'); // Set the filename as 'carro.png'
+
+  const requestOptions = {
+    method: 'POST',
+    body: formData,
+  };
+
+  return fetch(`http://localhost:8080/JEGEDAsegurosBackEnd/api/modelos/${modeloId}/carro`, requestOptions)
+    .then((response) => {
+      if (response.status === 204) {
+        // Request succeeded but no content in the response
+        return Promise.resolve();
+      } else if (!response.ok) {
+        throw new Error('Failed to add image');
+      }
+    })
+    .catch((error) => {
+      console.error('Error adding image:', error);
+    });
+}
 
 
-    // Other methods (load, reset, emptyEntity, update, validate) can be added here
+
+
+
+
+  // Other methods (load, reset, emptyEntity, update, validate) can be added here
 }
 
 const modelosTable = new Modelos();
 document.body.appendChild(modelosTable.dom);
 modelosTable.list(); // Call list() to fetch and display the modelos
-
-
-
