@@ -128,9 +128,9 @@ insert into Poliza (numeroPlaca, anno, valorAsegurado, plazoPago, fechaInicio, m
 VALUES ("JLV-015", "2022", "10000", "Anual", "2023-04-18", 2, "222");
 
 insert into Cobertura (descripcion, costoMinimo, costoPorcentual, categoria)
-values ("Danos a terceros", 50.0, 0.0, 1);
+values ("Danos a terceros", 50.0, 30, 1);
 insert into Cobertura (descripcion, costoMinimo, costoPorcentual, categoria)
-values ("Robo", 100.0, 0.05, 2);
+values ("Robo", 100.0, 20, 2);
 
 insert into Poliza_Cobertura (poliza, cobertura) values (2, 1);
 
