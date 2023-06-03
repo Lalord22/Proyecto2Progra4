@@ -476,7 +476,7 @@ closeAllModals() {
               <p><strong>Año de Fabricación:</strong> ${data.anno}</p>
               <p><strong>Plazo de Pago:</strong> ${data.plazoPago}</p>
               <p><strong>Fecha de Inicio:</strong> ${data.fechaInicio}</p>
-               <p><strong>Cuota Mensual:</strong> ${data.costoTotal}</p>
+               <p><strong>Costo Total:</strong> ${data.costoTotal}</p>
             </div>
             <div class="modal-footer">
               <button id="cancel-button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -504,6 +504,7 @@ closeAllModals() {
     // Add event listener to the cancel button
     const cancelButton = summaryPopup.querySelector('#cancel-button');
     cancelButton.addEventListener('click', () => {
+      this.closeAllModals();
       summaryModal.hide();
       resolve(false); // User canceled
       cleanup(); // Clean up the popup element from the DOM
