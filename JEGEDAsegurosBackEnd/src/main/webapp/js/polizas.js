@@ -380,39 +380,54 @@ class Polizas {
 
 
     createPoliza(poliza) {
-        // Show summary popup
-        this.showSummaryPopup(poliza)
-                .then((confirmed) => {
-                    if (confirmed) {
-                        // User confirmed, proceed with creating the poliza
-                        const request = new Request(`${backend}/polizas/agregar`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(poliza),
-                        });
+  // Show summary popup
+  this.showSummaryPopup(poliza)
+    .then((confirmed) => {
+      if (confirmed) {
+        // User confirmed, proceed with creating the poliza
+        const request = new Request(`${backend}/polizas/agregar`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(poliza),
+        });
 
-                        fetch(request)
-                                .then((response) => {
-                                    if (!response.ok) {
-                                        errorMessage(response.status);
-                                        throw new Error('Failed to create poliza');
-                                    }
-                                    this.modal.hide();
-                                    this.list(); // Refresh the polizas list after creating a new poliza
-                                })
-                                .catch((error) => {
-                                    console.error('Error creating poliza:', error);
-                                });
-                    } else {
-                        // User canceled, do nothing
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error showing summary popup:', error);
-                });
+        fetch(request)
+          .then((response) => {
+            if (!response.ok) {
+              errorMessage(response.status);
+              throw new Error('Failed to create poliza');
+            }
+            this.modal.hide();
+            this.list(); // Refresh the polizas list after creating a new poliza
+
+            // Close all modals
+            this.closeAllModals();
+          })
+          .catch((error) => {
+            console.error('Error creating poliza:', error);
+          });
+      } else {
+        // User canceled, do nothing
+      }
+    })
+    .catch((error) => {
+      console.error('Error showing summary popup:', error);
+    });
+}
+
+closeAllModals() {
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach((modal) => {
+    const bsModal = bootstrap.Modal.getInstance(modal);
+    if (bsModal) {
+      bsModal.hide();
     }
+  });
+}
+
+
 
     showSummaryPopup(data) {
         return new Promise((resolve, reject) => {
@@ -443,37 +458,42 @@ class Polizas {
       </div>
     `;
             const summaryPopup = document.createElement('div');
-            summaryPopup.innerHTML = html;
-            document.body.appendChild(summaryPopup);
+    summaryPopup.innerHTML = html;
 
-            // Show the summary popup
-            const summaryModal = new bootstrap.Modal(summaryPopup.querySelector('#summary-modal'));
-            summaryModal.show();
+    // Show the summary popup
+    const summaryModal = new bootstrap.Modal(summaryPopup.querySelector('#summary-modal'));
+    summaryModal.show();
 
-            // Add event listener to the confirm button
-            const confirmButton = summaryPopup.querySelector('#confirm-button');
-            confirmButton.addEventListener('click', () => {
-                summaryModal.hide();
-                resolve(true); // User confirmed
-            });
+    // Add event listener to the confirm button
+    const confirmButton = summaryPopup.querySelector('#confirm-button');
+    confirmButton.addEventListener('click', () => {
+      summaryModal.hide();
+      resolve(true); // User confirmed
+      cleanup(); // Clean up the popup element from the DOM
+    });
 
-            // Add event listener to the cancel button
-            const cancelButton = summaryPopup.querySelector('#cancel-button');
-            cancelButton.addEventListener('click', () => {
-                summaryModal.hide();
-                resolve(false); // User canceled
-            });
+    // Add event listener to the cancel button
+    const cancelButton = summaryPopup.querySelector('#cancel-button');
+    cancelButton.addEventListener('click', () => {
+      summaryModal.hide();
+      resolve(false); // User canceled
+      cleanup(); // Clean up the popup element from the DOM
+    });
 
-            // Cleanup function
-            const cleanup = () => {
-                confirmButton.removeEventListener('click', cleanup);
-                cancelButton.removeEventListener('click', cleanup);
-                summaryPopup.remove();
-            };
+    // Cleanup function
+    const cleanup = () => {
+      confirmButton.removeEventListener('click', cleanup);
+      cancelButton.removeEventListener('click', cleanup);
+      summaryModal.dispose(); // Dispose the modal
+      summaryPopup.remove(); // Remove the popup element from the DOM
+    };
 
-            // Cleanup when the modal is hidden
-            summaryModal._element.addEventListener('hidden.bs.modal', cleanup);
-        });
+    // Cleanup when the modal is hidden
+    summaryModal._element.addEventListener('hidden.bs.modal', cleanup);
+
+    document.body.appendChild(summaryPopup);
+  });
+           
     }
 
 }
