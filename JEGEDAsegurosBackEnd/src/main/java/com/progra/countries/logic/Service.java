@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -227,7 +228,7 @@ public class Service {
             multiplicadorPeriodoPago = 12;
         }
         for (Cobertura cobertura : coberturas) {
-            double costo = valorCalculado < 3000 ? cobertura.getCostoMinimo() : valorCalculado * cobertura.getCostoPorcentual(); // setea costo de acuerdo si el carro vale menos de 
+            double costo = valorCalculado < 3000 ? cobertura.getCostoMinimo() : valorCalculado * (cobertura.getCostoPorcentual()/100); // setea costo de acuerdo si el carro vale menos de 
             totalCosto += costo;                                                                                                                                             // 3000, retorna el costo minimo de la cobertura, sino, el costo porcentual sobre el carro
         }
         totalCosto *= multiplicadorPeriodoPago; //actualiza el pago por el numero de meses de servicio
@@ -236,7 +237,11 @@ public class Service {
         } else if (poliza.getPlazoPago().equals("anual")) {
             totalCosto *= 0.9; // aplicar 10% de descuento para anual
         }
-        return totalCosto;
+        
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        String formattedValue = decimalFormat.format(totalCosto);
+        
+        return Double.parseDouble(formattedValue);
     }
 
     public List<Usuario> getAllUsuarios() {
