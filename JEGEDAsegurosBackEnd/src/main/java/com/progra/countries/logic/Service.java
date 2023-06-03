@@ -26,7 +26,8 @@ import java.text.DecimalFormat;
  * @author Escinf
  */
 public class Service {
-
+    
+    
     private static Service uniqueInstance;
 
     public static Service instance() {
@@ -238,9 +239,11 @@ public class Service {
             totalCosto *= 0.9; // aplicar 10% de descuento para anual
         }
         
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        String formattedValue = decimalFormat.format(totalCosto);
+        double modifiedValue = Double.parseDouble(formattedValue);
         
-        
-        return totalCosto;
+        return modifiedValue;
     }
 
     public List<Usuario> getAllUsuarios() {
