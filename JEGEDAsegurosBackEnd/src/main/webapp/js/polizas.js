@@ -148,6 +148,10 @@ class Polizas {
       <td>${p.fechaInicio}</td>
       <td>${p.modelo.descripcion}</td>
       <td><img class="carro" src="${backend}/modelos/${p.modelo.id}/carro"></td>`;
+        
+         // Agrega el evento de clic a la fila de la tabla
+        tr.addEventListener('click', () => this.showPolizaPopup(p));
+
         list.append(tr);
     }
 
@@ -324,6 +328,56 @@ class Polizas {
             }
         })();
     }
+    
+    showPolizaPopup(poliza) {
+  // Crear el contenido HTML del popup con los detalles de la póliza
+  const html = `
+    <div class="modal fade" id="poliza-modal" tabindex="-1" role="dialog" aria-labelledby="poliza-modal-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="poliza-modal-label">Detalles de la Póliza</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>ID: ${poliza.id}</p>
+            <p>Placa: ${poliza.numeroPlaca}</p>
+            <p>Año: ${poliza.anno}</p>
+            <p>Valor Asegurado: ${poliza.valorAsegurado}</p>
+            <p>Plazo de Pago: ${poliza.plazoPago}</p>
+            <p>Fecha de Inicio: ${poliza.fechaInicio}</p>
+            <p>Modelo: ${poliza.modelo.descripcion}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+    // Agregar el popup al DOM
+    const polizaPopup = document.createElement('div');
+    polizaPopup.innerHTML = html;
+    document.body.appendChild(polizaPopup);
+
+    // Mostrar el popup
+    const modal = new bootstrap.Modal(polizaPopup.querySelector('.modal'));
+    modal.show();
+
+    // Obtener el botón de cierre del modal
+    const closeButton = polizaPopup.querySelector('.modal-header .close');
+
+    // Agregar un evento de clic al botón de cierre para cerrar el modal
+    closeButton.addEventListener('click', () => {
+      modal.hide(); // Ocultar el modal al hacer clic en el botón de cierre
+    });
+    // Eliminar el popup del DOM al cerrarlo
+    polizaPopup.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
+      document.body.removeChild(polizaPopup);
+    });
+    
+  }
+
 
     createPoliza(poliza) {
         // Show summary popup
