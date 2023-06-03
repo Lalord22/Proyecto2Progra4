@@ -428,6 +428,7 @@ closeAllModals() {
             <p>Plazo de Pago: ${poliza.plazoPago}</p>
             <p>Fecha de Inicio: ${poliza.fechaInicio}</p>
             <p>Modelo: ${poliza.modelo.descripcion}</p>
+            <p>Marca: ${poliza.modelo.marca.descripcion}</p>
           </div>
         </div>
       </div>
