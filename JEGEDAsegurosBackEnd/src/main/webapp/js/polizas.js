@@ -465,7 +465,7 @@ closeAllModals() {
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="summary-modal-label">Summary</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-button">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -492,6 +492,8 @@ closeAllModals() {
     // Show the summary popup
     const summaryModal = new bootstrap.Modal(summaryPopup.querySelector('#summary-modal'));
     summaryModal.show();
+    
+    
 
     // Add event listener to the confirm button
     const confirmButton = summaryPopup.querySelector('#confirm-button');
@@ -504,6 +506,14 @@ closeAllModals() {
     // Add event listener to the cancel button
     const cancelButton = summaryPopup.querySelector('#cancel-button');
     cancelButton.addEventListener('click', () => {
+      this.closeAllModals();
+      summaryModal.hide();
+      resolve(false); // User canceled
+      cleanup(); // Clean up the popup element from the DOM
+    });
+    
+     const closeButton = summaryPopup.querySelector('#close-button');
+    closeButton.addEventListener('click', () => {
       this.closeAllModals();
       summaryModal.hide();
       resolve(false); // User canceled
