@@ -278,6 +278,7 @@ class Polizas {
 
                 // Create a new poliza object from the form data
                 const newPoliza = {
+                    id:0,
                   modelo: modelo,
                   numeroPlaca: placaInput.value,
                   valorAsegurado: parseFloat(valorAseguradoInput.value),

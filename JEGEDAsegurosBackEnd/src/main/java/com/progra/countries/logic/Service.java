@@ -238,10 +238,9 @@ public class Service {
             totalCosto *= 0.9; // aplicar 10% de descuento para anual
         }
         
-        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        String formattedValue = decimalFormat.format(totalCosto);
         
-        return Double.parseDouble(formattedValue);
+        
+        return totalCosto;
     }
 
     public List<Usuario> getAllUsuarios() {

@@ -89,7 +89,7 @@ public class Poliza {
     public void setModelo(Modelo modelo) {
         this.modelo = modelo;
     }
-
+    
     public Cliente getCliente() {
         return cliente;
     }
