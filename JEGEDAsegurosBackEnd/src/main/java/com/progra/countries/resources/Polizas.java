@@ -24,6 +24,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Path("/polizas")
 @PermitAll
@@ -48,12 +49,23 @@ public class Polizas {
     
     
 
-    @GET
-    @Path("/findByPlaca/{placa}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Poliza> polizaFindPlaca(@PathParam("placa") String numero) throws Exception {
-        return Service.instance().polizaFindPlaca(numero);
+@GET
+@Path("/findByPlaca/{placa}")
+@Produces(MediaType.APPLICATION_JSON)
+public List<PolizaDTO> polizaFindPlaca(@PathParam("placa") String placa, @Context HttpServletRequest request) throws Exception {
+    List<PolizaDTO> polizasCliente = muestraPolizasCliente(request); // Call muestraPolizasCliente passing the HttpServletRequest
+    List<PolizaDTO> filteredPolizas = new ArrayList<>();
+
+    for (PolizaDTO poliza : polizasCliente) {
+        if (poliza.getNumeroPlaca().equals(placa)) {
+            filteredPolizas.add(poliza);
+        }
     }
+
+    return filteredPolizas;
+}
+
+
 
     @GET
     @Path("/{id}")
