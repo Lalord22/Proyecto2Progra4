@@ -1,8 +1,6 @@
 package com.progra.countries.resources;
-
 import com.progra.countries.logic.Categoria;
 import com.progra.countries.logic.Service;
-
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
@@ -13,7 +11,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import java.util.List;
 
 @Path("/categorias")
@@ -22,10 +19,11 @@ public class Categorias {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM", "CLI"})
     public List<Categoria> getCategorias() {
         return Service.instance().cargarCategorias();
     }
-    
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -39,9 +37,9 @@ public class Categorias {
         }
     }
 
-    
-            @GET
+    @GET
     @Path("/{id}")
+    @RolesAllowed({"ADM", "CLI"})
     @Produces(MediaType.APPLICATION_JSON)
     public Categoria categoriaShowById(@PathParam("id") Integer id) {
         try {
@@ -53,9 +51,5 @@ public class Categorias {
             return null; // or throw a custom exception here
         }
     }
-    
-    
-    
 
-    
 }

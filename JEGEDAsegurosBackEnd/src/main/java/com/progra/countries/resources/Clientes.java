@@ -1,12 +1,9 @@
 package com.progra.countries.resources;
-
 import com.progra.countries.logic.Cliente;
 import com.progra.countries.logic.Service;
-import com.progra.countries.logic.Poliza;
 import com.progra.countries.logic.Usuario;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -17,7 +14,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 

@@ -1,5 +1,4 @@
 package com.progra.countries.resources;
-
 import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -32,7 +31,7 @@ public class Usuarios {
     @GET
     @Path("/{cedula}/{clave}")
     @Produces({MediaType.APPLICATION_JSON})
-    @RolesAllowed({"CLI","ADM"})
+    @RolesAllowed({"ADM"})
     public Usuario getUsuario(@PathParam("cedula") String cedula, @PathParam("clave") String clave) throws Exception {
         try {
             return Service.instance().usuarioFind(cedula, clave);

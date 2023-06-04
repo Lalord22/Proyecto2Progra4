@@ -6,11 +6,9 @@ import com.progra.countries.logic.Poliza;
 import com.progra.countries.logic.PolizaDTO;
 import com.progra.countries.logic.Usuario;
 import jakarta.annotation.security.PermitAll;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -22,8 +20,6 @@ import java.util.List;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Path("/polizas")
@@ -36,6 +32,7 @@ public class Polizas {
     @GET
     @Path("/cliente")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "CLI"})
     public List<PolizaDTO> muestraPolizasCliente(@Context HttpServletRequest request) throws Exception {
         Usuario loggedUser = (Usuario) request.getSession().getAttribute("user");
         if (loggedUser == null) {
@@ -50,6 +47,7 @@ public class Polizas {
     @GET
     @Path("/findByPlaca/{placa}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "CLI"})
     public List<PolizaDTO> polizaFindPlaca(@PathParam("placa") String placa, @Context HttpServletRequest request) throws Exception {
         List<PolizaDTO> polizasCliente = muestraPolizasCliente(request); // Call muestraPolizasCliente passing the HttpServletRequest
         List<PolizaDTO> filteredPolizas = new ArrayList<>();
@@ -66,6 +64,7 @@ public class Polizas {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "CLI"})
     public Poliza polizaShowById(@PathParam("id") Integer id) {
         try {
             return Service.instance().polizaShowById(id);
@@ -80,6 +79,7 @@ public class Polizas {
     @GET
     @Path("/highestID")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM", "CLI"})
     public int polizaShowLatestPoliza() throws Exception {
         
             return Service.instance().getLatestPoliza();
@@ -89,6 +89,7 @@ public class Polizas {
     @POST
     @Path("/agregar")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "CLI"})
     public Response agregarPoliza(Poliza poliza) {
         try {
             Service.instance().agregarPoliza(poliza);
@@ -103,6 +104,7 @@ public class Polizas {
     @POST
     @Path("/agregarPolizaCobertura")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "CLI"})
     public Response agregarPolizaCobertura(Poliza poliza) {
         try {
             Service.instance().agregarPolizaCobertura(poliza);
@@ -116,6 +118,7 @@ public class Polizas {
     @POST
     @Path("/calcular")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADM", "CLI"})
     public double calcularCostoTotalPoliza(Poliza poliza) {
         return Service.instance().calcularCostoTotalPoliza(poliza);
     }

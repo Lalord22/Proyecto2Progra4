@@ -3,7 +3,6 @@ package com.progra.countries.resources;
 import com.progra.countries.logic.Categoria;
 import com.progra.countries.logic.Cobertura;
 import com.progra.countries.logic.Service;
-
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
@@ -14,7 +13,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import java.util.List;
 
 @Path("/coberturas")
@@ -61,7 +59,7 @@ public class Coberturas {
     @GET
     @Path("/poliza/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    //@RolesAllowed({"CLI", "ADM"})
+    @RolesAllowed({"CLI", "ADM"})
     public List<Cobertura> getCoberturasByPolizaId(@PathParam("id") int polizaId) {
         try {
             return Service.instance().cargarCoberturasByPolizaId(polizaId);
