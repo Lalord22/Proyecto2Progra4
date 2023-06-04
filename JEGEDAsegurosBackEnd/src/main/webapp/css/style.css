@@ -23,3 +23,16 @@ img.flag{
   width: 100px; /* Ancho deseado */
   height: auto; /* Altura ajustada automáticamente */
 }
+
+.categoria-div {
+  margin-bottom: 10px;
+}
+
+.categoria-div h4 {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.categoria-div div {
+  margin-left: 20px;
+}
