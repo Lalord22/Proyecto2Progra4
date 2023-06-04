@@ -37,7 +37,6 @@ public class Service {
         return uniqueInstance;
     }
 
-    HashMap<String, Country> countries;
     RelDatabase relDatabase;
     UsuarioDao usuarioDao;
     ClienteDao clienteDao;
@@ -58,29 +57,12 @@ public class Service {
         modeloDao = new ModeloDao(relDatabase);
         marcaDao = new MarcaDao(relDatabase);
 
-        countries = new HashMap();
-        Country c;
-        c = new Country("Argentina", "Buenos Aires", 43590400, 2780400, new ArrayList<>(Arrays.asList((new Integer[]{-34, -64}))), "https://flagcdn.com/ar.svg");
-        countries.put(c.name, c);
-
-        c = new Country("Belize", "Belmopan", 370300, 22966, new ArrayList<>(Arrays.asList(new Integer[]{17, -88})), "https://flagcdn.com/bo.svg");
-        countries.put(c.name, c);
+       
     }
 
-    public Country read(String name) throws Exception {
-        Country c = countries.get(name);
-        if (c != null) {
-            return c;
-        } else {
-            throw new Exception("Country does not exist");
-        }
-    }
+    
 
-    public List<Country> find(String patron) {
-        return countries.values().stream().
-                filter(c -> c.name.contains(patron)).
-                collect(Collectors.toList());
-    }
+   
 
     public Usuario usuarioFind(String cedula, String clave) throws Exception {  //implementado
         Usuario usuario = usuarioDao.read(cedula, clave);

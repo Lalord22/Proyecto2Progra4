@@ -3,7 +3,6 @@ package com.progra.countries;
 import com.progra.countries.resources.Categorias;
 import com.progra.countries.resources.Clientes;
 import com.progra.countries.resources.Coberturas;
-import com.progra.countries.resources.Countries;
 import com.progra.countries.resources.Login;
 import com.progra.countries.resources.Marcas;
 import com.progra.countries.resources.Modelos;
@@ -25,7 +24,6 @@ public class JakartaRestConfiguration extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         HashSet<Class<?>> classes = new HashSet<>();
-        classes.add(Countries.class); 
         classes.add(Usuarios.class);
         classes.add(Clientes.class);
         classes.add(Polizas.class);
