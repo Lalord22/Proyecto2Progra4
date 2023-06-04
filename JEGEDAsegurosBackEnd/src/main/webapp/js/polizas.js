@@ -155,172 +155,189 @@ class Polizas {
         list.append(tr);
     }
 
-    showAddModal() {
+   showAddModal() {
   // Reset modal form inputs
   const modalForm = this.dom.querySelector('#modal-form');
   modalForm.reset();
 
-  // Fetch modelos from the database
-  const requestModelos = new Request(`${backend}/modelos`, { method: 'GET', headers: {} });
-
-  fetch(requestModelos)
-    .then(async (responseModelos) => {
-      if (!responseModelos.ok) {
-        errorMessage(responseModelos.status);
-        return;
+  // Fetch the highest Poliza ID from the backend
+  fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/polizas/highestID')
+    .then((response) => {
+      if (!response.ok) {
+        errorMessage(response.status);
+        throw new Error('Failed to fetch highest Poliza ID');
       }
-
-      const modelos = await responseModelos.json();
-
-      // Create a map to store the unique combination of marca and modelos
-      const marcaModeloMap = new Map();
-
-      // Group modelos by marca
-      modelos.forEach((modelo) => {
-        const marcaId = modelo.marca.id;
-        if (!marcaModeloMap.has(marcaId)) {
-          marcaModeloMap.set(marcaId, {
-            marcaDescripcion: modelo.marca.descripcion,
-            modelos: [],
-          });
-        }
-        marcaModeloMap.get(marcaId).modelos.push(modelo);
-      });
-
-      // Populate selectModelo dropdown with modelos and their marca
-      const selectModelo = modalForm.querySelector('#selectModelo');
-      selectModelo.innerHTML = '';
-      modelos.forEach((modelo) => {
-        const optionModelo = document.createElement('option');
-        optionModelo.value = modelo.id;
-        optionModelo.textContent = `${modelo.descripcion} - ${modelo.marca.descripcion}`;
-        selectModelo.appendChild(optionModelo);
-      });
-
-      // Fetch coberturas from the database
-      const requestCoberturas = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
-
-      return fetch(requestCoberturas);
+      return response.json();
     })
-    .then(async (responseCoberturas) => {
-      if (!responseCoberturas.ok) {
-        errorMessage(responseCoberturas.status);
-        return;
-      }
+    .then((highestId) => {
+      // Calculate the new Poliza ID by incrementing the highest ID value by 1
+      const newPolizaId = highestId + 1;
 
-      const coberturas = await responseCoberturas.json();
+      // Fetch modelos from the database
+      const requestModelos = new Request(`${backend}/modelos`, { method: 'GET', headers: {} });
 
-      // Populate checkbox group with coberturas
-      const checkboxGroup = modalForm.querySelector('#checkboxGroup');
-      checkboxGroup.innerHTML = '';
-      coberturas.forEach((cobertura) => {
-        const checkbox = document.createElement('div');
-        checkbox.innerHTML = `
-          <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
-          <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
-          <div>Costo Minimo: ${cobertura.costoMinimo}</div>
-          <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
-          <div>Categoria: ${cobertura.categoria.descripcion}</div>
-          <!-- Add additional attributes as needed -->
-        `;
-        checkboxGroup.appendChild(checkbox);
-      });
-
-      // Fetch cliente information from the server
-      fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente')
-        .then((responseCliente) => {
-          if (!responseCliente.ok) {
-            errorMessage(responseCliente.status);
+      fetch(requestModelos)
+        .then(async (responseModelos) => {
+          if (!responseModelos.ok) {
+            errorMessage(responseModelos.status);
             return;
           }
 
-          return responseCliente.json();
-        })
-        .then((cliente) => {
-          // Show the modal
-          this.modal.show();
+          const modelos = await responseModelos.json();
 
-          // Bind the createPoliza method to the "Registrar" button click event
-          const registrarButton = modalForm.querySelector('#apply');
-          registrarButton.addEventListener('click', () => {
-            const selectModelo = modalForm.querySelector('#selectModelo');
-            const modeloSelected = selectModelo.value;
-            const placaInput = modalForm.querySelector('#placa');
-            const valorAseguradoInput = modalForm.querySelector('#valorAsegurado');
-            const annoInput = modalForm.querySelector('#anno');
-            const plazoPagoSelect = modalForm.querySelector('#plazoPago');
-            const fechaInicioInput = modalForm.querySelector('#fechaInicio');
+          // Create a map to store the unique combination of marca and modelos
+          const marcaModeloMap = new Map();
 
-            // Create an array of selected coberturas
-            const coberturasCheckboxList = modalForm.querySelectorAll('input[type="checkbox"]:checked');
-            const coberturaIds = Array.from(coberturasCheckboxList).map((checkbox) => checkbox.value);
-
-            // Fetch the selected coberturas from the database
-            const fetchCoberturas = coberturaIds.map((coberturaId) => {
-              const requestCobertura = new Request(`${backend}/coberturas/${coberturaId}`, {
-                method: 'GET',
-                headers: {},
+          // Group modelos by marca
+          modelos.forEach((modelo) => {
+            const marcaId = modelo.marca.id;
+            if (!marcaModeloMap.has(marcaId)) {
+              marcaModeloMap.set(marcaId, {
+                marcaDescripcion: modelo.marca.descripcion,
+                modelos: [],
               });
-              return fetch(requestCobertura).then((response) => response.json());
-            });
+            }
+            marcaModeloMap.get(marcaId).modelos.push(modelo);
+          });
 
-            // Fetch the selected modelo from the database
-            const requestModelo = new Request(`${backend}/modelos/${modeloSelected}`, { method: 'GET', headers: {} });
+          // Populate selectModelo dropdown with modelos and their marca
+          const selectModelo = modalForm.querySelector('#selectModelo');
+          selectModelo.innerHTML = '';
+          modelos.forEach((modelo) => {
+            const optionModelo = document.createElement('option');
+            optionModelo.value = modelo.id;
+            optionModelo.textContent = `${modelo.descripcion} - ${modelo.marca.descripcion}`;
+            selectModelo.appendChild(optionModelo);
+          });
 
-            Promise.all([fetch(requestModelo), ...fetchCoberturas])
-              .then(async ([responseModelo, ...selectedCoberturas]) => {
-                if (!responseModelo.ok) {
-                  errorMessage(responseModelo.status);
-                  return;
-                }
+          // Fetch coberturas from the database
+          const requestCoberturas = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
 
-                const modelo = await responseModelo.json();
+          return fetch(requestCoberturas);
+        })
+        .then(async (responseCoberturas) => {
+          if (!responseCoberturas.ok) {
+            errorMessage(responseCoberturas.status);
+            return;
+          }
 
-                // Create a new poliza object from the form data
-                const newPoliza = {
-                    id:0,
-                  modelo: modelo,
-                  numeroPlaca: placaInput.value,
-                  valorAsegurado: parseFloat(valorAseguradoInput.value),
-                  anno: annoInput.value,
-                  plazoPago: plazoPagoSelect.value,
-                  fechaInicio: fechaInicioInput.value,
-                  coberturas: selectedCoberturas,
-                  cliente: cliente,
-                };
+          const coberturas = await responseCoberturas.json();
 
-                // Fetch the costoTotal from the backend
-                const requestCostoTotal = new Request(`${backend}/polizas/calcular`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(newPoliza),
+          // Populate checkbox group with coberturas
+          const checkboxGroup = modalForm.querySelector('#checkboxGroup');
+          checkboxGroup.innerHTML = '';
+          coberturas.forEach((cobertura) => {
+            const checkbox = document.createElement('div');
+            checkbox.innerHTML = `
+              <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
+              <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
+              <div>Costo Minimo: ${cobertura.costoMinimo}</div>
+              <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
+              <div>Categoria: ${cobertura.categoria.descripcion}</div>
+              <!-- Add additional attributes as needed -->
+            `;
+            checkboxGroup.appendChild(checkbox);
+          });
+
+          // Fetch cliente information from the server
+          fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente')
+            .then((responseCliente) => {
+              if (!responseCliente.ok) {
+                errorMessage(responseCliente.status);
+                return;
+              }
+
+              return responseCliente.json();
+            })
+            .then((cliente) => {
+              // Show the modal
+              this.modal.show();
+
+              // Bind the createPoliza method to the "Registrar" button click event
+              const registrarButton = modalForm.querySelector('#apply');
+              registrarButton.addEventListener('click', () => {
+                const selectModelo = modalForm.querySelector('#selectModelo');
+                const modeloSelected = selectModelo.value;
+                const placaInput = modalForm.querySelector('#placa');
+                const valorAseguradoInput = modalForm.querySelector('#valorAsegurado');
+                const annoInput = modalForm.querySelector('#anno');
+                const plazoPagoSelect = modalForm.querySelector('#plazoPago');
+                const fechaInicioInput = modalForm.querySelector('#fechaInicio');
+
+                // Create an array of selected coberturas
+                const coberturasCheckboxList = modalForm.querySelectorAll('input[type="checkbox"]:checked');
+                const coberturaIds = Array.from(coberturasCheckboxList).map((checkbox) => checkbox.value);
+
+                // Fetch the selected coberturas from the database
+                const fetchCoberturas = coberturaIds.map((coberturaId) => {
+                  const requestCobertura = new Request(`${backend}/coberturas/${coberturaId}`, {
+                    method: 'GET',
+                    headers: {},
+                  });
+                  return fetch(requestCobertura).then((response) => response.json());
                 });
 
-                return fetch(requestCostoTotal)
-                  .then((responseCostoTotal) => {
-                    if (!responseCostoTotal.ok) {
-                      errorMessage(responseCostoTotal.status);
-                      throw new Error('Failed to calculate costoTotal');
-                    }
-                    return responseCostoTotal.json();
-                  })
-                  .then((costoTotal) => {
-                    // Add the costoTotal to the poliza object
-                    newPoliza.costoTotal = costoTotal;
+                // Fetch the selected modelo from the database
+                const requestModelo = new Request(`${backend}/modelos/${modeloSelected}`, { method: 'GET', headers: {} });
 
-                    // Call the createPoliza method with the new poliza object
-                    this.createPoliza(newPoliza);
+                Promise.all([fetch(requestModelo), ...fetchCoberturas])
+                  .then(async ([responseModelo, ...selectedCoberturas]) => {
+                    if (!responseModelo.ok) {
+                      errorMessage(responseModelo.status);
+                      return;
+                    }
+
+                    const modelo = await responseModelo.json();
+
+                    // Create a new poliza object from the form data
+                    const newPoliza = {
+                      id: newPolizaId, // Set the new Poliza ID
+                      modelo: modelo,
+                      numeroPlaca: placaInput.value,
+                      valorAsegurado: parseFloat(valorAseguradoInput.value),
+                      anno: annoInput.value,
+                      plazoPago: plazoPagoSelect.value,
+                      fechaInicio: fechaInicioInput.value,
+                      coberturas: selectedCoberturas,
+                      cliente: cliente,
+                    };
+
+                    // Fetch the costoTotal from the backend
+                    const requestCostoTotal = new Request(`${backend}/polizas/calcular`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(newPoliza),
+                    });
+
+                    return fetch(requestCostoTotal)
+                      .then((responseCostoTotal) => {
+                        if (!responseCostoTotal.ok) {
+                          errorMessage(responseCostoTotal.status);
+                          throw new Error('Failed to calculate costoTotal');
+                        }
+                        return responseCostoTotal.json();
+                      })
+                      .then((costoTotal) => {
+                        // Add the costoTotal to the poliza object
+                        newPoliza.costoTotal = costoTotal;
+
+                        // Call the createPoliza method with the new poliza object
+                        this.createPoliza(newPoliza);
+                      })
+                      .catch((error) => {
+                        console.error('Error calculating costoTotal:', error);
+                      });
                   })
                   .catch((error) => {
-                    console.error('Error calculating costoTotal:', error);
+                    errorMessage(error.message);
                   });
-              })
-              .catch((error) => {
-                errorMessage(error.message);
               });
-          });
+            })
+            .catch((error) => {
+              errorMessage(error.message);
+            });
         })
         .catch((error) => {
           errorMessage(error.message);
@@ -330,6 +347,7 @@ class Polizas {
       errorMessage(error.message);
     });
 }
+
 
 
     search() {
@@ -380,11 +398,32 @@ class Polizas {
               errorMessage(response.status);
               throw new Error('Failed to create poliza');
             }
-            this.modal.hide();
-            this.list(); // Refresh the polizas list after creating a new poliza
 
-            // Close all modals
-            this.closeAllModals();
+            // Send the poliza as JSON to the agregarPolizaCobertura endpoint
+            const coberturaRequest = new Request('http://localhost:8080/JEGEDAsegurosBackEnd/api/polizas/agregarPolizaCobertura', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(poliza),
+            });
+
+            fetch(coberturaRequest)
+              .then((coberturaResponse) => {
+                if (!coberturaResponse.ok) {
+                  errorMessage(coberturaResponse.status);
+                  throw new Error('Failed to add poliza cobertura');
+                }
+
+                this.modal.hide();
+                this.list(); // Refresh the polizas list after creating a new poliza
+
+                // Close all modals
+                this.closeAllModals();
+              })
+              .catch((error) => {
+                console.error('Error adding poliza cobertura:', error);
+              });
           })
           .catch((error) => {
             console.error('Error creating poliza:', error);
@@ -397,6 +436,7 @@ class Polizas {
       console.error('Error showing summary popup:', error);
     });
 }
+
 
 closeAllModals() {
   const modals = document.querySelectorAll('.modal');

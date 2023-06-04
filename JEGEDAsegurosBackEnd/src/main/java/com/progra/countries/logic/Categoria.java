@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 
 /*
- *Proyecto I Programacion 4
+ *Proyecto 2 Programacion 4
  * 
  *Jennifer Lobo Vasquez
  *Daniela Madrigal Morales

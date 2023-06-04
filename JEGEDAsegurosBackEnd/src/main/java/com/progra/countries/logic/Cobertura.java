@@ -70,7 +70,6 @@ public class Cobertura  implements Serializable{
         return categoria;
     }
 
-    @JsonbProperty("categoria")
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }  

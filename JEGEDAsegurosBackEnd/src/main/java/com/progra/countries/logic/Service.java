@@ -208,9 +208,18 @@ public class Service {
 
     }
 
-    public void agregarPoliza(Poliza poliza) throws SQLException {    //implementado
-        this.polizaDao.addPoliza(poliza);
+    public void agregarPoliza(Poliza poliza) throws SQLException {
+        this.polizaDao.addPoliza(poliza); // Register the Poliza object
+        
+        
+        
     }
+    
+    public void agregarPolizaCobertura(Poliza poliza) throws SQLException {
+    
+        this.polizaDao.insertCoberturas(poliza);
+    
+}
 
     public double calcularCostoTotalPoliza(Poliza poliza) {  //implementado
         double totalCosto = 0.0; //costo total a ser retornado
@@ -252,5 +261,9 @@ public class Service {
 
     public Modelo cargarUltimoModelo() throws Exception {
         return this.modeloDao.getLastModelo();
+    }
+
+    public int getLatestPoliza() throws Exception {
+        return this.polizaDao.getPolizaWithHighestId();
     }
 }

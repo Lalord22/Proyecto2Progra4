@@ -32,40 +32,36 @@ public class Polizas {
 
     @JsonbTransient
     private Cliente cliente;
-    
-     @GET
+
+    @GET
     @Path("/cliente")
     @Produces(MediaType.APPLICATION_JSON)
     public List<PolizaDTO> muestraPolizasCliente(@Context HttpServletRequest request) throws Exception {
         Usuario loggedUser = (Usuario) request.getSession().getAttribute("user");
         if (loggedUser == null) {
-        throw new NotAuthorizedException("User not logged in");
-    }
-        
+            throw new NotAuthorizedException("User not logged in");
+        }
+
         String cedula = loggedUser.getCedula();
         List<Poliza> polizas = Service.instance().cargarPolizasCliente(cedula);
         return PolizaDTO.fromPolizas(polizas);
     }
-    
-    
 
-@GET
-@Path("/findByPlaca/{placa}")
-@Produces(MediaType.APPLICATION_JSON)
-public List<PolizaDTO> polizaFindPlaca(@PathParam("placa") String placa, @Context HttpServletRequest request) throws Exception {
-    List<PolizaDTO> polizasCliente = muestraPolizasCliente(request); // Call muestraPolizasCliente passing the HttpServletRequest
-    List<PolizaDTO> filteredPolizas = new ArrayList<>();
+    @GET
+    @Path("/findByPlaca/{placa}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<PolizaDTO> polizaFindPlaca(@PathParam("placa") String placa, @Context HttpServletRequest request) throws Exception {
+        List<PolizaDTO> polizasCliente = muestraPolizasCliente(request); // Call muestraPolizasCliente passing the HttpServletRequest
+        List<PolizaDTO> filteredPolizas = new ArrayList<>();
 
-    for (PolizaDTO poliza : polizasCliente) {
-        if (poliza.getNumeroPlaca().equals(placa)) {
-            filteredPolizas.add(poliza);
+        for (PolizaDTO poliza : polizasCliente) {
+            if (poliza.getNumeroPlaca().equals(placa)) {
+                filteredPolizas.add(poliza);
+            }
         }
+
+        return filteredPolizas;
     }
-
-    return filteredPolizas;
-}
-
-
 
     @GET
     @Path("/{id}")
@@ -80,8 +76,17 @@ public List<PolizaDTO> polizaFindPlaca(@PathParam("placa") String placa, @Contex
             return null; // or throw a custom exception here
         }
     }
+    
+    @GET
+    @Path("/highestID")
+    @Produces(MediaType.APPLICATION_JSON)
+    public int polizaShowLatestPoliza() throws Exception {
+        
+            return Service.instance().getLatestPoliza();
+        
+    }
 
- @POST
+    @POST
     @Path("/agregar")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response agregarPoliza(Poliza poliza) {
@@ -92,8 +97,22 @@ public List<PolizaDTO> polizaFindPlaca(@PathParam("placa") String placa, @Contex
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+
     }
-    
+
+    @POST
+    @Path("/agregarPolizaCobertura")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response agregarPolizaCobertura(Poliza poliza) {
+        try {
+            Service.instance().agregarPolizaCobertura(poliza);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @POST
     @Path("/calcular")
     @Consumes(MediaType.APPLICATION_JSON)

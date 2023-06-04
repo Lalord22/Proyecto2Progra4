@@ -5,6 +5,7 @@
 package com.progra.guia.data;
 
 import com.progra.countries.logic.Cliente;
+import com.progra.countries.logic.Cobertura;
 import com.progra.countries.logic.Marca;
 import com.progra.countries.logic.Modelo;
 import com.progra.countries.logic.Poliza;
@@ -187,6 +188,39 @@ public class PolizaDao {
     stm.setString(7, poliza.getCliente().getCedula());
     stm.executeUpdate();
 }
+
+    public void insertCoberturas(Poliza poliza) throws SQLException {
+    int polizaId = poliza.getId();
+    for (Cobertura cobertura : poliza.getCoberturas()) {
+        int coberturaId = cobertura.getId();
+        
+        String sql = "INSERT INTO Poliza_Cobertura (poliza, cobertura) VALUES (?, ?)";
+        PreparedStatement stm = db.prepareStatement(sql);
+        
+        // Set the values for the parameters
+        stm.setInt(1, polizaId);
+        stm.setInt(2, coberturaId);
+        
+        // Execute the statement
+        stm.executeUpdate();
+    }
+    
+}
+
+public int getPolizaWithHighestId() throws SQLException, Exception {
+    String sql = "SELECT id FROM Poliza ORDER BY id DESC LIMIT 1";
+    PreparedStatement stm = db.prepareStatement(sql);
+    ResultSet rs = stm.executeQuery();
+
+    if (rs.next()) {
+        return rs.getInt("id");
+    } else {
+        throw new Exception("No Poliza Found");
+    }
+}
+
+
+
 
 
     
