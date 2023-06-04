@@ -93,11 +93,11 @@ class Polizas {
                   <input type="date" class="form-control" id="fechaInicio" required>
                 </div>
                 <div class="mb-3">
-    <label class="form-label">Coberturas</label>
-    <div id="checkboxGroup">
-      <!-- Checkboxes will be populated dynamically -->
-    </div>
-  </div>
+            <label class="form-label">Coberturas</label>
+            <div id="checkboxGroup">
+              <!-- Checkboxes will be populated dynamically -->
+            </div>
+          </div>
               </div>
               <div class="modal-footer">
                 <button id="apply" type="button" class="btn btn-primary">Registrar</button>
@@ -211,56 +211,56 @@ class Polizas {
           });
 
           // Fetch coberturas from the database
-          const requestCoberturas = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
+         const requestCoberturas = new Request(`${backend}/coberturas`, { method: 'GET', headers: {} });
 
           return fetch(requestCoberturas);
         })
-        .then(async (responseCoberturas) => {
-          if (!responseCoberturas.ok) {
-            errorMessage(responseCoberturas.status);
-            return;
-          }
-
-          const coberturas = await responseCoberturas.json();
-
-          // Group coberturas by categoria
-          const coberturasByCategoria = new Map();
-          coberturas.forEach((cobertura) => {
-            const categoriaId = cobertura.categoria.id;
-            if (!coberturasByCategoria.has(categoriaId)) {
-              coberturasByCategoria.set(categoriaId, {
-                categoriaDescripcion: cobertura.categoria.descripcion,
-                coberturas: [],
-              });
+          .then(async (responseCoberturas) => {
+            if (!responseCoberturas.ok) {
+              errorMessage(responseCoberturas.status);
+              return;
             }
-            coberturasByCategoria.get(categoriaId).coberturas.push(cobertura);
-          });
 
-          // Populate checkbox group with coberturas grouped by categoria
-          const checkboxGroup = modalForm.querySelector('#checkboxGroup');
-          checkboxGroup.innerHTML = '';
-          coberturasByCategoria.forEach((categoria, categoriaId) => {
-            const categoriaDiv = document.createElement('div');
-            categoriaDiv.classList.add('categoria-div');
+            const coberturas = await responseCoberturas.json();
 
-            const categoriaTitle = document.createElement('h4');
-            categoriaTitle.textContent = categoria.categoriaDescripcion;
-            categoriaDiv.appendChild(categoriaTitle);
-
-            categoria.coberturas.forEach((cobertura) => {
-              const checkbox = document.createElement('div');
-              checkbox.innerHTML = `
-                <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
-                <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
-                <div>Costo Minimo: ${cobertura.costoMinimo}</div>
-                <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
-                <!-- Add additional attributes as needed -->
-              `;
-              categoriaDiv.appendChild(checkbox);
+            // Group coberturas by categoria
+            const coberturasByCategoria = new Map();
+            coberturas.forEach((cobertura) => {
+              const categoriaId = cobertura.categoria.id;
+              if (!coberturasByCategoria.has(categoriaId)) {
+                coberturasByCategoria.set(categoriaId, {
+                  categoriaDescripcion: cobertura.categoria.descripcion,
+                  coberturas: [],
+                });
+              }
+              coberturasByCategoria.get(categoriaId).coberturas.push(cobertura);
             });
 
-            checkboxGroup.appendChild(categoriaDiv);
-          });
+            // Populate checkbox group with coberturas grouped by categoria
+            const checkboxGroup = modalForm.querySelector('#checkboxGroup');
+            checkboxGroup.innerHTML = '';
+            coberturasByCategoria.forEach((categoria, categoriaId) => {
+              const categoriaDiv = document.createElement('div');
+              categoriaDiv.classList.add('categoria-div');
+
+              const categoriaTitle = document.createElement('h4');
+              categoriaTitle.textContent = categoria.categoriaDescripcion;
+              categoriaDiv.appendChild(categoriaTitle);
+
+              categoria.coberturas.forEach((cobertura) => {
+                const checkbox = document.createElement('div');
+                checkbox.innerHTML = `
+                  <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
+                  <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
+                  <div>Costo Minimo: ${cobertura.costoMinimo}</div>
+                  <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
+                  <!-- Add additional attributes as needed -->
+                `;
+                categoriaDiv.appendChild(checkbox);
+              });
+
+              checkboxGroup.appendChild(categoriaDiv);
+            });
 
           // Fetch cliente information from the server
           fetch('http://localhost:8080/JEGEDAsegurosBackEnd/api/clientes/cliente')
@@ -374,7 +374,7 @@ class Polizas {
 
 
 
-    search() {
+search() {
   const searchInput = this.dom.querySelector('#name').value;
 
   if (searchInput.trim() === '') {
