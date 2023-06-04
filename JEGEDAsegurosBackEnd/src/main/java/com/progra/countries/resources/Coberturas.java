@@ -23,7 +23,7 @@ public class Coberturas {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"CLI","ADM"})
+    @RolesAllowed({"CLI", "ADM"})
     public List<Cobertura> getCoberturas() {
         return Service.instance().cargarCoberturas();
     }
@@ -42,18 +42,31 @@ public class Coberturas {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
-     @GET
+
+    @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"CLI","ADM"})
+    @RolesAllowed({"CLI", "ADM"})
     public Cobertura getCoberturaById(@PathParam("id") String coverageId) {
         try {
-          
+
             return Service.instance().cargarCoberturaById(coverageId);
         } catch (Exception e) {
             // Handle the exception appropriately (e.g., log the error, return an error response)
             // You can customize the error handling based on your application's requirements
+            return null;
+        }
+    }
+
+    @GET
+    @Path("/poliza/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    //@RolesAllowed({"CLI", "ADM"})
+    public List<Cobertura> getCoberturasByPolizaId(@PathParam("id") int polizaId) {
+        try {
+            return Service.instance().cargarCoberturasByPolizaId(polizaId);
+        } catch (Exception e) {
+            e.printStackTrace(); // Print the exception stack trace for debugging purposes
             return null;
         }
     }

@@ -153,5 +153,58 @@ public class CoberturaDao {
         throw new Exception("Cobertura no Existe");
     }
 }
+    
+    public List<Cobertura> getCoberturasByPolizaId(int polizaId) {
+    List<Cobertura> coberturas = new ArrayList<>();
+    try {
+        String sql = "SELECT c.* FROM Cobertura c " +
+                     "JOIN Poliza_Cobertura pc ON c.id = pc.cobertura " +
+                     "WHERE pc.poliza = ?";
+        PreparedStatement stm = db.prepareStatement(sql);
+        stm.setInt(1, polizaId);
+        ResultSet rs = stm.executeQuery();
+        
+        while (rs.next()) {
+            int coberturaId = rs.getInt("id");
+            String descripcion = rs.getString("descripcion");
+            int costoMinimo = rs.getInt("costoMinimo");
+            int costoPorcentual = rs.getInt("costoPorcentual");
+            
+            // Retrieve the associated Categoria
+            int categoriaId = rs.getInt("categoria");
+            Categoria categoria = getCategoriaById(categoriaId); // Implement this method in your CategoriaDAO
+            
+            Cobertura cobertura = new Cobertura(descripcion, costoMinimo, costoPorcentual, categoria);
+            cobertura.setId(coberturaId);
+            
+            coberturas.add(cobertura);
+        }
+    } catch (SQLException ex) {
+        // Handle the exception
+    }
+    return coberturas;
+}
+
+    private Categoria getCategoriaById(int categoriaId) {
+    Categoria categoria = null;
+    try {
+        String sql = "SELECT * FROM Categoria WHERE id = ?";
+        PreparedStatement stm = db.prepareStatement(sql);
+        stm.setInt(1, categoriaId);
+        ResultSet rs = stm.executeQuery();
+        
+        if (rs.next()) {
+            int id = rs.getInt("id");
+            String descripcion = rs.getString("descripcion");
+            
+            categoria = new Categoria(id, descripcion);
+        }
+    } catch (SQLException ex) {
+        // Handle the exception
+    }
+    return categoria;
+}
+
+
 
 }

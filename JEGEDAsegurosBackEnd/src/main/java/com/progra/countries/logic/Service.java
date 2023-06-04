@@ -238,7 +238,7 @@ public class Service {
             multiplicadorPeriodoPago = 12;
         }
         for (Cobertura cobertura : coberturas) {
-            double costo = valorCalculado < 3000 ? cobertura.getCostoMinimo() : valorCalculado * (cobertura.getCostoPorcentual()/100); // setea costo de acuerdo si el carro vale menos de 
+            double costo = valorCalculado * (cobertura.getCostoPorcentual()/100) <  cobertura.getCostoMinimo() ? cobertura.getCostoMinimo() : valorCalculado * (cobertura.getCostoPorcentual()/100); // setea costo de acuerdo si el carro vale menos de 
             totalCosto += costo;                                                                                                                                             // 3000, retorna el costo minimo de la cobertura, sino, el costo porcentual sobre el carro
         }
         totalCosto *= multiplicadorPeriodoPago; //actualiza el pago por el numero de meses de servicio
@@ -266,4 +266,8 @@ public class Service {
     public int getLatestPoliza() throws Exception {
         return this.polizaDao.getPolizaWithHighestId();
     }
+
+    public List<Cobertura> cargarCoberturasByPolizaId(int polizaId) {
+        return this.coberturaDao.getCoberturasByPolizaId(polizaId);
+                }
 }

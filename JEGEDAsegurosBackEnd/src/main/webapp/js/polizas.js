@@ -449,7 +449,7 @@ closeAllModals() {
 }
 
   showPolizaPopup(poliza) {
-  // Crear el contenido HTML del popup con los detalles de la póliza
+  // Create the HTML content of the popup with the poliza details
   const html = `
     <div class="modal fade" id="poliza-modal" tabindex="-1" role="dialog" aria-labelledby="poliza-modal-label" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -469,34 +469,60 @@ closeAllModals() {
             <p>Fecha de Inicio: ${poliza.fechaInicio}</p>
             <p>Modelo: ${poliza.modelo.descripcion}</p>
             <p>Marca: ${poliza.modelo.marca.descripcion}</p>
+            <p>Coberturas:</p>
+            <ul id="coberturas-list"></ul>
           </div>
         </div>
       </div>
     </div>
   `;
 
-    // Agregar el popup al DOM
-    const polizaPopup = document.createElement('div');
-    polizaPopup.innerHTML = html;
-    document.body.appendChild(polizaPopup);
+  // Add the popup to the DOM
+  const polizaPopup = document.createElement('div');
+  polizaPopup.innerHTML = html;
+  document.body.appendChild(polizaPopup);
 
-    // Mostrar el popup
-    const modal = new bootstrap.Modal(polizaPopup.querySelector('.modal'));
-    modal.show();
+  // Fetch the coberturas of the poliza
+  fetch(`http://localhost:8080/JEGEDAsegurosBackEnd/api/coberturas/poliza/${poliza.id}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch coberturas');
+      }
+      return response.json();
+    })
+    .then((coberturas) => {
+      // Get the coberturas list element
+      const coberturasList = polizaPopup.querySelector('#coberturas-list');
 
-    // Obtener el botón de cierre del modal
-    const closeButton = polizaPopup.querySelector('.modal-header .close');
+      // Iterate through the fetched coberturas and create list items
+      coberturas.forEach((cobertura) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${cobertura.descripcion} - Costo Minimo: ${cobertura.costoMinimo}, Costo Porcentual: ${cobertura.costoPorcentual}`;
+        coberturasList.appendChild(listItem);
+      });
 
-    // Agregar un evento de clic al botón de cierre para cerrar el modal
-    closeButton.addEventListener('click', () => {
-      modal.hide(); // Ocultar el modal al hacer clic en el botón de cierre
+      // Show the popup
+      const modal = new bootstrap.Modal(polizaPopup.querySelector('.modal'));
+      modal.show();
+
+      // Get the close button of the modal
+      const closeButton = polizaPopup.querySelector('.modal-header .close');
+
+      // Add a click event to the close button to hide the modal
+      closeButton.addEventListener('click', () => {
+        modal.hide();
+      });
+
+      // Remove the popup from the DOM when it is hidden
+      polizaPopup.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(polizaPopup);
+      });
+    })
+    .catch((error) => {
+      console.error('Error fetching coberturas:', error);
     });
-    // Eliminar el popup del DOM al cerrarlo
-    polizaPopup.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
-      document.body.removeChild(polizaPopup);
-    });
+}
 
-  }
 
     showSummaryPopup(data) {
         return new Promise((resolve, reject) => {
