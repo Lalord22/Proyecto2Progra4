@@ -375,30 +375,64 @@ class Polizas {
 
 
     search() {
-        const searchInput = this.dom.querySelector('#name').value;
-        const request = new Request(`${backend}/polizas/findByPlaca/${searchInput}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+  const searchInput = this.dom.querySelector('#name').value;
 
-        (async () => {
-            try {
-                const response = await fetch(request);
-                if (!response.ok) {
-                    errorMessage(response.status);
-                    return;
-                }
-                const polizas = await response.json();
-                const listing = this.dom.querySelector('#listbody');
-                listing.innerHTML = '';
-                polizas.forEach((p) => this.row(listing, p));
-            } catch (error) {
-                console.error('Error searching polizas:', error);
-            }
-        })();
+  if (searchInput.trim() === '') {
+    // Display an error message in a modal if the searchInput is empty
+    const errorMessageModal = document.createElement('div');
+    errorMessageModal.innerHTML = `
+      <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="error-modal-label">Error</h5>
+            </div>
+            <div class="modal-body">
+              Ingrese un número de placa.
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(errorMessageModal);
+
+    // Show the error modal
+    const modal = new bootstrap.Modal(errorMessageModal.querySelector('.modal'));
+    modal.show();
+
+    // Remove the error modal from the DOM after it is closed
+    errorMessageModal.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
+      document.body.removeChild(errorMessageModal);
+    });
+
+    return;
+  }
+
+  const request = new Request(`${backend}/polizas/findByPlaca/${searchInput}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  (async () => {
+    try {
+      const response = await fetch(request);
+      if (!response.ok) {
+        errorMessage(response.status);
+        return;
+      }
+      const polizas = await response.json();
+      const listing = this.dom.querySelector('#listbody');
+      listing.innerHTML = '';
+      polizas.forEach((p) => this.row(listing, p));
+    } catch (error) {
+      console.error('Error searching polizas:', error);
     }
+  })();
+}
+
+
    
 
 
