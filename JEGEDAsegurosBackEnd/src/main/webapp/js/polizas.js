@@ -223,20 +223,43 @@ class Polizas {
 
           const coberturas = await responseCoberturas.json();
 
-          // Populate checkbox group with coberturas
+          // Group coberturas by categoria
+          const coberturasByCategoria = new Map();
+          coberturas.forEach((cobertura) => {
+            const categoriaId = cobertura.categoria.id;
+            if (!coberturasByCategoria.has(categoriaId)) {
+              coberturasByCategoria.set(categoriaId, {
+                categoriaDescripcion: cobertura.categoria.descripcion,
+                coberturas: [],
+              });
+            }
+            coberturasByCategoria.get(categoriaId).coberturas.push(cobertura);
+          });
+
+          // Populate checkbox group with coberturas grouped by categoria
           const checkboxGroup = modalForm.querySelector('#checkboxGroup');
           checkboxGroup.innerHTML = '';
-          coberturas.forEach((cobertura) => {
-            const checkbox = document.createElement('div');
-            checkbox.innerHTML = `
-              <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
-              <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
-              <div>Costo Minimo: ${cobertura.costoMinimo}</div>
-              <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
-              <div>Categoria: ${cobertura.categoria.descripcion}</div>
-              <!-- Add additional attributes as needed -->
-            `;
-            checkboxGroup.appendChild(checkbox);
+          coberturasByCategoria.forEach((categoria, categoriaId) => {
+            const categoriaDiv = document.createElement('div');
+            categoriaDiv.classList.add('categoria-div');
+
+            const categoriaTitle = document.createElement('h4');
+            categoriaTitle.textContent = categoria.categoriaDescripcion;
+            categoriaDiv.appendChild(categoriaTitle);
+
+            categoria.coberturas.forEach((cobertura) => {
+              const checkbox = document.createElement('div');
+              checkbox.innerHTML = `
+                <input type="checkbox" id="cobertura_${cobertura.id}" value="${cobertura.id}">
+                <label for="cobertura_${cobertura.id}">${cobertura.descripcion}</label>
+                <div>Costo Minimo: ${cobertura.costoMinimo}</div>
+                <div>Costo Porcentual: ${cobertura.costoPorcentual}</div>
+                <!-- Add additional attributes as needed -->
+              `;
+              categoriaDiv.appendChild(checkbox);
+            });
+
+            checkboxGroup.appendChild(categoriaDiv);
           });
 
           // Fetch cliente information from the server
@@ -347,6 +370,7 @@ class Polizas {
       errorMessage(error.message);
     });
 }
+
 
 
 
