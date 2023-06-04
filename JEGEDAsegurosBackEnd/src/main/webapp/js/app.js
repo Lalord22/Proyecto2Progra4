@@ -358,6 +358,7 @@ class App {
                 const user = await response.json();
                 globalstate.user = user;
                 this.modal.hide();
+                this.resetLoginForm();
                 this.renderMenuItems();
             } else if (response.status === 401) {
                 alert("Credenciales inválidas. Por favor, verifique su Id y Clave.");
@@ -374,6 +375,12 @@ class App {
         const bodyElement = this.dom.querySelector('#app>#body');
         bodyElement.innerHTML = '';
     }
+    
+    resetLoginForm = () => {
+      this.dom.querySelector("#identificacion").value = '';
+      this.dom.querySelector("#clave").value = '';
+    }
+
 
     logout = () => {
         globalstate.user = null;
