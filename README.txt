@@ -23,3 +23,7 @@ Integrantes
  Contraseña: 12345678
 
 Tambien, descomprimir la carpeta AAA en la raiz del disco duro C para cargar las imagenes de los modelos que trae por default
+
+
+TODO: El supervisor deberia de poder ver las polizas de cada uno de sus clientes.
+      El sistema no debe registrar campos en blanco.
